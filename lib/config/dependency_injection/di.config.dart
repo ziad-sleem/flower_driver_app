@@ -19,6 +19,13 @@ import '../../core/notifications/fcm_service.dart' as _i761;
 import '../../core/notifications/local_notification_service.dart' as _i298;
 import '../../core/notifications/notification_initializer.dart' as _i838;
 import '../../core/service/crashlytics_service.dart' as _i776;
+import '../../features/auth/api/api_client/auth_api_client.dart' as _i824;
+import '../../features/auth/api/datasources/auth_remote_data_source_impl.dart'
+    as _i723;
+import '../../features/auth/data/datasources/auth_remote_data_source.dart'
+    as _i107;
+import '../../features/auth/data/repositories/auth_repo_impl.dart' as _i662;
+import '../../features/auth/domain/repositories/auth_repo.dart' as _i723;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -36,8 +43,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i776.CrashlyticsService>(
       () => _i776.CrashlyticsService(),
     );
+    gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
+      () => _i723.AuthRemoteDataSourceImpl(
+        authApiClient: gh<_i824.AuthApiClient>(),
+      ),
+    );
     gh.lazySingleton<_i761.FcmService>(
       () => _i761.FcmService(gh<_i298.LocalNotificationService>()),
+    );
+    gh.factory<_i723.AuthRepo>(
+      () => _i662.AuthRepoImpl(
+        authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
+      ),
     );
     gh.lazySingleton<_i838.NotificationInitializer>(
       () => _i838.NotificationInitializer(
