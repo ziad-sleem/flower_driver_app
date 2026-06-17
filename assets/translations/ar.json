@@ -40,6 +40,10 @@
     "enter_code_sent": "يرجى إدخال الرمز المرسل إلى بريدك الإلكتروني",
     "didnt_receive_code": "لم تستلم الرمز؟ إعادة إرسال"
   },
+  "onboarding": {
+    "title": "مرحباً بك في",
+    "description": "تطبيق Flowery رايدر"
+  },
   "validation": {
     "email_required": "البريد الإلكتروني مطلوب",
     "invalid_email": "البريد الإلكتروني غير صالح",
