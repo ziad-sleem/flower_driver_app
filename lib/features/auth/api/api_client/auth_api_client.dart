@@ -8,7 +8,7 @@ import 'package:tracking_app/features/auth/data/models/response/login_response.d
 part 'auth_api_client.g.dart';
 
 @RestApi()
-abstract class AuthApiClient {
+abstract interface class AuthApiClient {
   @factoryMethod
   factory AuthApiClient(Dio dio, {String baseUrl}) = _AuthApiClient;
 
