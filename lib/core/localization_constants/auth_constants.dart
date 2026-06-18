@@ -18,7 +18,4 @@ class AuthConstants {
   static String get enterEmailAssociation => "auth.enter_email_association".tr();
   static String get enterCodeSent => "auth.enter_code_sent".tr();
   static String get didntReceiveCode => "auth.didnt_receive_code".tr();
-  static String get continueAsGuest => "auth.continue_as_guest".tr();
-  static String get dontHaveAccount => "auth.dont_have_account".tr();
-  static String get signUp => "auth.sign_up".tr();
 }

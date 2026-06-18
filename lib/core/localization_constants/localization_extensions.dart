@@ -9,7 +9,4 @@ extension LocalizationExtensions on BuildContext {
   String get enterPassword => AuthConstants.enterYourPassword;
   String get rememberMe => AuthConstants.rememberMe;
   String get forgotPassword => AuthConstants.forgetPassword;
-  String get continueAsGuest => AuthConstants.continueAsGuest;
-  String get dontHaveAccount => AuthConstants.dontHaveAccount;
-  String get signUp => AuthConstants.signUp;
 }
