@@ -32,6 +32,9 @@
     "forget_password": "نسيت كلمة المرور",
     "forget_password_question": "نسيت كلمة المرور؟",
     "remember_me": "تذكرني",
+    "continue_as_guest": "المتابعة كضيف",
+    "dont_have_account": "ليس لديك حساب؟",
+    "sign_up": "إنشاء حساب",
     "email_verification": "التحقق من البريد الإلكتروني",
     "reset_password": "إعادة تعيين كلمة المرور",
     "new_password": "كلمة المرور الجديدة",
@@ -67,6 +70,7 @@
     "unexpected_error": "خطأ غير متوقع",
     "unknown_error": "خطأ غير معروف",
     "login_successfully": "تم تسجيل الدخول بنجاح",
+    "login_error": "فشل تسجيل الدخول",
     "signup_successfully": "تم التسجيل بنجاح"
   },
   "delivery_application": {

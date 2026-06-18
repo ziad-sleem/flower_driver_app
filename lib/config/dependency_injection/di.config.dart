@@ -26,6 +26,8 @@ import '../../features/auth/data/datasources/auth_remote_data_source.dart'
     as _i107;
 import '../../features/auth/data/repositories/auth_repo_impl.dart' as _i662;
 import '../../features/auth/domain/repositories/auth_repo.dart' as _i723;
+import '../../features/auth/domain/use_cases/login_use_case.dart' as _i1038;
+import '../../features/auth/presentation/login/cubit/login_cubit.dart' as _i179;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -43,24 +45,33 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i776.CrashlyticsService>(
       () => _i776.CrashlyticsService(),
     );
-    gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
-      () => _i723.AuthRemoteDataSourceImpl(
-        authApiClient: gh<_i824.AuthApiClient>(),
-      ),
-    );
     gh.lazySingleton<_i761.FcmService>(
       () => _i761.FcmService(gh<_i298.LocalNotificationService>()),
     );
-    gh.factory<_i723.AuthRepo>(
-      () => _i662.AuthRepoImpl(
-        authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
-      ),
+    gh.singleton<_i824.AuthApiClient>(
+      () => networkModule.authApi(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i838.NotificationInitializer>(
       () => _i838.NotificationInitializer(
         gh<_i761.FcmService>(),
         gh<_i298.LocalNotificationService>(),
       ),
+    );
+    gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
+      () => _i723.AuthRemoteDataSourceImpl(
+        authApiClient: gh<_i824.AuthApiClient>(),
+      ),
+    );
+    gh.factory<_i723.AuthRepo>(
+      () => _i662.AuthRepoImpl(
+        authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
+      ),
+    );
+    gh.factory<_i1038.LoginUseCase>(
+      () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
+    );
+    gh.factory<_i179.LoginCubit>(
+      () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
     );
     return this;
   }

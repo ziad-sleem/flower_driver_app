@@ -11,5 +11,6 @@ abstract class ErrorConstants {
   static String get unexpectedError => "errors.unexpected_error".tr();
   static String get unknownError => "errors.unknown_error".tr();
   static String get loginSuccessfully => "errors.login_successfully".tr();
+  static String get loginError => "errors.login_error".tr();
   static String get signupSuccessfully => "errors.signup_successfully".tr();
 }
