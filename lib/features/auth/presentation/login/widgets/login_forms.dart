@@ -105,58 +105,7 @@ class _LoginFormState extends State<LoginForm> {
               },
             ),
 
-            const AppSizedBox(height: 16),
 
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-              child: Text(
-                context.continueAsGuest,
-                style: getMediumStyle(
-                  context: context,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            /// signup
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  context.dontHaveAccount,
-                  style: getRegularStyle(
-                    context: context,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                AppSizedBox(width: 4),
-                GestureDetector(
-                  onTap: () {
-                    // nav to signup
-                  },
-                  child: Text(
-                    context.signUp,
-                    style:
-                        getSemiBoldStyle(
-                          context: context,
-                          color: AppColors.primary,
-                          fontSize: 14,
-                        ).copyWith(
-                          decoration: TextDecoration.underline,
-                          decorationColor: AppColors.primary,
-                        ),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
