@@ -11,7 +11,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final FocusNode? focusNode;
   final Widget? prefixIcon;
-
+  final TextInputAction? textInputAction;
   const CustomTextField({
     super.key,
     this.hintText,
@@ -24,6 +24,7 @@ class CustomTextField extends StatefulWidget {
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
     this.readOnly = false,
+    this.textInputAction,
   });
 
   @override
@@ -43,6 +44,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.keyboardType,
       readOnly: widget.readOnly,
       onChanged: widget.onChanged,
+      textInputAction: widget.textInputAction,
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,
