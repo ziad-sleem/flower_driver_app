@@ -1,8 +1,13 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tracking_app/config/dependency_injection/di.dart';
 import 'package:tracking_app/config/routes/page_transitions.dart';
 import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/widgets/not_found_screen.dart';
 import 'package:tracking_app/core/widgets/app_loading_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:tracking_app/features/auth/presentation/apply/cubit/apply_cubit.dart';
+import 'package:tracking_app/features/auth/presentation/apply/pages/apply_page.dart';
+import 'package:tracking_app/features/auth/presentation/apply/pages/success_apply_page.dart';
 
 abstract class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -14,6 +19,15 @@ abstract class AppRouter {
         case Routes.home:
           return PageTransitions.fade(const AppLoadingWidget());
 
+        case Routes.applyNow:
+          return PageTransitions.fade(
+            BlocProvider<ApplyCubit>(
+              create: (_) => getIt<ApplyCubit>(),
+              child: const ApplyNowPage(),
+            ),
+          );
+        case Routes.succesApply:
+          return PageTransitions.fade(SuccessApplyScreen());
         default:
           return PageTransitions.fade(
             NotFoundScreen(route: settings.name ?? ''),
