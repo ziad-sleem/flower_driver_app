@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:tracking_app/features/auth/domain/entities/verify_reset_code_entity.dart';
 part 'verify_reset_code_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class VerifyResetCodeResponseDto {
   @JsonKey(name: "status")
   final String? status;
@@ -12,9 +12,12 @@ class VerifyResetCodeResponseDto {
   factory VerifyResetCodeResponseDto.fromJson(Map<String, dynamic> json) =>
       _$VerifyResetCodeResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$VerifyResetCodeResponseDtoToJson(this);
-
   VerifyResetCodeEntity toEntity() {
-    return VerifyResetCodeEntity(status: status ?? '');
+    if (status == null) {
+      throw const FormatException(
+        'VerifyResetCodeResponseDto: required field "status" is missing',
+      );
+    }
+    return VerifyResetCodeEntity(status: status!);
   }
 }

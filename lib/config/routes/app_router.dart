@@ -5,11 +5,6 @@ import 'package:tracking_app/core/widgets/not_found_screen.dart';
 import 'package:tracking_app/core/widgets/app_loading_widget.dart';
 import 'package:tracking_app/features/auth/presentation/forget_password/cubit/forget_password_cubit.dart';
 import 'package:tracking_app/features/auth/presentation/forget_password/pages/forget_password_screen.dart';
-import 'package:tracking_app/features/auth/presentation/reset_password/cubit/reset_password_cubit.dart';
-import 'package:tracking_app/features/auth/presentation/reset_password/pages/reset_password_screen.dart';
-import 'package:tracking_app/features/auth/presentation/verify_reset_code/cubit/verify_reset_code_cubit.dart';
-import 'package:tracking_app/features/auth/presentation/verify_reset_code/pages/verify_reset_code_screen.dart';
-import 'package:tracking_app/features/auth/presentation/login/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,27 +25,6 @@ abstract class AppRouter {
               child: const ForgetPasswordScreen(),
             ),
           );
-
-        case Routes.verificationCode:
-          final email = settings.arguments as String;
-          return PageTransitions.fade(
-            BlocProvider(
-              create: (_) => getIt<VerifyResetCodeCubit>(),
-              child: VerifyResetCodeScreen(email: email),
-            ),
-          );
-
-        case Routes.resetPassword:
-          final email = settings.arguments as String;
-          return PageTransitions.fade(
-            BlocProvider(
-              create: (_) => getIt<ResetPasswordCubit>(),
-              child: ResetPasswordScreen(email: email),
-            ),
-          );
-
-        case Routes.login:
-          return PageTransitions.fade(const LoginScreen());
 
         default:
           return PageTransitions.fade(

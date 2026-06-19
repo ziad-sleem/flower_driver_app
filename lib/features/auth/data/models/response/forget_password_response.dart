@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:tracking_app/features/auth/domain/entities/forget_password_entity.dart';
 part 'forget_password_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class ForgetPasswordResponseDto {
   @JsonKey(name: "message")
   final String? message;
@@ -14,9 +14,12 @@ class ForgetPasswordResponseDto {
   factory ForgetPasswordResponseDto.fromJson(Map<String, dynamic> json) =>
       _$ForgetPasswordResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ForgetPasswordResponseDtoToJson(this);
-
   ForgetPasswordEntity toEntity() {
-    return ForgetPasswordEntity(message: message ?? '', info: info ?? '');
+    if (message == null) {
+      throw const FormatException(
+        'ForgetPasswordResponseDto: required field "message" is missing',
+      );
+    }
+    return ForgetPasswordEntity(message: message!, info: info ?? '');
   }
 }

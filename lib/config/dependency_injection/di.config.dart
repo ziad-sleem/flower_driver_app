@@ -31,10 +31,6 @@ import '../../features/auth/domain/use_cases/verify_reset_code_usecase.dart'
     as _i887;
 import '../../features/auth/presentation/forget_password/cubit/forget_password_cubit.dart'
     as _i995;
-import '../../features/auth/presentation/reset_password/cubit/reset_password_cubit.dart'
-    as _i450;
-import '../../features/auth/presentation/verify_reset_code/cubit/verify_reset_code_cubit.dart'
-    as _i660;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -71,17 +67,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i887.VerifyResetCodeUseCase>(
       () => _i887.VerifyResetCodeUseCase(gh<_i723.AuthRepo>()),
     );
-    gh.factory<_i660.VerifyResetCodeCubit>(
-      () => _i660.VerifyResetCodeCubit(
-        gh<_i887.VerifyResetCodeUseCase>(),
-        gh<_i27.ForgetPasswordUseCase>(),
-      ),
-    );
-    gh.factory<_i450.ResetPasswordCubit>(
-      () => _i450.ResetPasswordCubit(gh<_i348.ResetPasswordUseCase>()),
-    );
     gh.factory<_i995.ForgetPasswordCubit>(
-      () => _i995.ForgetPasswordCubit(gh<_i27.ForgetPasswordUseCase>()),
+      () => _i995.ForgetPasswordCubit(
+        gh<_i27.ForgetPasswordUseCase>(),
+        gh<_i887.VerifyResetCodeUseCase>(),
+        gh<_i348.ResetPasswordUseCase>(),
+      ),
     );
     return this;
   }

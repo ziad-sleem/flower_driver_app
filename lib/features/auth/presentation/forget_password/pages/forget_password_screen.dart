@@ -1,13 +1,13 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/layout/app_padding.dart';
 import 'package:tracking_app/core/localization_constants/auth_constants.dart';
 import 'package:tracking_app/core/widgets/custom_appbar.dart';
-import 'package:tracking_app/core/widgets/custom_snack_bar.dart';
 import 'package:tracking_app/features/auth/presentation/forget_password/cubit/forget_password_cubit.dart';
-import 'package:tracking_app/features/auth/presentation/forget_password/widgets/forget_password_form.dart';
+import 'package:tracking_app/features/auth/presentation/forget_password/widgets/forget_password_email_step.dart';
+import 'package:tracking_app/features/auth/presentation/forget_password/widgets/new_password_step.dart';
+import 'package:tracking_app/features/auth/presentation/forget_password/widgets/verify_code_step.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -17,12 +17,11 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  final _emailController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final _pageController = PageController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -31,27 +30,37 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: AuthConstants.password),
       body: BlocListener<ForgetPasswordCubit, ForgetPasswordState>(
-        listener: _onStateChanged,
+        listenWhen: (prev, curr) =>
+            prev.step != curr.step ||
+            prev.resetState.data != curr.resetState.data,
+        listener: (context, state) {
+          if (state.resetState.data != null) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.login,
+              (_) => false,
+            );
+            return;
+          }
+          _pageController.animateToPage(
+            state.step.index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
-          child: ForgetPasswordForm(
-            emailController: _emailController,
-            formKey: _formKey,
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: const [
+              ForgetPasswordEmailStep(),
+              VerifyCodeStep(),
+              NewPasswordStep(),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  void _onStateChanged(BuildContext context, ForgetPasswordState state) {
-    if (state.base.data != null) {
-      Navigator.pushNamed(
-        context,
-        Routes.verificationCode,
-        arguments: state.email,
-      );
-    } else if (state.base.errorMessage != null) {
-      CustomSnackBar.error(context, state.base.errorMessage!.tr());
-    }
   }
 }

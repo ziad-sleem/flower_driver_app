@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:tracking_app/features/auth/domain/entities/reset_password_entity.dart';
 part 'reset_password_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class ResetPasswordResponseDto {
   @JsonKey(name: "message")
   final String? message;
@@ -14,9 +14,12 @@ class ResetPasswordResponseDto {
   factory ResetPasswordResponseDto.fromJson(Map<String, dynamic> json) =>
       _$ResetPasswordResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ResetPasswordResponseDtoToJson(this);
-
   ResetPasswordEntity toEntity() {
-    return ResetPasswordEntity(message: message ?? '', token: token ?? '');
+    if (message == null || token == null) {
+      throw const FormatException(
+        'ResetPasswordResponseDto: required fields "message"/"token" are missing',
+      );
+    }
+    return ResetPasswordEntity(message: message!, token: token!);
   }
 }
