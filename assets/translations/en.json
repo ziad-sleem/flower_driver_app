@@ -40,6 +40,10 @@
     "enter_code_sent": "Please enter your code that send to your email address",
     "didnt_receive_code": "Didn't receive code? Resend"
   },
+  "onboarding": {
+    "title": "Welcome to",
+    "description": "Flowery rider app"
+  },
   "validation": {
     "email_required": "Email is required",
     "invalid_email": "This Email is not valid",
