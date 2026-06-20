@@ -21,14 +21,16 @@ class ApplyNowPage extends StatefulWidget {
 
 class _ApplyNowPageState extends State<ApplyNowPage> {
   late final ApplyFormController controller;
-
   @override
   void initState() {
     super.initState();
     controller = ApplyFormController();
-    final cubit = context.read<ApplyCubit>();
-    cubit.onEvent(const LoadCountriesEvent());
-    cubit.onEvent(const GetVehiclesEvent());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<ApplyCubit>();
+      cubit.onEvent(const LoadCountriesEvent());
+      cubit.onEvent(const GetVehiclesEvent());
+    });
   }
 
   @override
@@ -52,7 +54,7 @@ class _ApplyNowPageState extends State<ApplyNowPage> {
         return Scaffold(
           appBar: CustomAppBar(
             title: GeneralConstants.apply,
-            buttonEnable: false,
+            buttonEnable: true,
           ),
           body: SafeArea(
             child: SingleChildScrollView(

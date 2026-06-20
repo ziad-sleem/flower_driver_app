@@ -1,8 +1,8 @@
 class AuthEndPoint {
-  static const baseUrl = "https://flower.elevateegy.com/api/v1/drivers/";
-  static const signIn = "/signin";
-  static const applyNow = "/apply";
-  static const vehicles = "/vehicles";
+  static const baseUrl = "https://flower.elevateegy.com/api/v1/";
+  static const signIn = "drivers/signin";
+  static const applyNow = "drivers/apply";
+  static const vehicles = "vehicles/";
 }
 
 class ProductsSectionsEndPoint {}

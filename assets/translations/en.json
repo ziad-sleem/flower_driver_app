@@ -45,6 +45,10 @@
     "code_sent_again": "A new code has been sent to your email",
     "reset_password_condition": "Password must not be empty and must contain 8 characters with upper case letter and one number at least"
   },
+    "onboarding": {
+    "title": "Welcome to",
+    "description": "Flowery rider app"
+  },
   "validation": {
     "email_required": "Email is required",
     "invalid_email": "This Email is not valid",
