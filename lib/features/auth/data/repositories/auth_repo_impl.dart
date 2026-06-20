@@ -1,6 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:tracking_app/features/auth/data/models/response/apply_now_response_dto.dart';
+import 'package:tracking_app/features/auth/data/models/response/vehicle_response_dto.dart';
+import 'package:tracking_app/features/auth/domain/entities/apply_now_params.dart';
+import 'package:tracking_app/features/auth/domain/entities/apply_now_response_entity.dart';
+import 'package:tracking_app/features/auth/domain/entities/vehicle_response_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/forget_password_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/reset_password_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/verify_reset_code_entity.dart';
@@ -57,5 +63,62 @@ class AuthRepoImpl implements AuthRepo {
       ),
       ErrorBaseResponse() => ErrorBaseResponse(failure: response.failure),
     };
+  }
+
+  Future<BaseResponse<ApplyNowResponseEntity>> applyNow(
+    ApplyNowParams params,
+  ) async {
+    final vehicleLicense = await MultipartFile.fromFile(
+      params.vehicleLicensePath,
+      filename: params.vehicleLicensePath.split('/').last,
+    );
+
+    final nidImg = await MultipartFile.fromFile(
+      params.nidImgPath,
+      filename: params.nidImgPath.split('/').last,
+    );
+
+    final request = FormData.fromMap({
+      'country': params.country,
+      'firstName': params.firstName,
+      'lastName': params.lastName,
+      'vehicleType': params.vehicleType,
+      'vehicleNumber': params.vehicleNumber,
+      'NID': params.nid,
+      'email': params.email,
+      'password': params.password,
+      'rePassword': params.rePassword,
+      'gender': params.gender,
+      'phone': params.phone,
+      'vehicleLicense': vehicleLicense,
+      'NIDImg': nidImg,
+    });
+
+    final result = await authRemoteDataSourceContract.applyNow(request);
+
+    switch (result) {
+      case SuccessBaseResponse<ApplyNowResponseDto>():
+        return SuccessBaseResponse<ApplyNowResponseEntity>(
+          data: result.data.toEntity(),
+        );
+
+      case ErrorBaseResponse():
+        return ErrorBaseResponse(failure: result.failure);
+    }
+  }
+
+  @override
+  Future<BaseResponse<VehicleResponseEntity>> getVehicles() async {
+    final response = await authRemoteDataSourceContract.getVehicles();
+
+    switch (response) {
+      case SuccessBaseResponse<VehicleResponseDto>():
+        return SuccessBaseResponse<VehicleResponseEntity>(
+          data: response.data.toEntity(),
+        );
+
+      case ErrorBaseResponse():
+        return ErrorBaseResponse(failure: response.failure);
+    }
   }
 }

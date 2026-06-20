@@ -115,4 +115,39 @@ class AppValidator {
 
     return null;
   }
+
+  static String? nationalId(String? value) {
+    final v = AppValidation.value(value);
+
+    if (v.isEmpty) return ValidationConstants.idNumberRequired;
+
+    if (v.length != 14) {
+      return ValidationConstants.nationalIdLength;
+    }
+
+    if (!v.startsWith('2') && !v.startsWith('3')) {
+      return ValidationConstants.nationalIdStart;
+    }
+
+    final isNumeric = RegExp(r'^[0-9]+$').hasMatch(v);
+    if (!isNumeric) {
+      return ValidationConstants.nationalIdNumeric;
+    }
+
+    return null;
+  }
+
+  static String? vehicleNumber(String? value) {
+    final v = AppValidation.value(value);
+
+    if (v.isEmpty) return ValidationConstants.vehicleNumberRequired;
+
+    final regex = RegExp(r'^[0-9\u0600-\u06FF\s\-]+$');
+
+    if (!regex.hasMatch(v)) {
+      return ValidationConstants.vehicleNumberInvalid;
+    }
+
+    return null;
+  }
 }
