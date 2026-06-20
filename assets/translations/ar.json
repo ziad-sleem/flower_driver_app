@@ -49,6 +49,10 @@
     "title": "مرحباً بك في",
     "description": "تطبيق Flowery رايدر"
   },
+  "onboarding": {
+    "title": "مرحباً بك في",
+    "description": "تطبيق Flowery رايدر"
+  },
   "validation": {
     "email_required": "البريد الإلكتروني مطلوب",
     "invalid_email": "البريد الإلكتروني غير صالح",

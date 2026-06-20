@@ -47,6 +47,9 @@ abstract class AppRouter {
             ),
           );
 
+        case Routes.onboarding:
+          return PageTransitions.fade(const OnboardingScreen());
+
         default:
           return PageTransitions.fade(
             NotFoundScreen(route: settings.name ?? ''),

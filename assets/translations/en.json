@@ -49,6 +49,10 @@
     "title": "Welcome to",
     "description": "Flowery rider app"
   },
+  "onboarding": {
+    "title": "Welcome to",
+    "description": "Flowery rider app"
+  },
   "validation": {
     "email_required": "Email is required",
     "invalid_email": "This Email is not valid",
