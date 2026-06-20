@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkAuth() async {
     final token = await SecureStorageService.getToken();
     final destination = (token != null && token.isNotEmpty)
-        ? Routes.home
+        ? Routes.appSection
         : Routes.login;
 
     if (!mounted) return;

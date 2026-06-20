@@ -5,6 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/core/localization_constants/error_massage_constants.dart';
 import 'package:tracking_app/core/network/model/user.dart';
+import 'package:tracking_app/core/network/safe_api_caller.dart';
 import 'package:tracking_app/features/auth/api/api_client/auth_api_client.dart';
 import 'package:tracking_app/features/auth/api/datasources/auth_remote_data_source_impl.dart';
 import 'package:tracking_app/features/auth/data/models/requests/login_request.dart';
@@ -13,11 +14,12 @@ import 'package:tracking_app/features/auth/domain/use_cases/login_params.dart';
 
 import 'auth_remote_data_source_impl_test.mocks.dart';
 
-@GenerateMocks([AuthApiClient])
+@GenerateMocks([AuthApiClient, SafeApiCaller])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late AuthRemoteDataSourceImpl dataSource;
   late MockAuthApiClient mockApiClient;
+  late MockSafeApiCaller mockSafeApiCaller;
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
@@ -25,7 +27,11 @@ void main() {
       (MethodCall methodCall) async => null,
     );
     mockApiClient = MockAuthApiClient();
-    dataSource = AuthRemoteDataSourceImpl(authApiClient: mockApiClient);
+    mockSafeApiCaller = MockSafeApiCaller();
+    dataSource = AuthRemoteDataSourceImpl(
+      authApiClient: mockApiClient,
+      safeApiCaller: mockSafeApiCaller,
+    );
   });
 
 

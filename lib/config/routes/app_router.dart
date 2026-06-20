@@ -1,10 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tracking_app/config/dependency_injection/di.dart';
 import 'package:tracking_app/config/routes/page_transitions.dart';
 import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/widgets/not_found_screen.dart';
+import 'package:tracking_app/features/auth/presentation/apply/cubit/apply_cubit.dart';
+import 'package:tracking_app/features/auth/presentation/apply/pages/apply_page.dart';
+import 'package:tracking_app/features/auth/presentation/apply/pages/success_apply_page.dart';
+import 'package:tracking_app/features/auth/presentation/forget_password/cubit/forget_password_cubit.dart';
+import 'package:tracking_app/features/auth/presentation/forget_password/pages/forget_password_screen.dart';
 import 'package:tracking_app/features/auth/presentation/login/pages/login_screen.dart';
-import 'package:tracking_app/features/home/presentation/pages/home_page.dart';
+import 'package:tracking_app/features/app_section/presentation/page/app_section_page.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
-import 'package:flutter/material.dart';
 
 abstract class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -16,8 +23,26 @@ abstract class AppRouter {
         case Routes.login:
           return PageTransitions.fade(const LoginScreen());
 
-        case Routes.home:
-          return PageTransitions.fade(const HomePage());
+
+        case Routes.appSection:
+          return PageTransitions.fade(const AppSectionsPage());
+
+        case Routes.applyNow:
+          return PageTransitions.fade(
+            BlocProvider<ApplyCubit>(
+              create: (_) => getIt<ApplyCubit>(),
+              child: const ApplyNowPage(),
+            ),
+          );
+        case Routes.succesApply:
+          return PageTransitions.fade(SuccessApplyScreen());
+        case Routes.forgetPassword:
+          return PageTransitions.fade(
+            BlocProvider(
+              create: (_) => getIt<ForgetPasswordCubit>(),
+              child: const ForgetPasswordScreen(),
+            ),
+          );
 
         default:
           return PageTransitions.fade(

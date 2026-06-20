@@ -1,3 +1,4 @@
+import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/localization_constants/localization_extensions.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
@@ -69,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
 
                     GestureDetector(
                       onTap: () {
-                        // nav to forget password
+                        Navigator.pushNamed(context, Routes.forgetPassword);
                       },
                       child: Text(
                         context.forgotPassword,

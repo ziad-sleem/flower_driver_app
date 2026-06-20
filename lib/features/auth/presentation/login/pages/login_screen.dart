@@ -26,7 +26,7 @@ class LoginScreen extends StatelessWidget {
 
             if (loginData != null) {
               CustomSnackBar.success(context, ErrorConstants.loginSuccessfully);
-              Navigator.pushReplacementNamed(context, Routes.home);
+              Navigator.pushReplacementNamed(context, Routes.appSection);
             }
 
             if (state.loginState.errorMessage != null) {
