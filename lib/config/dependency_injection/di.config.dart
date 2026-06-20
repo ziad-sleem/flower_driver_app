@@ -18,6 +18,8 @@ import '../../core/network/safe_api_caller.dart' as _i563;
 import '../../core/service/crashlytics_service.dart' as _i776;
 import '../../core/service/image_picker_service.dart' as _i488;
 import '../../core/service/load_json_countries.dart' as _i923;
+import '../../features/app_section/presentation/cubit/app_section_cubit.dart'
+    as _i999;
 import '../../features/auth/api/api_client/auth_api_client.dart' as _i824;
 import '../../features/auth/api/datasources/auth_remote_data_source_impl.dart'
     as _i723;
@@ -26,9 +28,17 @@ import '../../features/auth/data/datasources/auth_remote_data_source.dart'
 import '../../features/auth/data/repositories/auth_repo_impl.dart' as _i662;
 import '../../features/auth/domain/repositories/auth_repo.dart' as _i723;
 import '../../features/auth/domain/use_cases/apply_now_use_case.dart' as _i724;
+import '../../features/auth/domain/use_cases/forget_password_usecase.dart'
+    as _i27;
 import '../../features/auth/domain/use_cases/get_vehicles_use_case.dart'
     as _i817;
+import '../../features/auth/domain/use_cases/reset_password_usecase.dart'
+    as _i348;
+import '../../features/auth/domain/use_cases/verify_reset_code_usecase.dart'
+    as _i887;
 import '../../features/auth/presentation/apply/cubit/apply_cubit.dart' as _i650;
+import '../../features/auth/presentation/forget_password/cubit/forget_password_cubit.dart'
+    as _i995;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -40,6 +50,7 @@ extension GetItInjectableX on _i174.GetIt {
     final networkModule = _$NetworkModule();
     gh.factory<_i563.SafeApiCaller>(() => _i563.SafeApiCaller());
     gh.factory<_i923.CountryService>(() => _i923.CountryService());
+    gh.factory<_i999.AppSectionsCubit>(() => _i999.AppSectionsCubit());
     gh.singleton<_i361.Dio>(() => networkModule.dio);
     gh.lazySingleton<_i776.CrashlyticsService>(
       () => _i776.CrashlyticsService(),
@@ -67,12 +78,28 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i817.GetVehiclesUseCase>(
       () => _i817.GetVehiclesUseCase(gh<_i723.AuthRepo>()),
     );
+    gh.factory<_i27.ForgetPasswordUseCase>(
+      () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
+    );
+    gh.factory<_i348.ResetPasswordUseCase>(
+      () => _i348.ResetPasswordUseCase(gh<_i723.AuthRepo>()),
+    );
+    gh.factory<_i887.VerifyResetCodeUseCase>(
+      () => _i887.VerifyResetCodeUseCase(gh<_i723.AuthRepo>()),
+    );
     gh.factory<_i650.ApplyCubit>(
       () => _i650.ApplyCubit(
         gh<_i817.GetVehiclesUseCase>(),
         gh<_i724.ApplyNowUseCase>(),
         gh<_i923.CountryService>(),
         gh<_i488.ImagePickerService>(),
+      ),
+    );
+    gh.factory<_i995.ForgetPasswordCubit>(
+      () => _i995.ForgetPasswordCubit(
+        gh<_i27.ForgetPasswordUseCase>(),
+        gh<_i887.VerifyResetCodeUseCase>(),
+        gh<_i348.ResetPasswordUseCase>(),
       ),
     );
     return this;

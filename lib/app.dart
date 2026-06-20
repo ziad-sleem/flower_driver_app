@@ -11,12 +11,12 @@ class TrackingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: Routes.applyNow,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
       locale: context.locale,
+      supportedLocales: context.supportedLocales,
+      localizationsDelegates: context.localizationDelegates,
+      theme: AppTheme.lightTheme,
+      initialRoute: Routes.forgetPassword,
+      onGenerateRoute: AppRouter.onGenerateRoute,
     );
   }
 }

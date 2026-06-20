@@ -31,6 +31,8 @@
     "enter_your_password": "Enter your password",
     "forget_password": "Forget password",
     "forget_password_question": "Forget password?",
+    "forget_password_title": "Forgot your password?",
+    "forget_password_subtitle": "Please enter your email associated to your account, we'll send you a code to reset it.",
     "remember_me": "Remember me",
     "email_verification": "Email verification",
     "reset_password": "Reset password",
@@ -38,7 +40,10 @@
     "confirm_password": "Confirm password",
     "enter_email_association": "Please enter your email associated to your account",
     "enter_code_sent": "Please enter your code that send to your email address",
-    "didnt_receive_code": "Didn't receive code? Resend"
+    "didnt_receive_code": "Didn't receive code?",
+    "resend": "Resend",
+    "code_sent_again": "A new code has been sent to your email",
+    "reset_password_condition": "Password must not be empty and must contain 8 characters with upper case letter and one number at least"
   },
   "validation": {
     "email_required": "Email is required",
