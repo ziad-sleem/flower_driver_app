@@ -32,6 +32,7 @@ import '../../features/auth/domain/use_cases/forget_password_usecase.dart'
     as _i27;
 import '../../features/auth/domain/use_cases/get_vehicles_use_case.dart'
     as _i817;
+import '../../features/auth/domain/use_cases/login_use_case.dart' as _i1038;
 import '../../features/auth/domain/use_cases/reset_password_usecase.dart'
     as _i348;
 import '../../features/auth/domain/use_cases/verify_reset_code_usecase.dart'
@@ -39,6 +40,7 @@ import '../../features/auth/domain/use_cases/verify_reset_code_usecase.dart'
 import '../../features/auth/presentation/apply/cubit/apply_cubit.dart' as _i650;
 import '../../features/auth/presentation/forget_password/cubit/forget_password_cubit.dart'
     as _i995;
+import '../../features/auth/presentation/login/cubit/login_cubit.dart' as _i179;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -72,11 +74,17 @@ extension GetItInjectableX on _i174.GetIt {
         authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
       ),
     );
+    gh.factory<_i1038.LoginUseCase>(
+      () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
+    );
     gh.factory<_i724.ApplyNowUseCase>(
       () => _i724.ApplyNowUseCase(gh<_i723.AuthRepo>()),
     );
     gh.factory<_i817.GetVehiclesUseCase>(
       () => _i817.GetVehiclesUseCase(gh<_i723.AuthRepo>()),
+    );
+    gh.factory<_i179.LoginCubit>(
+      () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),

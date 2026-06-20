@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tracking_app/core/localization_constants/delivery_application_constants.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
-import 'package:tracking_app/features/auth/domain/entities/vehicle_entity%20.dart';
+import 'package:tracking_app/features/auth/domain/entities/vehicle_entity.dart';
 
 class VehicleDropdown extends StatelessWidget {
   final List<VehicleEntity> vehicles;

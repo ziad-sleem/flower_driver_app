@@ -12,5 +12,6 @@ class ApplyNowResponseEntity extends Equatable {
     required this.token,
   });
 
+  @override
   List<Object?> get props => [message, driver, token];
 }

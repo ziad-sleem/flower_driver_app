@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tracking_app/features/auth/domain/entities/vehicle_entity%20.dart';
+import 'package:tracking_app/features/auth/domain/entities/vehicle_entity.dart';
 part 'vehicle_dto.g.dart';
 
 @JsonSerializable()

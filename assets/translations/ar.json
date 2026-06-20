@@ -79,6 +79,7 @@
     "unexpected_error": "خطأ غير متوقع",
     "unknown_error": "خطأ غير معروف",
     "login_successfully": "تم تسجيل الدخول بنجاح",
+    "login_error": "فشل تسجيل الدخول",
     "signup_successfully": "تم التسجيل بنجاح"
   },
   "delivery_application": {

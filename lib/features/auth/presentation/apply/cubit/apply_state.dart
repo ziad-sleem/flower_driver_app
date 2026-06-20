@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:tracking_app/features/auth/data/models/country_model.dart';
 import 'package:tracking_app/features/auth/domain/entities/apply_now_response_entity.dart';
-import 'package:tracking_app/features/auth/domain/entities/vehicle_entity%20.dart';
+import 'package:tracking_app/features/auth/domain/entities/vehicle_entity.dart';
 
 class ApplyState extends Equatable {
   final List<CountryModel> countries;

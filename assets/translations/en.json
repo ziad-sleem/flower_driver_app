@@ -79,6 +79,7 @@
     "unexpected_error": "Unexpected error",
     "unknown_error": "Unknown error",
     "login_successfully": "Login successfully",
+    "login_error": "Login failed",
     "signup_successfully": "Signup successfully"
   },
   "delivery_application": {

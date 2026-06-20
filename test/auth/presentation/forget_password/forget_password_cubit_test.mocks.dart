@@ -10,8 +10,16 @@ import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:tracking_app/config/base/base_response.dart' as _i4;
 import 'package:tracking_app/features/auth/domain/entities/forget_password_entity.dart'
     as _i5;
+import 'package:tracking_app/features/auth/domain/entities/reset_password_entity.dart'
+    as _i10;
+import 'package:tracking_app/features/auth/domain/entities/verify_reset_code_entity.dart'
+    as _i8;
 import 'package:tracking_app/features/auth/domain/use_cases/forget_password_usecase.dart'
     as _i2;
+import 'package:tracking_app/features/auth/domain/use_cases/reset_password_usecase.dart'
+    as _i9;
+import 'package:tracking_app/features/auth/domain/use_cases/verify_reset_code_usecase.dart'
+    as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -52,4 +60,63 @@ class MockForgetPasswordUseCase extends _i1.Mock
                 ),
           )
           as _i3.Future<_i4.BaseResponse<_i5.ForgetPasswordEntity>>);
+}
+
+/// A class which mocks [VerifyResetCodeUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockVerifyResetCodeUseCase extends _i1.Mock
+    implements _i7.VerifyResetCodeUseCase {
+  MockVerifyResetCodeUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i8.VerifyResetCodeEntity>> call({
+    required String? resetCode,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [], {#resetCode: resetCode}),
+            returnValue:
+                _i3.Future<_i4.BaseResponse<_i8.VerifyResetCodeEntity>>.value(
+                  _i6.dummyValue<_i4.BaseResponse<_i8.VerifyResetCodeEntity>>(
+                    this,
+                    Invocation.method(#call, [], {#resetCode: resetCode}),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i8.VerifyResetCodeEntity>>);
+}
+
+/// A class which mocks [ResetPasswordUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockResetPasswordUseCase extends _i1.Mock
+    implements _i9.ResetPasswordUseCase {
+  MockResetPasswordUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i10.ResetPasswordEntity>> call({
+    required String? email,
+    required String? newPassword,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [], {
+              #email: email,
+              #newPassword: newPassword,
+            }),
+            returnValue:
+                _i3.Future<_i4.BaseResponse<_i10.ResetPasswordEntity>>.value(
+                  _i6.dummyValue<_i4.BaseResponse<_i10.ResetPasswordEntity>>(
+                    this,
+                    Invocation.method(#call, [], {
+                      #email: email,
+                      #newPassword: newPassword,
+                    }),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i10.ResetPasswordEntity>>);
 }

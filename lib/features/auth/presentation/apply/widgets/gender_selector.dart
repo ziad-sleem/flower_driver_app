@@ -29,23 +29,22 @@ class GenderSelector extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Radio<String>(
-          value: AppKeys.female,
+        RadioGroup<String>(
           groupValue: selectedGender,
           onChanged: (value) {
             if (value != null) onChanged(value);
           },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Radio<String>(value: AppKeys.female),
+              Text(DeliveryApplicationConstants.female),
+              const AppSizedBox(width: 12),
+              Radio<String>(value: AppKeys.male),
+              Text(DeliveryApplicationConstants.male),
+            ],
+          ),
         ),
-        Text(DeliveryApplicationConstants.female),
-        const AppSizedBox(width: 12),
-        Radio<String>(
-          value: AppKeys.male,
-          groupValue: selectedGender,
-          onChanged: (value) {
-            if (value != null) onChanged(value);
-          },
-        ),
-        Text(DeliveryApplicationConstants.male),
       ],
     );
   }

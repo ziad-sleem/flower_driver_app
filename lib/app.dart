@@ -10,13 +10,13 @@ class TrackingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      locale: context.locale,
-      supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      initialRoute: Routes.forgetPassword,
       onGenerateRoute: AppRouter.onGenerateRoute,
+      initialRoute: Routes.splash,
     );
   }
 }
