@@ -11,6 +11,7 @@ class AppTheme {
       elevation: 0,
       foregroundColor: AppColors.textPrimary,
       centerTitle: false,
+      scrolledUnderElevation: 0.0,
     ),
 
     colorScheme: const ColorScheme(
