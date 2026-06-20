@@ -45,6 +45,10 @@
     "code_sent_again": "تم إرسال رمز جديد إلى بريدك الإلكتروني",
     "reset_password_condition": "يجب ألا تكون كلمة المرور فارغة ويجب أن تحتوي على 8 أحرف مع حرف كبير ورقم واحد على الأقل"
   },
+  "onboarding": {
+    "title": "مرحباً بك في",
+    "description": "تطبيق Flowery رايدر"
+  },
   "validation": {
     "email_required": "البريد الإلكتروني مطلوب",
     "invalid_email": "البريد الإلكتروني غير صالح",

@@ -19,7 +19,7 @@ class LoginScreen extends StatelessWidget {
       create: (_) => getIt<LoginCubit>(),
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: CustomAppBar(title: context.login, buttonEnable: false),
+        appBar: CustomAppBar(title: context.login, buttonEnable: true),
         body: BlocListener<LoginCubit, LoginState>(
           listener: (context, state) {
             final loginData = state.loginState.data;

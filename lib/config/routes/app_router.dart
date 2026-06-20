@@ -11,6 +11,7 @@ import 'package:tracking_app/features/auth/presentation/forget_password/cubit/fo
 import 'package:tracking_app/features/auth/presentation/forget_password/pages/forget_password_screen.dart';
 import 'package:tracking_app/features/auth/presentation/login/pages/login_screen.dart';
 import 'package:tracking_app/features/app_section/presentation/page/app_section_page.dart';
+import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {
@@ -20,15 +21,17 @@ abstract class AppRouter {
         case Routes.splash:
           return PageTransitions.fade(const SplashScreen());
 
-        case Routes.login:
-          return PageTransitions.fade(const LoginScreen());
+        case Routes.onboarding:
+          return PageTransitions.fade(const OnboardingScreen());
 
+        case Routes.login:
+          return PageTransitions.slide(const LoginScreen());
 
         case Routes.appSection:
           return PageTransitions.fade(const AppSectionsPage());
 
         case Routes.applyNow:
-          return PageTransitions.fade(
+          return PageTransitions.slide(
             BlocProvider<ApplyCubit>(
               create: (_) => getIt<ApplyCubit>(),
               child: const ApplyNowPage(),

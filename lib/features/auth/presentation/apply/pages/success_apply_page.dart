@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/localization_constants/auth_constants.dart';
 import 'package:tracking_app/core/localization_constants/delivery_application_constants.dart';
 import 'package:tracking_app/core/resources/app_lottie.dart';
@@ -65,7 +66,12 @@ class _Content extends StatelessWidget {
           ),
         ),
         const AppSizedBox(height: 24),
-        PrimaryButton(text: AuthConstants.login, onTap: () {}),
+        PrimaryButton(
+          text: AuthConstants.login,
+          onTap: () {
+            Navigator.pushReplacementNamed(context, Routes.login);
+          },
+        ),
         const Spacer(),
       ],
     );
