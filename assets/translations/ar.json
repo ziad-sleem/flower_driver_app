@@ -31,6 +31,8 @@
     "enter_your_password": "أدخل كلمة المرور",
     "forget_password": "نسيت كلمة المرور",
     "forget_password_question": "نسيت كلمة المرور؟",
+    "forget_password_title": "هل نسيت كلمة المرور؟",
+    "forget_password_subtitle": "يرجى إدخال بريدك الإلكتروني المرتبط بحسابك، وسنرسل لك رمزاً لإعادة التعيين.",
     "remember_me": "تذكرني",
     "email_verification": "التحقق من البريد الإلكتروني",
     "reset_password": "إعادة تعيين كلمة المرور",
@@ -38,7 +40,10 @@
     "confirm_password": "تأكيد كلمة المرور",
     "enter_email_association": "يرجى إدخال بريدك الإلكتروني المرتبط بحسابك",
     "enter_code_sent": "يرجى إدخال الرمز المرسل إلى بريدك الإلكتروني",
-    "didnt_receive_code": "لم تستلم الرمز؟ إعادة إرسال"
+    "didnt_receive_code": "لم تستلم الرمز؟",
+    "resend": "إعادة إرسال",
+    "code_sent_again": "تم إرسال رمز جديد إلى بريدك الإلكتروني",
+    "reset_password_condition": "يجب ألا تكون كلمة المرور فارغة ويجب أن تحتوي على 8 أحرف مع حرف كبير ورقم واحد على الأقل"
   },
   "validation": {
     "email_required": "البريد الإلكتروني مطلوب",
