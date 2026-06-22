@@ -5,8 +5,8 @@ import 'package:tracking_app/core/localization_constants/tabs_constants.dart';
 import 'package:tracking_app/core/resources/app_svgs.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/features/app_section/presentation/cubit/app_section_cubit.dart';
-import 'package:tracking_app/features/logout/log_out.dart';
 
+ 
 class AppSectionsPage extends StatelessWidget {
   const AppSectionsPage({super.key});
 
@@ -45,7 +45,7 @@ class _AppSectionsView extends StatelessWidget {
             children: [
               _PlaceholderScreen(title: TabsConstants.home),
               _PlaceholderScreen(title: TabsConstants.orders),
-              ProfileScreen(),
+              _PlaceholderScreen(title: TabsConstants.profile),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(

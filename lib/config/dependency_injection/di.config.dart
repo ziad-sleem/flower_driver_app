@@ -41,6 +41,15 @@ import '../../features/auth/presentation/apply/cubit/apply_cubit.dart' as _i650;
 import '../../features/auth/presentation/forget_password/cubit/forget_password_cubit.dart'
     as _i995;
 import '../../features/auth/presentation/login/cubit/login_cubit.dart' as _i179;
+import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
+import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
+    as _i4;
+import '../../features/profile/data/datasources/profile_remote_data_source.dart'
+    as _i847;
+import '../../features/profile/data/repositories/profile_repo_impl.dart'
+    as _i988;
+import '../../features/profile/domain/repositories/profile_repo.dart' as _i790;
+import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -63,6 +72,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i824.AuthApiClient>(
       () => networkModule.authApi(gh<_i361.Dio>()),
     );
+    gh.singleton<_i699.ProfileApiClient>(
+      () => networkModule.profileApi(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i847.ProfileRemoteDataSourceContract>(
+      () => _i4.ProfileRemoteDataSourceImpl(
+        profileApiClient: gh<_i699.ProfileApiClient>(),
+      ),
+    );
     gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
       () => _i723.AuthRemoteDataSourceImpl(
         authApiClient: gh<_i824.AuthApiClient>(),
@@ -72,6 +89,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i723.AuthRepo>(
       () => _i662.AuthRepoImpl(
         authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
+      ),
+    );
+    gh.factory<_i790.ProfileRepo>(
+      () => _i988.ProfileRepoImpl(
+        profileRemoteDataSourceContract:
+            gh<_i847.ProfileRemoteDataSourceContract>(),
       ),
     );
     gh.factory<_i1038.LoginUseCase>(
@@ -85,6 +108,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
+    );
+    gh.factory<_i36.ProfileCubit>(
+      () => _i36.ProfileCubit(gh<_i790.ProfileRepo>()),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
