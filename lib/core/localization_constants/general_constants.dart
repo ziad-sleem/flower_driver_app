@@ -18,6 +18,7 @@ class GeneralConstants {
   static String get change => "general.change".tr();
   static String get language => "general.language".tr();
   static String get english => "general.english".tr();
+  static String get arabic => "general.arabic".tr();
   static String get welcome => "general.welcome".tr();
   static String get welcomeToApp => "general.welcome_to_app".tr();
   static String get applyNow => "general.apply_now".tr();
