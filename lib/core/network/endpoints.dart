@@ -12,6 +12,11 @@ class ProfileEndPoint {
   static const vehicles = "vehicles";
 }
 
+class EditVehicleInfoEndPoint {
+  static const vehicles = 'vehicles';
+  static const updateVehicleInfo = 'vehicles/update';
+}
+
 class ProductsSectionsEndPoint {}
 
 class CartEndPoints {}

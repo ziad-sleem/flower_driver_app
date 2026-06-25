@@ -41,6 +41,22 @@ import '../../features/auth/presentation/apply/cubit/apply_cubit.dart' as _i650;
 import '../../features/auth/presentation/forget_password/cubit/forget_password_cubit.dart'
     as _i995;
 import '../../features/auth/presentation/login/cubit/login_cubit.dart' as _i179;
+import '../../features/edit_vehical_info/api/api_client/edit_vehicle_info_api_client.dart'
+    as _i321;
+import '../../features/edit_vehical_info/api/datasource/edit_vehicle_info_remote_data_source_impl.dart'
+    as _i146;
+import '../../features/edit_vehical_info/data/datasources/edit_vehicle_info_remote_data_source.dart'
+    as _i115;
+import '../../features/edit_vehical_info/data/repositories/edit_vehicle_info_repo_impl.dart'
+    as _i574;
+import '../../features/edit_vehical_info/domain/repositories/edit_vehicle_info_repo.dart'
+    as _i461;
+import '../../features/edit_vehical_info/domain/usecases/get_vehicles_use_case.dart'
+    as _i365;
+import '../../features/edit_vehical_info/domain/usecases/update_vehicle_use_case.dart'
+    as _i129;
+import '../../features/edit_vehical_info/presentation/cubit/edit_vehicle_info_cubit.dart'
+    as _i903;
 import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
 import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
     as _i4;
@@ -75,15 +91,29 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i699.ProfileApiClient>(
       () => networkModule.profileApi(gh<_i361.Dio>()),
     );
+    gh.singleton<_i321.EditVehicleInfoApiClient>(
+      () => networkModule.editVehicleInfoApi(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i847.ProfileRemoteDataSourceContract>(
       () => _i4.ProfileRemoteDataSourceImpl(
         profileApiClient: gh<_i699.ProfileApiClient>(),
+      ),
+    );
+    gh.lazySingleton<_i115.EditVehicleInfoRemoteDataSourceContract>(
+      () => _i146.EditVehicleInfoRemoteDataSourceImpl(
+        apiClient: gh<_i321.EditVehicleInfoApiClient>(),
+        safeApiCaller: gh<_i563.SafeApiCaller>(),
       ),
     );
     gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
       () => _i723.AuthRemoteDataSourceImpl(
         authApiClient: gh<_i824.AuthApiClient>(),
         safeApiCaller: gh<_i563.SafeApiCaller>(),
+      ),
+    );
+    gh.factory<_i461.EditVehicleInfoRepo>(
+      () => _i574.EditVehicleInfoRepoImpl(
+        remoteDataSource: gh<_i115.EditVehicleInfoRemoteDataSourceContract>(),
       ),
     );
     gh.factory<_i723.AuthRepo>(
@@ -96,6 +126,12 @@ extension GetItInjectableX on _i174.GetIt {
         profileRemoteDataSourceContract:
             gh<_i847.ProfileRemoteDataSourceContract>(),
       ),
+    );
+    gh.factory<_i365.GetVehiclesUseCase>(
+      () => _i365.GetVehiclesUseCase(gh<_i461.EditVehicleInfoRepo>()),
+    );
+    gh.factory<_i129.UpdateVehicleUseCase>(
+      () => _i129.UpdateVehicleUseCase(gh<_i461.EditVehicleInfoRepo>()),
     );
     gh.factory<_i1038.LoginUseCase>(
       () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
@@ -111,6 +147,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i36.ProfileCubit>(
       () => _i36.ProfileCubit(gh<_i790.ProfileRepo>()),
+    );
+    gh.factory<_i903.EditVehicleInfoCubit>(
+      () => _i903.EditVehicleInfoCubit(
+        gh<_i365.GetVehiclesUseCase>(),
+        gh<_i129.UpdateVehicleUseCase>(),
+        gh<_i488.ImagePickerService>(),
+      ),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
