@@ -2,6 +2,7 @@ import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/core/network/model/user_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/apply_now_params.dart';
 import 'package:tracking_app/features/auth/domain/entities/apply_now_response_entity.dart';
+import 'package:tracking_app/features/auth/domain/entities/driver_profile_response_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/forget_password_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/reset_password_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/vehicle_response_entity.dart';
@@ -26,4 +27,5 @@ abstract interface class AuthRepo {
 
   Future<BaseResponse<ApplyNowResponseEntity>> applyNow(ApplyNowParams params);
   Future<BaseResponse<VehicleResponseEntity>> getVehicles();
+  Future<BaseResponse<DriverProfileResponseEntity>> getDriverProfile();
 }

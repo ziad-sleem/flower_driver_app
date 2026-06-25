@@ -3,11 +3,14 @@ import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/core/network/model/user.dart';
 import 'package:tracking_app/core/network/model/user_entity.dart';
+import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:tracking_app/features/auth/data/models/response/apply_now_response_dto.dart';
+import 'package:tracking_app/features/auth/data/models/response/driver_profile_response_dto.dart';
 import 'package:tracking_app/features/auth/data/models/response/vehicle_response_dto.dart';
 import 'package:tracking_app/features/auth/domain/entities/apply_now_params.dart';
 import 'package:tracking_app/features/auth/domain/entities/apply_now_response_entity.dart';
+import 'package:tracking_app/features/auth/domain/entities/driver_profile_response_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/vehicle_response_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/forget_password_entity.dart';
 import 'package:tracking_app/features/auth/domain/entities/reset_password_entity.dart';
@@ -27,6 +30,21 @@ class AuthRepoImpl implements AuthRepo {
 
     switch (response) {
       case SuccessBaseResponse<UserDto>():
+        final profileResponse = await authRemoteDataSourceContract
+            .getDriverProfile();
+
+        switch (profileResponse) {
+          case SuccessBaseResponse<DriverProfileResponseDto>():
+            final driverId = profileResponse.data.driver?.id;
+
+            if (driverId != null && driverId.isNotEmpty) {
+              await SecureStorageService.saveDriverId(driverId);
+            }
+
+          case ErrorBaseResponse():
+            break;
+        }
+
         return SuccessBaseResponse<UserEntity>(data: response.data.toDomain());
 
       case ErrorBaseResponse<UserDto>():
@@ -115,6 +133,7 @@ class AuthRepoImpl implements AuthRepo {
 
     switch (result) {
       case SuccessBaseResponse<ApplyNowResponseDto>():
+        await SecureStorageService.saveToken(result.data.token ?? '');
         return SuccessBaseResponse<ApplyNowResponseEntity>(
           data: result.data.toEntity(),
         );
@@ -135,6 +154,19 @@ class AuthRepoImpl implements AuthRepo {
         );
 
       case ErrorBaseResponse():
+        return ErrorBaseResponse(failure: response.failure);
+    }
+  }
+
+  @override
+  Future<BaseResponse<DriverProfileResponseEntity>> getDriverProfile() async {
+    final response = await authRemoteDataSourceContract.getDriverProfile();
+
+    switch (response) {
+      case SuccessBaseResponse<DriverProfileResponseDto>():
+        return SuccessBaseResponse(data: response.data.toEntity());
+
+      case ErrorBaseResponse<DriverProfileResponseDto>():
         return ErrorBaseResponse(failure: response.failure);
     }
   }
