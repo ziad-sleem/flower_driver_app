@@ -9,6 +9,7 @@ import 'package:tracking_app/core/network/safe_api_caller.dart';
 import 'package:tracking_app/features/auth/api/api_client/auth_api_client.dart';
 import 'package:tracking_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:tracking_app/features/auth/data/models/requests/login_request.dart';
+import 'package:tracking_app/features/auth/data/models/response/driver_profile_response_dto.dart';
 import 'package:tracking_app/features/auth/domain/use_cases/login_params.dart';
 import 'package:tracking_app/features/auth/data/models/response/apply_now_response_dto.dart';
 import 'package:tracking_app/features/auth/data/models/response/forget_password_response.dart';
@@ -95,5 +96,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSourceContract {
     } catch (e) {
       return ErrorBaseResponse<UserDto>(failure: ErrorHandler.handle(e));
     }
+  }
+
+  @override
+  Future<BaseResponse<DriverProfileResponseDto>> getDriverProfile() {
+    return safeApiCaller.safeCall(() => authApiClient.getDriverProfile());
   }
 }
