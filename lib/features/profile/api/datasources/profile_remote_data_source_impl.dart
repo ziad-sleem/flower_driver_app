@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
-import 'package:tracking_app/core/error/error_handler.dart';
 import 'package:tracking_app/core/network/safe_api_caller.dart';
 import 'package:tracking_app/features/profile/api/api_client/profile_api_client.dart';
 import 'package:tracking_app/features/profile/data/datasources/profile_remote_data_source.dart';
@@ -19,19 +18,11 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSourceContract {
 
   @override
   Future<BaseResponse<ProfileDataResponseDto>> getProfileData() async {
-    try {
-      return safeApiCaller.safeCall(() => profileApiClient.getProfileData());
-    } catch (e) {
-      return ErrorBaseResponse(failure: ErrorHandler.handle(e));
-    }
+    return safeApiCaller.safeCall(() => profileApiClient.getProfileData());
   }
 
   @override
   Future<BaseResponse<AllVehiclesResponseDto>> getVehicles() async {
-    try {
-      return safeApiCaller.safeCall(() => profileApiClient.getVehicles());
-    } catch (e) {
-      return ErrorBaseResponse(failure: ErrorHandler.handle(e));
-    }
+    return safeApiCaller.safeCall(() => profileApiClient.getVehicles());
   }
 }

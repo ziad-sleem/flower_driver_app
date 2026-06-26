@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -32,6 +34,18 @@ void main() {
         data: const AllVehiclesResponseEntity(),
       ),
     );
+
+    const channel = MethodChannel('plugins.it_nomads.com/flutter_secure_storage');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (methodCall) async => null);
+  });
+
+  tearDownAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
+      null,
+    );
   });
 
   setUp(() {
@@ -52,6 +66,8 @@ void main() {
       expect(profileCubit.state.vehiclesState.isLoading, false);
       expect(profileCubit.state.vehiclesState.data, isNull);
       expect(profileCubit.state.vehiclesState.errorMessage, isNull);
+      expect(profileCubit.state.targetLocale, isNull);
+      expect(profileCubit.state.loggedOut, false);
     });
 
     group('GetDriverDataEvent', () {
@@ -179,6 +195,36 @@ void main() {
 
         expect(profileCubit.state.vehiclesState.isLoading, false);
         expect(profileCubit.state.vehiclesState.errorMessage, isNotNull);
+      });
+    });
+
+    group('ToggleLanguageEvent', () {
+      test('toggles from default (null) to arabic', () {
+        expect(profileCubit.state.targetLocale, isNull);
+
+        profileCubit.doEvent(ToggleLanguageEvent());
+
+        expect(profileCubit.state.targetLocale, const Locale('ar'));
+      });
+
+      test('toggles from arabic to english', () {
+        profileCubit.doEvent(ToggleLanguageEvent());
+        expect(profileCubit.state.targetLocale, const Locale('ar'));
+
+        profileCubit.doEvent(ToggleLanguageEvent());
+
+        expect(profileCubit.state.targetLocale, const Locale('en'));
+      });
+    });
+
+    group('LogoutEvent', () {
+      test('emits loggedOut true after logout', () async {
+        expect(profileCubit.state.loggedOut, false);
+
+        profileCubit.doEvent(LogoutEvent());
+        await Future.delayed(Duration.zero);
+
+        expect(profileCubit.state.loggedOut, true);
       });
     });
   });

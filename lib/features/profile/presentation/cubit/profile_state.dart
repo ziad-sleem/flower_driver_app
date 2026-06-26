@@ -22,7 +22,7 @@ class ProfileState extends Equatable {
     return ProfileState(
       driverDataState: driverDataState ?? this.driverDataState,
       vehiclesState: vehiclesState ?? this.vehiclesState,
-      targetLocale: targetLocale,
+      targetLocale: targetLocale ?? this.targetLocale,
       loggedOut: loggedOut ?? this.loggedOut,
     );
   }

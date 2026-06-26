@@ -21,12 +21,9 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        final cubit = getIt<ProfileCubit>();
-        cubit.doEvent(GetDriverDataEvent());
-        cubit.doEvent(GetVehiclesEvent());
-        return cubit;
-      },
+      create: (context) => getIt<ProfileCubit>()
+        ..doEvent(GetDriverDataEvent())
+        ..doEvent(GetVehiclesEvent()),
       child: BlocListener<ProfileCubit, ProfileState>(
         listenWhen: (prev, current) =>
             prev.targetLocale != current.targetLocale,
@@ -89,7 +86,13 @@ class _ProfileBody extends StatelessWidget {
                   onArrowPressed: () {},
                   child: Row(
                     children: [
-                      CachedNetworkImageWidget(urlToImage: driver.photo ?? ""),
+                      driver.photo != null && driver.photo!.isNotEmpty
+                          ? CachedNetworkImageWidget(urlToImage: driver.photo!)
+                          : CircleAvatar(
+                              radius: 30,
+                              backgroundColor: AppColors.primary,
+                              child: Icon(Icons.person, color: Colors.white, size: 32),
+                            ),
                       const AppSizedBox(width: 10),
                       Expanded(
                         child: Column(
