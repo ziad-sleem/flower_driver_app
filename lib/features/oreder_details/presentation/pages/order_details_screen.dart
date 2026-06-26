@@ -177,7 +177,7 @@ class _OrderStatusBanner extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Order ID : # ${order.orderNumber ?? order.id ?? ''}',
+            'Order ID : ${order.orderNumber ?? order.id ?? ''}',
             style: getBoldStyle(
               context: context,
               color: AppColors.textPrimary,
