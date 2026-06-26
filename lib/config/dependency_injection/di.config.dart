@@ -33,6 +33,7 @@ import '../../features/auth/domain/use_cases/forget_password_usecase.dart'
 import '../../features/auth/domain/use_cases/get_vehicles_use_case.dart'
     as _i817;
 import '../../features/auth/domain/use_cases/login_use_case.dart' as _i1038;
+import '../../features/auth/domain/use_cases/logout_use_case.dart' as _i698;
 import '../../features/auth/domain/use_cases/reset_password_usecase.dart'
     as _i348;
 import '../../features/auth/domain/use_cases/verify_reset_code_usecase.dart'
@@ -49,7 +50,11 @@ import '../../features/profile/data/datasources/profile_remote_data_source.dart'
 import '../../features/profile/data/repositories/profile_repo_impl.dart'
     as _i988;
 import '../../features/profile/domain/repositories/profile_repo.dart' as _i790;
+import '../../features/profile/domain/use_cases/reset_password_use_case.dart'
+    as _i641;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
+import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
+    as _i786;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -62,6 +67,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i563.SafeApiCaller>(() => _i563.SafeApiCaller());
     gh.factory<_i923.CountryService>(() => _i923.CountryService());
     gh.factory<_i999.AppSectionsCubit>(() => _i999.AppSectionsCubit());
+    gh.factory<_i698.LogoutUseCase>(() => _i698.LogoutUseCase());
     gh.singleton<_i361.Dio>(() => networkModule.dio);
     gh.lazySingleton<_i776.CrashlyticsService>(
       () => _i776.CrashlyticsService(),
@@ -78,6 +84,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i847.ProfileRemoteDataSourceContract>(
       () => _i4.ProfileRemoteDataSourceImpl(
         profileApiClient: gh<_i699.ProfileApiClient>(),
+        safeApiCaller: gh<_i563.SafeApiCaller>(),
       ),
     );
     gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
@@ -97,6 +104,9 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i847.ProfileRemoteDataSourceContract>(),
       ),
     );
+    gh.factory<_i641.ResetPasswordUseCase>(
+      () => _i641.ResetPasswordUseCase(gh<_i790.ProfileRepo>()),
+    );
     gh.factory<_i1038.LoginUseCase>(
       () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
     );
@@ -111,6 +121,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i36.ProfileCubit>(
       () => _i36.ProfileCubit(gh<_i790.ProfileRepo>()),
+    );
+    gh.factory<_i786.ResetPasswordCubit>(
+      () => _i786.ResetPasswordCubit(gh<_i641.ResetPasswordUseCase>()),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),

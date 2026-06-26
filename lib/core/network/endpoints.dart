@@ -10,6 +10,7 @@ class ProfileEndPoint {
   static const profileData = "drivers/profile-data";
   static const vehicleId = "vehicle/";
   static const vehicles = "vehicles";
+  static const changePassword = "drivers/change-password";
 }
 
 class ProductsSectionsEndPoint {}
