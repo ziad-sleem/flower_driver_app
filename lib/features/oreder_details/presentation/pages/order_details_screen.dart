@@ -19,78 +19,92 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: OrdersConstants.orderDetails),
-      body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
-        listenWhen: (p, c) =>
-            (p.updateState.errorMessage != c.updateState.errorMessage &&
-                c.updateState.errorMessage != null) ||
-            (p.step != c.step && c.step == OrderStep.delivered),
-        listener: (context, state) {
-          if (state.step == OrderStep.delivered) {
-            Navigator.pop(context, true);
-            return;
-          }
-          if (state.updateState.errorMessage != null) {
-            CustomSnackBar.error(context, state.updateState.errorMessage!.tr());
-          }
-        },
-        builder: (context, state) {
-          final order = state.order;
-          final step = state.step;
-          if (order == null || step == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return Column(
-            children: [
-              _OrderProgressBar(step: step),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _OrderStatusBanner(order: order, step: step),
-                      const SizedBox(height: 20),
-                      _SectionTitle(OrdersConstants.pickupAddress),
-                      const SizedBox(height: 10),
-                      _AddressCard(
-                        title: order.store?.name ?? '',
-                        address: order.store?.address ?? '',
-                        image: order.store?.image,
-                      ),
-                      const SizedBox(height: 20),
-                      _SectionTitle(OrdersConstants.userAddress),
-                      const SizedBox(height: 10),
-                      _AddressCard(
-                        title: _userName(order.user, order.shippingAddress?.city),
-                        address: order.shippingAddress?.street ?? '',
-                      ),
-                      const SizedBox(height: 20),
-                      _SectionTitle(OrdersConstants.orderDetails),
-                      const SizedBox(height: 10),
-                      _OrderItemsSection(items: order.orderItems ?? const []),
-                      const SizedBox(height: 8),
-                      const Divider(),
-                      _SummaryRow(
-                        label: OrdersConstants.total,
-                        value: 'EGP ${order.totalPrice?.toInt() ?? 0}',
-                      ),
-                      const Divider(),
-                      _SummaryRow(
-                        label: OrdersConstants.paymentMethod,
-                        value: _paymentLabel(order.paymentType),
-                      ),
-                    ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) _handleBack(context);
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: OrdersConstants.orderDetails,
+          onBack: () => _handleBack(context),
+        ),
+        body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
+          listenWhen: (p, c) =>
+              p.updateState.errorMessage != c.updateState.errorMessage &&
+              c.updateState.errorMessage != null,
+          listener: (context, state) => CustomSnackBar.error(
+            context,
+            state.updateState.errorMessage!.tr(),
+          ),
+          builder: (context, state) {
+            final order = state.order;
+            final step = state.step;
+            if (order == null || step == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Column(
+              children: [
+                _OrderProgressBar(step: step),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _OrderStatusBanner(order: order, step: step),
+                        const SizedBox(height: 20),
+                        _SectionTitle(OrdersConstants.pickupAddress),
+                        const SizedBox(height: 10),
+                        _AddressCard(
+                          title: order.store?.name ?? '',
+                          address: order.store?.address ?? '',
+                          image: order.store?.image,
+                        ),
+                        const SizedBox(height: 20),
+                        _SectionTitle(OrdersConstants.userAddress),
+                        const SizedBox(height: 10),
+                        _AddressCard(
+                          title: _userName(
+                            order.user,
+                            order.shippingAddress?.city,
+                          ),
+                          address: order.shippingAddress?.street ?? '',
+                        ),
+                        const SizedBox(height: 20),
+                        _SectionTitle(OrdersConstants.orderDetails),
+                        const SizedBox(height: 10),
+                        _OrderItemsSection(
+                          items: order.orderItems ?? const [],
+                        ),
+                        const SizedBox(height: 8),
+                        const Divider(),
+                        _SummaryRow(
+                          label: OrdersConstants.total,
+                          value: 'EGP ${order.totalPrice?.toInt() ?? 0}',
+                        ),
+                        const Divider(),
+                        _SummaryRow(
+                          label: OrdersConstants.paymentMethod,
+                          value: _paymentLabel(order.paymentType),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const _OrderActionButton(),
-            ],
-          );
-        },
+                const _OrderActionButton(),
+              ],
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void _handleBack(BuildContext context) {
+    final delivered =
+        context.read<OrderDetailsCubit>().state.step == OrderStep.delivered;
+    Navigator.pop(context, delivered);
   }
 
   static String _userName(Object? user, String? fallback) {
