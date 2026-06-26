@@ -15,12 +15,12 @@ enum OrderState {
   @JsonValue('pending')
   pending,
 
-  @JsonValue('accepted')
-  accepted,
+  @JsonValue('inProgress')
+  inProgress,
 
-  @JsonValue('delivered')
-  delivered,
+  @JsonValue('canceled')
+  canceled,
 
-  @JsonValue('cancelled')
-  cancelled,
+  @JsonValue('completed')
+  completed,
 }

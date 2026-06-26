@@ -130,7 +130,7 @@ class OrderCard extends StatelessWidget {
                       ? null
                       : () {
                           context.read<HomeCubit>().doEvent(
-                            AcceptOrder(orderId: order.id ?? ""),
+                            AcceptOrder(order: order),
                           );
                         },
                   child: acceptLoading

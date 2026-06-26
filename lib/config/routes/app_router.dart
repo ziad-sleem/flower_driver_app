@@ -13,6 +13,10 @@ import 'package:tracking_app/features/auth/presentation/login/pages/login_screen
 import 'package:tracking_app/features/app_section/presentation/page/app_section_page.dart';
 import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
+import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_cubit.dart';
+import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
+import 'package:tracking_app/features/oreder_details/presentation/pages/order_details_screen.dart';
 
 abstract class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -47,8 +51,15 @@ abstract class AppRouter {
             ),
           );
 
-        case Routes.onboarding:
-          return PageTransitions.fade(const OnboardingScreen());
+        case Routes.orderDetails:
+          final order = settings.arguments as OrderEntity;
+          return PageTransitions.slide(
+            BlocProvider(
+              create: (_) => getIt<OrderDetailsCubit>()
+                ..doIntent(StartOrderDetailsIntent(order)),
+              child: const OrderDetailsScreen(),
+            ),
+          );
 
         default:
           return PageTransitions.fade(

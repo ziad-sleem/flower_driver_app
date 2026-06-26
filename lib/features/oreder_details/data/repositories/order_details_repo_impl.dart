@@ -70,4 +70,9 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
   Future<void> deleteCurrentOrder({required String driverId}) {
     return firestoreDataSource.deleteCurrentOrder(driverId: driverId);
   }
+
+  @override
+  Stream<String?> watchOrderState({required String driverId}) {
+    return firestoreDataSource.watchOrderState(driverId: driverId);
+  }
 }

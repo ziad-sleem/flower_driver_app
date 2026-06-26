@@ -19,8 +19,13 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
-            if (state.acceptOrderState.data == true) {
-              Navigator.pushNamed(context, Routes.succesApply);
+            if (state.acceptOrderState.data == true &&
+                state.acceptedOrder != null) {
+              Navigator.pushNamed(
+                context,
+                Routes.orderDetails,
+                arguments: state.acceptedOrder,
+              );
             }
 
             if (state.rejectOrderState.data == true) {

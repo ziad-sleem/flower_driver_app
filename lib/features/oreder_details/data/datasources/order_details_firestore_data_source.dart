@@ -6,4 +6,6 @@ abstract class OrderDetailsFireStoreDataSource {
   });
 
   Future<void> deleteCurrentOrder({required String driverId});
+
+  Stream<String?> watchOrderState({required String driverId});
 }
