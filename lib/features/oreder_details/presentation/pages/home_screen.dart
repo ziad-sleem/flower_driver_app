@@ -20,7 +20,8 @@ class HomeScreen extends StatelessWidget {
         child: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
             if (state.acceptOrderState.data == true) {
-              Navigator.pushNamed(context, Routes.succesApply);
+              // Navigator.pushNamed(context, Routes.succesApply);
+              print("Accept Succsefully====================");
             }
 
             if (state.rejectOrderState.data == true) {

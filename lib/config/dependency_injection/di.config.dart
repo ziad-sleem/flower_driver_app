@@ -153,6 +153,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i832.GetDriverProfileUseCase>(
       () => _i832.GetDriverProfileUseCase(gh<_i723.AuthRepo>()),
     );
+    gh.factory<_i531.HomeCubit>(
+      () => _i531.HomeCubit(
+        gh<_i945.GetPendingOrdersUseCase>(),
+        gh<_i386.UpdateOrderStateUseCase>(),
+      ),
+    );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
     );
@@ -175,13 +181,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i27.ForgetPasswordUseCase>(),
         gh<_i887.VerifyResetCodeUseCase>(),
         gh<_i348.ResetPasswordUseCase>(),
-      ),
-    );
-    gh.factory<_i531.HomeCubit>(
-      () => _i531.HomeCubit(
-        gh<_i945.GetPendingOrdersUseCase>(),
-        gh<_i386.UpdateOrderStateUseCase>(),
-        gh<_i753.SaveCurrentOrderUseCase>(),
       ),
     );
     return this;
