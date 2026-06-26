@@ -41,6 +41,22 @@ import '../../features/auth/presentation/apply/cubit/apply_cubit.dart' as _i650;
 import '../../features/auth/presentation/forget_password/cubit/forget_password_cubit.dart'
     as _i995;
 import '../../features/auth/presentation/login/cubit/login_cubit.dart' as _i179;
+import '../../features/edit_profile/api/api_client/edit_profile_api_client.dart'
+    as _i690;
+import '../../features/edit_profile/api/datasource/edit_profile_remote_data_source_impl.dart'
+    as _i458;
+import '../../features/edit_profile/data/datasources/edit_profile_remote_data_source.dart'
+    as _i261;
+import '../../features/edit_profile/data/repositories/edit_profile_repository_impl.dart'
+    as _i337;
+import '../../features/edit_profile/domain/repositories/edit_profile_repository.dart'
+    as _i698;
+import '../../features/edit_profile/domain/usecases/edit_profile_use_case.dart'
+    as _i620;
+import '../../features/edit_profile/domain/usecases/upload_photo_use_case.dart'
+    as _i538;
+import '../../features/edit_profile/presentation/cubit/edit_profile_cubit.dart'
+    as _i657;
 import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
 import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
     as _i4;
@@ -75,15 +91,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i699.ProfileApiClient>(
       () => networkModule.profileApi(gh<_i361.Dio>()),
     );
+    gh.singleton<_i690.EditProfileApiClient>(
+      () => networkModule.editProfileApi(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i847.ProfileRemoteDataSourceContract>(
       () => _i4.ProfileRemoteDataSourceImpl(
         profileApiClient: gh<_i699.ProfileApiClient>(),
+        safeApiCaller: gh<_i563.SafeApiCaller>(),
       ),
     );
     gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
       () => _i723.AuthRemoteDataSourceImpl(
         authApiClient: gh<_i824.AuthApiClient>(),
         safeApiCaller: gh<_i563.SafeApiCaller>(),
+      ),
+    );
+    gh.lazySingleton<_i261.EditProfileRemoteDataSourceContract>(
+      () => _i458.EditProfileRemoteDataSourceImpl(
+        gh<_i690.EditProfileApiClient>(),
       ),
     );
     gh.factory<_i723.AuthRepo>(
@@ -109,8 +134,26 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
     );
+    gh.factory<_i698.EditProfileRepository>(
+      () => _i337.EditProfileRepositoryImpl(
+        gh<_i261.EditProfileRemoteDataSourceContract>(),
+      ),
+    );
     gh.factory<_i36.ProfileCubit>(
       () => _i36.ProfileCubit(gh<_i790.ProfileRepo>()),
+    );
+    gh.factory<_i620.EditProfileUseCase>(
+      () => _i620.EditProfileUseCase(gh<_i698.EditProfileRepository>()),
+    );
+    gh.factory<_i538.UploadPhotoUseCase>(
+      () => _i538.UploadPhotoUseCase(gh<_i698.EditProfileRepository>()),
+    );
+    gh.factory<_i657.EditProfileCubit>(
+      () => _i657.EditProfileCubit(
+        gh<_i620.EditProfileUseCase>(),
+        gh<_i538.UploadPhotoUseCase>(),
+        gh<_i790.ProfileRepo>(),
+      ),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
