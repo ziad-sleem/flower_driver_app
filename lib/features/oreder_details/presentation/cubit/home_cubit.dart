@@ -3,13 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/config/base/base_state.dart';
-import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_params.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/get_all_pending_order.dart';
-import 'package:tracking_app/features/oreder_details/domain/use_cases/save_current_order_usecase.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/update_order_state_usecase.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
 part 'home_state.dart';
@@ -18,13 +16,9 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   final GetPendingOrdersUseCase _getPendingOrdersUseCase;
   final UpdateOrderStateUseCase _updateOrderStateUseCase;
-  final SaveCurrentOrderUseCase _saveCurrentOrderUseCase;
 
-  HomeCubit(
-    this._getPendingOrdersUseCase,
-    this._updateOrderStateUseCase,
-    this._saveCurrentOrderUseCase,
-  ) : super(const HomeState());
+  HomeCubit(this._getPendingOrdersUseCase, this._updateOrderStateUseCase)
+    : super(const HomeState());
 
   void doEvent(HomeEvent event) {
     switch (event) {
@@ -83,16 +77,6 @@ class HomeCubit extends Cubit<HomeState> {
 
     switch (result) {
       case SuccessBaseResponse<UpdateOrderStateResponseEntity>():
-        final driverId = await SecureStorageService.getDriverId();
-
-        if (driverId != null) {
-          await _saveCurrentOrderUseCase(
-            driverId: driverId,
-            orderId: event.order.id ?? '',
-            state: "inProgress",
-          );
-        }
-
         emit(
           state.copyWith(
             acceptingOrderId: null,

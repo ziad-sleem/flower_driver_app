@@ -25,7 +25,11 @@ class HomeScreen extends StatelessWidget {
                 context,
                 Routes.orderDetails,
                 arguments: state.acceptedOrder,
-              );
+              ).then((delivered) {
+                if (delivered == true && context.mounted) {
+                  context.read<HomeCubit>().doEvent(GetPendingOrders());
+                }
+              });
             }
 
             if (state.rejectOrderState.data == true) {

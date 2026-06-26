@@ -23,10 +23,18 @@ class OrderDetailsScreen extends StatelessWidget {
       appBar: CustomAppBar(title: OrdersConstants.orderDetails),
       body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
         listenWhen: (p, c) =>
-            p.updateState.errorMessage != c.updateState.errorMessage &&
-            c.updateState.errorMessage != null,
-        listener: (context, state) =>
-            CustomSnackBar.error(context, state.updateState.errorMessage!.tr()),
+            (p.updateState.errorMessage != c.updateState.errorMessage &&
+                c.updateState.errorMessage != null) ||
+            (p.step != c.step && c.step == OrderStep.delivered),
+        listener: (context, state) {
+          if (state.step == OrderStep.delivered) {
+            Navigator.pop(context, true);
+            return;
+          }
+          if (state.updateState.errorMessage != null) {
+            CustomSnackBar.error(context, state.updateState.errorMessage!.tr());
+          }
+        },
         builder: (context, state) {
           final order = state.order;
           final step = state.step;
