@@ -53,4 +53,9 @@ class ProfileDriverEntity extends Equatable {
     role,
     createdAt,
   ];
+
+  String? get name {
+    if (firstName != null && lastName != null) return '$firstName $lastName';
+    return firstName ?? lastName;
+  }
 }
