@@ -6,6 +6,7 @@ import 'package:tracking_app/core/error/error_handler.dart';
 import 'package:tracking_app/core/network/model/user.dart';
 import 'package:tracking_app/core/network/model/user_entity.dart';
 import 'package:tracking_app/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:tracking_app/features/auth/data/models/response/driver_profile_response_dto.dart';
 import 'package:tracking_app/features/auth/data/repositories/auth_repo_impl.dart';
 import 'package:tracking_app/features/auth/domain/use_cases/login_params.dart';
 
@@ -20,6 +21,11 @@ void main() {
   setUpAll(() {
     provideDummy<BaseResponse<UserDto>>(
       SuccessBaseResponse<UserDto>(data: UserDto()),
+    );
+    provideDummy<BaseResponse<DriverProfileResponseDto>>(
+      ErrorBaseResponse<DriverProfileResponseDto>(
+        failure: Failure(message: ''),
+      ),
     );
   });
 
@@ -38,6 +44,11 @@ void main() {
       when(mockUserDto.toDomain()).thenReturn(tUserEntity);
       when(mockDataSource.login(tParams)).thenAnswer(
         (_) async => SuccessBaseResponse<UserDto>(data: mockUserDto),
+      );
+      when(mockDataSource.getDriverProfile()).thenAnswer(
+        (_) async => ErrorBaseResponse<DriverProfileResponseDto>(
+          failure: Failure(message: ''),
+        ),
       );
 
       final result = await authRepoImpl.login(tParams);

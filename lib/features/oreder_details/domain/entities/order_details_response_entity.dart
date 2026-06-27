@@ -4,7 +4,7 @@ import 'package:tracking_app/features/oreder_details/domain/entities/pagination_
 
 enum PaymentType { cash, visa, wallet }
 
-enum OrderState { pending, accepted, delivered, cancelled }
+enum OrderState { pending, inProgress, canceled, completed }
 
 class OrdersResponseEntity extends Equatable {
   final String? message;

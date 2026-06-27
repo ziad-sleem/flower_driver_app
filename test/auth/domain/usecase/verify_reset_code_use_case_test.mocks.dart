@@ -13,6 +13,8 @@ import 'package:tracking_app/features/auth/domain/entities/apply_now_params.dart
     as _i12;
 import 'package:tracking_app/features/auth/domain/entities/apply_now_response_entity.dart'
     as _i11;
+import 'package:tracking_app/features/auth/domain/entities/driver_profile_response_entity.dart'
+    as _i14;
 import 'package:tracking_app/features/auth/domain/entities/forget_password_entity.dart'
     as _i8;
 import 'package:tracking_app/features/auth/domain/entities/reset_password_entity.dart'
@@ -148,4 +150,20 @@ class MockAuthRepo extends _i1.Mock implements _i2.AuthRepo {
                 ),
           )
           as _i3.Future<_i4.BaseResponse<_i13.VehicleResponseEntity>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i14.DriverProfileResponseEntity>>
+  getDriverProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDriverProfile, []),
+            returnValue:
+                _i3.Future<
+                  _i4.BaseResponse<_i14.DriverProfileResponseEntity>
+                >.value(
+                  _i7.dummyValue<
+                    _i4.BaseResponse<_i14.DriverProfileResponseEntity>
+                  >(this, Invocation.method(#getDriverProfile, [])),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i14.DriverProfileResponseEntity>>);
 }

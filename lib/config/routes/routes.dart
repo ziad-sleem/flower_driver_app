@@ -6,4 +6,5 @@ abstract class Routes {
   static const String succesApply = '/succes_apply';
   static const String onboarding = '/onboarding';
   static const String forgetPassword = '/forget-password';
+  static const String orderDetails = '/order-details';
 }

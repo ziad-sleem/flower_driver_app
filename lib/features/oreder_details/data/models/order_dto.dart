@@ -101,12 +101,12 @@ class OrderDto {
     switch (state) {
       case OrderState.pending:
         return entity.OrderState.pending;
-      case OrderState.accepted:
-        return entity.OrderState.accepted;
-      case OrderState.delivered:
-        return entity.OrderState.delivered;
-      case OrderState.cancelled:
-        return entity.OrderState.cancelled;
+      case OrderState.inProgress:
+        return entity.OrderState.inProgress;
+      case OrderState.canceled:
+        return entity.OrderState.canceled;
+      case OrderState.completed:
+        return entity.OrderState.completed;
       case null:
         return null;
     }

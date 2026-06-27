@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:tracking_app/features/oreder_details/data/models/product_dto.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_entity.dart'
     as entity;
+import 'package:tracking_app/features/oreder_details/domain/entities/product_entity.dart';
 
 part 'order_item_dto.g.dart';
 
@@ -24,9 +25,21 @@ class OrderItemDto {
   Map<String, dynamic> toJson() => _$OrderItemDtoToJson(this);
 
   entity.OrderItemEntity toEntity() => entity.OrderItemEntity(
-    product: product is ProductDto ? product.toEntity() : null,
+    product: _parseProduct(),
     price: price,
     quantity: quantity,
     id: id,
   );
+
+  ProductEntity? _parseProduct() {
+    final value = product;
+    if (value is Map<String, dynamic>) {
+      try {
+        return ProductDto.fromJson(value).toEntity();
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
 }

@@ -66,8 +66,12 @@ import '../../features/oreder_details/domain/use_cases/save_current_order_usecas
     as _i753;
 import '../../features/oreder_details/domain/use_cases/update_order_state_usecase.dart'
     as _i386;
+import '../../features/oreder_details/domain/use_cases/watch_order_state_usecase.dart'
+    as _i941;
 import '../../features/oreder_details/presentation/cubit/home_cubit.dart'
     as _i531;
+import '../../features/oreder_details/presentation/cubit/order_details_cubit.dart'
+    as _i235;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -133,6 +137,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i386.UpdateOrderStateUseCase>(
       () => _i386.UpdateOrderStateUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
+    gh.factory<_i941.WatchOrderStateUseCase>(
+      () => _i941.WatchOrderStateUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
+    );
     gh.factory<_i723.AuthRepo>(
       () => _i662.AuthRepoImpl(
         authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
@@ -146,6 +153,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i817.GetVehiclesUseCase>(
       () => _i817.GetVehiclesUseCase(gh<_i723.AuthRepo>()),
+    );
+    gh.factory<_i235.OrderDetailsCubit>(
+      () => _i235.OrderDetailsCubit(
+        gh<_i386.UpdateOrderStateUseCase>(),
+        gh<_i753.SaveCurrentOrderUseCase>(),
+        gh<_i941.WatchOrderStateUseCase>(),
+      ),
     );
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
