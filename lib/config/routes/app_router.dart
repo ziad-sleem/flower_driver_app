@@ -16,6 +16,8 @@ import 'package:tracking_app/features/edit_vehical_info/presentation/pages/edit_
 import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/pages/reset_password_page.dart';
+import 'package:tracking_app/features/edit_profile/presentation/cubit/edit_profile_cubit.dart';
+import 'package:tracking_app/features/edit_profile/presentation/pages/edit_profile_page.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {
@@ -48,6 +50,14 @@ abstract class AppRouter {
             BlocProvider(
               create: (_) => getIt<ForgetPasswordCubit>(),
               child: const ForgetPasswordScreen(),
+            ),
+          );
+
+        case Routes.editProfile:
+          return PageTransitions.slide(
+            BlocProvider(
+              create: (_) => getIt<EditProfileCubit>(),
+              child: const EditProfilePage(),
             ),
           );
 

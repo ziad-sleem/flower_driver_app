@@ -83,7 +83,11 @@ class _ProfileBody extends StatelessWidget {
                 }
                 final driver = driverData!.driver!;
                 return ProfileContainer(
-                  onArrowPressed: () {},
+                  onArrowPressed: () {
+                    Navigator.pushNamed(context, Routes.editProfile).then((_) {
+                      context.read<ProfileCubit>().doEvent(GetDriverDataEvent());
+                    });
+                  },
                   child: Row(
                     children: [
                       driver.photo != null && driver.photo!.isNotEmpty
@@ -149,7 +153,8 @@ class _ProfileBody extends StatelessWidget {
                 }
                 final vehicle = vehiclesData.vehicles!.first;
                 return ProfileContainer(
-                  onArrowPressed: () {},
+                  onArrowPressed: () =>
+                      Navigator.pushNamed(context, Routes.editVehicleInfo),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

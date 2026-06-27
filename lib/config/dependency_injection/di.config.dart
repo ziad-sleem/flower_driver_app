@@ -42,6 +42,22 @@ import '../../features/auth/presentation/apply/cubit/apply_cubit.dart' as _i650;
 import '../../features/auth/presentation/forget_password/cubit/forget_password_cubit.dart'
     as _i995;
 import '../../features/auth/presentation/login/cubit/login_cubit.dart' as _i179;
+import '../../features/edit_profile/api/api_client/edit_profile_api_client.dart'
+    as _i690;
+import '../../features/edit_profile/api/datasource/edit_profile_remote_data_source_impl.dart'
+    as _i458;
+import '../../features/edit_profile/data/datasources/edit_profile_remote_data_source.dart'
+    as _i261;
+import '../../features/edit_profile/data/repositories/edit_profile_repository_impl.dart'
+    as _i337;
+import '../../features/edit_profile/domain/repositories/edit_profile_repository.dart'
+    as _i698;
+import '../../features/edit_profile/domain/usecases/edit_profile_use_case.dart'
+    as _i620;
+import '../../features/edit_profile/domain/usecases/upload_photo_use_case.dart'
+    as _i538;
+import '../../features/edit_profile/presentation/cubit/edit_profile_cubit.dart'
+    as _i657;
 import '../../features/edit_vehical_info/api/api_client/edit_vehicle_info_api_client.dart'
     as _i321;
 import '../../features/edit_vehical_info/api/datasource/edit_vehicle_info_remote_data_source_impl.dart'
@@ -66,15 +82,12 @@ import '../../features/profile/data/datasources/profile_remote_data_source.dart'
 import '../../features/profile/data/repositories/profile_repo_impl.dart'
     as _i988;
 import '../../features/profile/domain/repositories/profile_repo.dart' as _i790;
-<<<<<<< HEAD
-import '../../features/profile/domain/use_cases/reset_password_use_case.dart'
-    as _i641;
-=======
 import '../../features/profile/domain/use_cases/get_driver_data_use_case.dart'
     as _i141;
 import '../../features/profile/domain/use_cases/get_vehicles_use_case.dart'
     as _i151;
->>>>>>> feature/SCRUM-62-profile-module
+import '../../features/profile/domain/use_cases/reset_password_use_case.dart'
+    as _i641;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
     as _i786;
@@ -104,14 +117,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i699.ProfileApiClient>(
       () => networkModule.profileApi(gh<_i361.Dio>()),
     );
+    gh.singleton<_i690.EditProfileApiClient>(
+      () => networkModule.editProfileApi(gh<_i361.Dio>()),
+    );
     gh.singleton<_i321.EditVehicleInfoApiClient>(
       () => networkModule.editVehicleInfoApi(gh<_i361.Dio>()),
-    );
-    gh.lazySingleton<_i847.ProfileRemoteDataSourceContract>(
-      () => _i4.ProfileRemoteDataSourceImpl(
-        profileApiClient: gh<_i699.ProfileApiClient>(),
-        safeApiCaller: gh<_i563.SafeApiCaller>(),
-      ),
     );
     gh.lazySingleton<_i115.EditVehicleInfoRemoteDataSourceContract>(
       () => _i146.EditVehicleInfoRemoteDataSourceImpl(
@@ -119,10 +129,21 @@ extension GetItInjectableX on _i174.GetIt {
         safeApiCaller: gh<_i563.SafeApiCaller>(),
       ),
     );
+    gh.lazySingleton<_i847.ProfileRemoteDataSourceContract>(
+      () => _i4.ProfileRemoteDataSourceImpl(
+        profileApiClient: gh<_i699.ProfileApiClient>(),
+        safeApiCaller: gh<_i563.SafeApiCaller>(),
+      ),
+    );
     gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
       () => _i723.AuthRemoteDataSourceImpl(
         authApiClient: gh<_i824.AuthApiClient>(),
         safeApiCaller: gh<_i563.SafeApiCaller>(),
+      ),
+    );
+    gh.lazySingleton<_i261.EditProfileRemoteDataSourceContract>(
+      () => _i458.EditProfileRemoteDataSourceImpl(
+        gh<_i690.EditProfileApiClient>(),
       ),
     );
     gh.factory<_i461.EditVehicleInfoRepo>(
@@ -141,16 +162,14 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i847.ProfileRemoteDataSourceContract>(),
       ),
     );
-<<<<<<< HEAD
+    gh.factory<_i641.ResetPasswordUseCase>(
+      () => _i641.ResetPasswordUseCase(gh<_i790.ProfileRepo>()),
+    );
     gh.factory<_i365.GetVehiclesUseCase>(
       () => _i365.GetVehiclesUseCase(gh<_i461.EditVehicleInfoRepo>()),
     );
     gh.factory<_i129.UpdateVehicleUseCase>(
       () => _i129.UpdateVehicleUseCase(gh<_i461.EditVehicleInfoRepo>()),
-=======
-    gh.factory<_i641.ResetPasswordUseCase>(
-      () => _i641.ResetPasswordUseCase(gh<_i790.ProfileRepo>()),
->>>>>>> origin/feature/SCRUM-62-profile-module
     );
     gh.factory<_i1038.LoginUseCase>(
       () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
@@ -164,14 +183,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
     );
-    gh.factory<_i141.GetDriverDataUseCase>(
-      () => _i141.GetDriverDataUseCase(profileRepo: gh<_i790.ProfileRepo>()),
-    );
-    gh.factory<_i151.GetVehiclesUseCase>(
-      () => _i151.GetVehiclesUseCase(profileRepo: gh<_i790.ProfileRepo>()),
-    );
-    gh.factory<_i786.ResetPasswordCubit>(
-      () => _i786.ResetPasswordCubit(gh<_i641.ResetPasswordUseCase>()),
+    gh.factory<_i698.EditProfileRepository>(
+      () => _i337.EditProfileRepositoryImpl(
+        gh<_i261.EditProfileRemoteDataSourceContract>(),
+      ),
     );
     gh.factory<_i903.EditVehicleInfoCubit>(
       () => _i903.EditVehicleInfoCubit(
@@ -179,6 +194,28 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i129.UpdateVehicleUseCase>(),
         gh<_i488.ImagePickerService>(),
       ),
+    );
+    gh.factory<_i620.EditProfileUseCase>(
+      () => _i620.EditProfileUseCase(gh<_i698.EditProfileRepository>()),
+    );
+    gh.factory<_i538.UploadPhotoUseCase>(
+      () => _i538.UploadPhotoUseCase(gh<_i698.EditProfileRepository>()),
+    );
+    gh.factory<_i786.ResetPasswordCubit>(
+      () => _i786.ResetPasswordCubit(gh<_i641.ResetPasswordUseCase>()),
+    );
+    gh.factory<_i657.EditProfileCubit>(
+      () => _i657.EditProfileCubit(
+        gh<_i620.EditProfileUseCase>(),
+        gh<_i538.UploadPhotoUseCase>(),
+        gh<_i790.ProfileRepo>(),
+      ),
+    );
+    gh.factory<_i141.GetDriverDataUseCase>(
+      () => _i141.GetDriverDataUseCase(profileRepo: gh<_i790.ProfileRepo>()),
+    );
+    gh.factory<_i151.GetVehiclesUseCase>(
+      () => _i151.GetVehiclesUseCase(profileRepo: gh<_i790.ProfileRepo>()),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
