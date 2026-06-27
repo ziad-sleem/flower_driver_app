@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/localization_constants/auth_constants.dart';
 import 'package:tracking_app/core/localization_constants/general_constants.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
@@ -70,7 +71,7 @@ class _PasswordField extends StatelessWidget {
         Positioned(
           right: 12,
           child: GestureDetector(
-            onTap: () => Navigator.pushNamed(context, '/forget-password'),
+            onTap: () => Navigator.pushNamed(context, Routes.resetPassword),
             child: Text(
               GeneralConstants.change,
               style: getMediumStyle(

@@ -18,6 +18,11 @@ class EditProfileEndPoint {
   static const uploadPhoto = 'drivers/upload-photo';
 }
 
+class EditVehicleInfoEndPoint {
+  static const vehicles = 'vehicles';
+  static const updateVehicleInfo = 'vehicles/update';
+}
+
 class ProductsSectionsEndPoint {}
 
 class CartEndPoints {}
