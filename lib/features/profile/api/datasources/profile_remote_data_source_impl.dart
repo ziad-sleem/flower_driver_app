@@ -5,6 +5,8 @@ import 'package:tracking_app/features/profile/api/api_client/profile_api_client.
 import 'package:tracking_app/features/profile/data/datasources/profile_remote_data_source.dart';
 import 'package:tracking_app/features/profile/data/models/responses/all_vehicles_response_dto.dart';
 import 'package:tracking_app/features/profile/data/models/responses/profile_data_response_dto.dart';
+import 'package:tracking_app/features/profile/data/models/requests/reset_password_request_dto.dart';
+import 'package:tracking_app/features/profile/data/models/responses/reset_password_response_dto.dart';
 
 @LazySingleton(as: ProfileRemoteDataSourceContract)
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSourceContract {
@@ -15,6 +17,13 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSourceContract {
     required this.profileApiClient,
     required this.safeApiCaller,
   });
+
+  @override
+  Future<BaseResponse<ResetPasswordResponseDto>> resetPassword(
+    ResetPasswordRequestDto request,
+  ) {
+    return safeApiCaller.safeCall(() => profileApiClient.resetPassword(request));
+  }
 
   @override
   Future<BaseResponse<ProfileDataResponseDto>> getProfileData() async {
