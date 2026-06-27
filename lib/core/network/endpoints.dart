@@ -13,6 +13,11 @@ class ProfileEndPoint {
   static const changePassword = "drivers/change-password";
 }
 
+class EditProfileEndPoint {
+  static const editProfile = 'drivers/editProfile';
+  static const uploadPhoto = 'drivers/upload-photo';
+}
+
 class ProductsSectionsEndPoint {}
 
 class CartEndPoints {}

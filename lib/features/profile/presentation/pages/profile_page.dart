@@ -83,7 +83,10 @@ class _ProfileBody extends StatelessWidget {
                 }
                 final driver = driverData!.driver!;
                 return ProfileContainer(
-                  onArrowPressed: () {},
+                  onArrowPressed: () => Navigator.pushNamed(
+                    context,
+                    Routes.editProfile,
+                  ),
                   child: Row(
                     children: [
                       driver.photo != null && driver.photo!.isNotEmpty
