@@ -49,6 +49,10 @@ import '../../features/profile/data/datasources/profile_remote_data_source.dart'
 import '../../features/profile/data/repositories/profile_repo_impl.dart'
     as _i988;
 import '../../features/profile/domain/repositories/profile_repo.dart' as _i790;
+import '../../features/profile/domain/use_cases/get_driver_data_use_case.dart'
+    as _i141;
+import '../../features/profile/domain/use_cases/get_vehicles_use_case.dart'
+    as _i151;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -78,6 +82,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i847.ProfileRemoteDataSourceContract>(
       () => _i4.ProfileRemoteDataSourceImpl(
         profileApiClient: gh<_i699.ProfileApiClient>(),
+        safeApiCaller: gh<_i563.SafeApiCaller>(),
       ),
     );
     gh.lazySingleton<_i107.AuthRemoteDataSourceContract>(
@@ -109,8 +114,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
     );
-    gh.factory<_i36.ProfileCubit>(
-      () => _i36.ProfileCubit(gh<_i790.ProfileRepo>()),
+    gh.factory<_i141.GetDriverDataUseCase>(
+      () => _i141.GetDriverDataUseCase(profileRepo: gh<_i790.ProfileRepo>()),
+    );
+    gh.factory<_i151.GetVehiclesUseCase>(
+      () => _i151.GetVehiclesUseCase(profileRepo: gh<_i790.ProfileRepo>()),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
@@ -134,6 +142,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i27.ForgetPasswordUseCase>(),
         gh<_i887.VerifyResetCodeUseCase>(),
         gh<_i348.ResetPasswordUseCase>(),
+      ),
+    );
+    gh.factory<_i36.ProfileCubit>(
+      () => _i36.ProfileCubit(
+        gh<_i141.GetDriverDataUseCase>(),
+        gh<_i151.GetVehiclesUseCase>(),
       ),
     );
     return this;
