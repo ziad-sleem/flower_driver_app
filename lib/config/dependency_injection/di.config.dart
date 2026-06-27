@@ -50,8 +50,15 @@ import '../../features/profile/data/datasources/profile_remote_data_source.dart'
 import '../../features/profile/data/repositories/profile_repo_impl.dart'
     as _i988;
 import '../../features/profile/domain/repositories/profile_repo.dart' as _i790;
+<<<<<<< HEAD
 import '../../features/profile/domain/use_cases/reset_password_use_case.dart'
     as _i641;
+=======
+import '../../features/profile/domain/use_cases/get_driver_data_use_case.dart'
+    as _i141;
+import '../../features/profile/domain/use_cases/get_vehicles_use_case.dart'
+    as _i151;
+>>>>>>> feature/SCRUM-62-profile-module
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
     as _i786;
@@ -119,8 +126,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
     );
-    gh.factory<_i36.ProfileCubit>(
-      () => _i36.ProfileCubit(gh<_i790.ProfileRepo>()),
+    gh.factory<_i141.GetDriverDataUseCase>(
+      () => _i141.GetDriverDataUseCase(profileRepo: gh<_i790.ProfileRepo>()),
+    );
+    gh.factory<_i151.GetVehiclesUseCase>(
+      () => _i151.GetVehiclesUseCase(profileRepo: gh<_i790.ProfileRepo>()),
     );
     gh.factory<_i786.ResetPasswordCubit>(
       () => _i786.ResetPasswordCubit(gh<_i641.ResetPasswordUseCase>()),
@@ -147,6 +157,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i27.ForgetPasswordUseCase>(),
         gh<_i887.VerifyResetCodeUseCase>(),
         gh<_i348.ResetPasswordUseCase>(),
+      ),
+    );
+    gh.factory<_i36.ProfileCubit>(
+      () => _i36.ProfileCubit(
+        gh<_i141.GetDriverDataUseCase>(),
+        gh<_i151.GetVehiclesUseCase>(),
       ),
     );
     return this;
