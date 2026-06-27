@@ -14,6 +14,8 @@ import 'package:tracking_app/features/app_section/presentation/page/app_section_
 import 'package:tracking_app/features/edit_vehical_info/presentation/cubit/edit_vehicle_info_cubit.dart';
 import 'package:tracking_app/features/edit_vehical_info/presentation/pages/edit_vehicle_info_page.dart';
 import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
+import 'package:tracking_app/features/profile/presentation/reset_password/cubit/reset_password_cubit.dart';
+import 'package:tracking_app/features/profile/presentation/reset_password/pages/reset_password_page.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {
@@ -49,8 +51,13 @@ abstract class AppRouter {
             ),
           );
 
-        case Routes.onboarding:
-          return PageTransitions.fade(const OnboardingScreen());
+        case Routes.resetPassword:
+          return PageTransitions.fade(
+            BlocProvider(
+              create: (_) => getIt<ResetPasswordCubit>(),
+              child: const ResetPasswordPage(),
+            ),
+          );
 
         case Routes.editVehicleInfo:
           return PageTransitions.slide(
