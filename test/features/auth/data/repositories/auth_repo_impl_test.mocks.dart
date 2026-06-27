@@ -15,6 +15,8 @@ import 'package:tracking_app/features/auth/data/datasources/auth_remote_data_sou
     as _i3;
 import 'package:tracking_app/features/auth/data/models/response/apply_now_response_dto.dart'
     as _i12;
+import 'package:tracking_app/features/auth/data/models/response/driver_profile_response_dto.dart'
+    as _i15;
 import 'package:tracking_app/features/auth/data/models/response/forget_password_response.dart'
     as _i9;
 import 'package:tracking_app/features/auth/data/models/response/reset_password_response.dart'
@@ -165,6 +167,22 @@ class MockAuthRemoteDataSourceContract extends _i1.Mock
                 ),
           )
           as _i4.Future<_i5.BaseResponse<_i14.VehicleResponseDto>>);
+
+  @override
+  _i4.Future<_i5.BaseResponse<_i15.DriverProfileResponseDto>>
+  getDriverProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDriverProfile, []),
+            returnValue:
+                _i4.Future<
+                  _i5.BaseResponse<_i15.DriverProfileResponseDto>
+                >.value(
+                  _i8.dummyValue<
+                    _i5.BaseResponse<_i15.DriverProfileResponseDto>
+                  >(this, Invocation.method(#getDriverProfile, [])),
+                ),
+          )
+          as _i4.Future<_i5.BaseResponse<_i15.DriverProfileResponseDto>>);
 }
 
 /// A class which mocks [UserDto].

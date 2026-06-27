@@ -12,6 +12,8 @@ import 'package:tracking_app/features/profile/domain/entities/all_vehicles_respo
     as _i7;
 import 'package:tracking_app/features/profile/domain/entities/profile_data_response_entity.dart'
     as _i5;
+import 'package:tracking_app/features/profile/domain/entities/reset_password_response_entity.dart'
+    as _i8;
 import 'package:tracking_app/features/profile/domain/repositories/profile_repo.dart'
     as _i2;
 
@@ -68,4 +70,31 @@ class MockProfileRepo extends _i1.Mock implements _i2.ProfileRepo {
                 ),
           )
           as _i3.Future<_i4.BaseResponse<_i7.AllVehiclesResponseEntity>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i8.ResetPasswordResponseEntity>> resetPassword({
+    required String? password,
+    required String? newPassword,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#resetPassword, [], {
+              #password: password,
+              #newPassword: newPassword,
+            }),
+            returnValue:
+                _i3.Future<
+                  _i4.BaseResponse<_i8.ResetPasswordResponseEntity>
+                >.value(
+                  _i6.dummyValue<
+                    _i4.BaseResponse<_i8.ResetPasswordResponseEntity>
+                  >(
+                    this,
+                    Invocation.method(#resetPassword, [], {
+                      #password: password,
+                      #newPassword: newPassword,
+                    }),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i8.ResetPasswordResponseEntity>>);
 }

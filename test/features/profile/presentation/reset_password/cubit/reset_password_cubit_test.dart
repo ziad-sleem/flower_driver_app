@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:tracking_app/config/base/base_response.dart';
-import 'package:tracking_app/config/base/base_state.dart';
 import 'package:tracking_app/core/error/error_handler.dart';
 import 'package:tracking_app/features/profile/domain/entities/reset_password_response_entity.dart';
 import 'package:tracking_app/features/profile/domain/use_cases/reset_password_use_case.dart';

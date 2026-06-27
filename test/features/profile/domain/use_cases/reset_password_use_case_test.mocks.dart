@@ -8,8 +8,12 @@ import 'dart:async' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:tracking_app/config/base/base_response.dart' as _i4;
-import 'package:tracking_app/features/profile/domain/entities/reset_password_response_entity.dart'
+import 'package:tracking_app/features/profile/domain/entities/all_vehicles_response_entity.dart'
+    as _i7;
+import 'package:tracking_app/features/profile/domain/entities/profile_data_response_entity.dart'
     as _i5;
+import 'package:tracking_app/features/profile/domain/entities/reset_password_response_entity.dart'
+    as _i8;
 import 'package:tracking_app/features/profile/domain/repositories/profile_repo.dart'
     as _i2;
 
@@ -37,7 +41,38 @@ class MockProfileRepo extends _i1.Mock implements _i2.ProfileRepo {
   }
 
   @override
-  _i3.Future<_i4.BaseResponse<_i5.ResetPasswordResponseEntity>> resetPassword({
+  _i3.Future<_i4.BaseResponse<_i5.ProfileDataResponseEntity>>
+  getProfileData() =>
+      (super.noSuchMethod(
+            Invocation.method(#getProfileData, []),
+            returnValue:
+                _i3.Future<
+                  _i4.BaseResponse<_i5.ProfileDataResponseEntity>
+                >.value(
+                  _i6.dummyValue<
+                    _i4.BaseResponse<_i5.ProfileDataResponseEntity>
+                  >(this, Invocation.method(#getProfileData, [])),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i5.ProfileDataResponseEntity>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i7.AllVehiclesResponseEntity>> getVehicles() =>
+      (super.noSuchMethod(
+            Invocation.method(#getVehicles, []),
+            returnValue:
+                _i3.Future<
+                  _i4.BaseResponse<_i7.AllVehiclesResponseEntity>
+                >.value(
+                  _i6.dummyValue<
+                    _i4.BaseResponse<_i7.AllVehiclesResponseEntity>
+                  >(this, Invocation.method(#getVehicles, [])),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i7.AllVehiclesResponseEntity>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i8.ResetPasswordResponseEntity>> resetPassword({
     required String? password,
     required String? newPassword,
   }) =>
@@ -48,10 +83,10 @@ class MockProfileRepo extends _i1.Mock implements _i2.ProfileRepo {
             }),
             returnValue:
                 _i3.Future<
-                  _i4.BaseResponse<_i5.ResetPasswordResponseEntity>
+                  _i4.BaseResponse<_i8.ResetPasswordResponseEntity>
                 >.value(
                   _i6.dummyValue<
-                    _i4.BaseResponse<_i5.ResetPasswordResponseEntity>
+                    _i4.BaseResponse<_i8.ResetPasswordResponseEntity>
                   >(
                     this,
                     Invocation.method(#resetPassword, [], {
@@ -61,5 +96,5 @@ class MockProfileRepo extends _i1.Mock implements _i2.ProfileRepo {
                   ),
                 ),
           )
-          as _i3.Future<_i4.BaseResponse<_i5.ResetPasswordResponseEntity>>);
+          as _i3.Future<_i4.BaseResponse<_i8.ResetPasswordResponseEntity>>);
 }

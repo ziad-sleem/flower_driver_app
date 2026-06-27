@@ -20,7 +20,7 @@ class VehicleTypeDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<VehicleEntity>(
       icon: const Icon(Icons.keyboard_arrow_down_outlined),
-      value: selectedVehicle,
+      initialValue: selectedVehicle,
       decoration: InputDecoration(
         labelText: DeliveryApplicationConstants.vehicleType,
       ),

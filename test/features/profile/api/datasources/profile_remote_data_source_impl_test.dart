@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:tracking_app/config/base/base_response.dart';
-import 'package:tracking_app/core/error/error_handler.dart';
 import 'package:tracking_app/core/network/safe_api_caller.dart';
 import 'package:tracking_app/features/profile/api/api_client/profile_api_client.dart';
 import 'package:tracking_app/features/profile/api/datasources/profile_remote_data_source_impl.dart';

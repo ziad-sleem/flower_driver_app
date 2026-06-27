@@ -25,10 +25,12 @@ class LoginCubit extends Cubit<LoginState> {
         break;
 
       case RememberMeChanged():
-        emit(state.copyWith(
-          rememberMe: event.value,
-          loginState: const BaseState(),
-        ));
+        emit(
+          state.copyWith(
+            rememberMe: event.value,
+            loginState: const BaseState(),
+          ),
+        );
         break;
     }
   }

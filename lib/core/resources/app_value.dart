@@ -5,4 +5,6 @@ abstract class AppKeys {
   static const String arLocale = 'ar';
   static const String male = "male";
   static const String female = "female";
+  static const tokenKey = "token";
+  static const driverIdKey = "driverId";
 }

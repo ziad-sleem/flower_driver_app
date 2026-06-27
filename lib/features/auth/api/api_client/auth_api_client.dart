@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:tracking_app/core/network/endpoints.dart';
 import 'package:tracking_app/features/auth/data/models/requests/login_request.dart';
+import 'package:tracking_app/features/auth/data/models/response/driver_profile_response_dto.dart';
 import 'package:tracking_app/features/auth/data/models/response/login_response.dart';
 import 'package:tracking_app/features/auth/data/models/response/apply_now_response_dto.dart';
 import 'package:tracking_app/features/auth/data/models/response/vehicle_response_dto.dart';
@@ -23,4 +24,6 @@ abstract interface class AuthApiClient {
 
   @GET(AuthEndPoint.vehicles)
   Future<VehicleResponseDto> getVehicles();
+  @GET("/api/v1/drivers/profile-data")
+  Future<DriverProfileResponseDto> getDriverProfile();
 }

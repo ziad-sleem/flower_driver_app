@@ -10,10 +10,14 @@ import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:tracking_app/config/base/base_response.dart' as _i4;
 import 'package:tracking_app/features/profile/data/datasources/profile_remote_data_source.dart'
     as _i2;
+import 'package:tracking_app/features/profile/data/models/requests/reset_password_request_dto.dart'
+    as _i9;
 import 'package:tracking_app/features/profile/data/models/responses/all_vehicles_response_dto.dart'
-    as _i5;
-import 'package:tracking_app/features/profile/data/models/responses/profile_data_response_dto.dart'
     as _i7;
+import 'package:tracking_app/features/profile/data/models/responses/profile_data_response_dto.dart'
+    as _i5;
+import 'package:tracking_app/features/profile/data/models/responses/reset_password_response_dto.dart'
+    as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -40,30 +44,47 @@ class MockProfileRemoteDataSourceContract extends _i1.Mock
   }
 
   @override
-  _i3.Future<_i4.BaseResponse<_i5.AllVehiclesResponseDto>> getVehicles() =>
-      (super.noSuchMethod(
-            Invocation.method(#getVehicles, []),
-            returnValue:
-                _i3.Future<_i4.BaseResponse<_i5.AllVehiclesResponseDto>>.value(
-                  _i6.dummyValue<_i4.BaseResponse<_i5.AllVehiclesResponseDto>>(
-                    this,
-                    Invocation.method(#getVehicles, []),
-                  ),
-                ),
-          )
-          as _i3.Future<_i4.BaseResponse<_i5.AllVehiclesResponseDto>>);
-
-  @override
-  _i3.Future<_i4.BaseResponse<_i7.ProfileDataResponseDto>> getProfileData() =>
+  _i3.Future<_i4.BaseResponse<_i5.ProfileDataResponseDto>> getProfileData() =>
       (super.noSuchMethod(
             Invocation.method(#getProfileData, []),
             returnValue:
-                _i3.Future<_i4.BaseResponse<_i7.ProfileDataResponseDto>>.value(
-                  _i6.dummyValue<_i4.BaseResponse<_i7.ProfileDataResponseDto>>(
+                _i3.Future<_i4.BaseResponse<_i5.ProfileDataResponseDto>>.value(
+                  _i6.dummyValue<_i4.BaseResponse<_i5.ProfileDataResponseDto>>(
                     this,
                     Invocation.method(#getProfileData, []),
                   ),
                 ),
           )
-          as _i3.Future<_i4.BaseResponse<_i7.ProfileDataResponseDto>>);
+          as _i3.Future<_i4.BaseResponse<_i5.ProfileDataResponseDto>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i7.AllVehiclesResponseDto>> getVehicles() =>
+      (super.noSuchMethod(
+            Invocation.method(#getVehicles, []),
+            returnValue:
+                _i3.Future<_i4.BaseResponse<_i7.AllVehiclesResponseDto>>.value(
+                  _i6.dummyValue<_i4.BaseResponse<_i7.AllVehiclesResponseDto>>(
+                    this,
+                    Invocation.method(#getVehicles, []),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i7.AllVehiclesResponseDto>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i8.ResetPasswordResponseDto>> resetPassword(
+    _i9.ResetPasswordRequestDto? request,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#resetPassword, [request]),
+            returnValue:
+                _i3.Future<
+                  _i4.BaseResponse<_i8.ResetPasswordResponseDto>
+                >.value(
+                  _i6.dummyValue<
+                    _i4.BaseResponse<_i8.ResetPasswordResponseDto>
+                  >(this, Invocation.method(#resetPassword, [request])),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i8.ResetPasswordResponseDto>>);
 }

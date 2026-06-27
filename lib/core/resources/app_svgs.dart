@@ -12,4 +12,5 @@ class AppSvgs {
   static const plus = "assets/svgs/plus.svg";
   static const filterButton = "assets/svgs/filter_button.svg";
   static const order = "assets/svgs/order.svg";
+  static const homeLogo = "assets/svgs/homeLogo.svg";
 }

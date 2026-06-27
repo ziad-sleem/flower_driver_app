@@ -6,7 +6,6 @@ import 'package:mockito/mockito.dart';
 import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/core/resources/app_value.dart';
 import 'package:tracking_app/features/profile/domain/entities/reset_password_response_entity.dart';
-import 'package:tracking_app/features/profile/domain/use_cases/reset_password_use_case.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/pages/reset_password_page.dart';
 

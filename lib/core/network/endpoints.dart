@@ -29,7 +29,10 @@ class CartEndPoints {}
 
 class CheckoutEndPoints {}
 
-class OrdersEndPoints {}
+class OrdersEndPoints {
+  static const getPendingOrder = "orders/pending-orders";
+  static const String updateOrderState = "orders/state";
+}
 
 class NotificationsEndPoints {}
 

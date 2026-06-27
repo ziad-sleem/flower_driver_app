@@ -3,19 +3,21 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i7;
 
-import 'package:dio/dio.dart' as _i8;
+import 'package:dio/dio.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i11;
-import 'package:tracking_app/config/base/base_response.dart' as _i10;
-import 'package:tracking_app/core/network/safe_api_caller.dart' as _i9;
+import 'package:mockito/src/dummies.dart' as _i12;
+import 'package:tracking_app/config/base/base_response.dart' as _i11;
+import 'package:tracking_app/core/network/safe_api_caller.dart' as _i10;
 import 'package:tracking_app/features/auth/api/api_client/auth_api_client.dart'
-    as _i5;
+    as _i6;
 import 'package:tracking_app/features/auth/data/models/requests/login_request.dart'
-    as _i7;
+    as _i8;
 import 'package:tracking_app/features/auth/data/models/response/apply_now_response_dto.dart'
     as _i3;
+import 'package:tracking_app/features/auth/data/models/response/driver_profile_response_dto.dart'
+    as _i5;
 import 'package:tracking_app/features/auth/data/models/response/login_response.dart'
     as _i2;
 import 'package:tracking_app/features/auth/data/models/response/vehicle_response_dto.dart'
@@ -53,71 +55,90 @@ class _FakeVehicleResponseDto_2 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
+class _FakeDriverProfileResponseDto_3 extends _i1.SmartFake
+    implements _i5.DriverProfileResponseDto {
+  _FakeDriverProfileResponseDto_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [AuthApiClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthApiClient extends _i1.Mock implements _i5.AuthApiClient {
+class MockAuthApiClient extends _i1.Mock implements _i6.AuthApiClient {
   MockAuthApiClient() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<_i2.LoginResponse> login(_i7.LoginRequest? request) =>
+  _i7.Future<_i2.LoginResponse> login(_i8.LoginRequest? request) =>
       (super.noSuchMethod(
             Invocation.method(#login, [request]),
-            returnValue: _i6.Future<_i2.LoginResponse>.value(
+            returnValue: _i7.Future<_i2.LoginResponse>.value(
               _FakeLoginResponse_0(this, Invocation.method(#login, [request])),
             ),
           )
-          as _i6.Future<_i2.LoginResponse>);
+          as _i7.Future<_i2.LoginResponse>);
 
   @override
-  _i6.Future<_i3.ApplyNowResponseDto> applyNow(_i8.FormData? request) =>
+  _i7.Future<_i3.ApplyNowResponseDto> applyNow(_i9.FormData? request) =>
       (super.noSuchMethod(
             Invocation.method(#applyNow, [request]),
-            returnValue: _i6.Future<_i3.ApplyNowResponseDto>.value(
+            returnValue: _i7.Future<_i3.ApplyNowResponseDto>.value(
               _FakeApplyNowResponseDto_1(
                 this,
                 Invocation.method(#applyNow, [request]),
               ),
             ),
           )
-          as _i6.Future<_i3.ApplyNowResponseDto>);
+          as _i7.Future<_i3.ApplyNowResponseDto>);
 
   @override
-  _i6.Future<_i4.VehicleResponseDto> getVehicles() =>
+  _i7.Future<_i4.VehicleResponseDto> getVehicles() =>
       (super.noSuchMethod(
             Invocation.method(#getVehicles, []),
-            returnValue: _i6.Future<_i4.VehicleResponseDto>.value(
+            returnValue: _i7.Future<_i4.VehicleResponseDto>.value(
               _FakeVehicleResponseDto_2(
                 this,
                 Invocation.method(#getVehicles, []),
               ),
             ),
           )
-          as _i6.Future<_i4.VehicleResponseDto>);
+          as _i7.Future<_i4.VehicleResponseDto>);
+
+  @override
+  _i7.Future<_i5.DriverProfileResponseDto> getDriverProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDriverProfile, []),
+            returnValue: _i7.Future<_i5.DriverProfileResponseDto>.value(
+              _FakeDriverProfileResponseDto_3(
+                this,
+                Invocation.method(#getDriverProfile, []),
+              ),
+            ),
+          )
+          as _i7.Future<_i5.DriverProfileResponseDto>);
 }
 
 /// A class which mocks [SafeApiCaller].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSafeApiCaller extends _i1.Mock implements _i9.SafeApiCaller {
+class MockSafeApiCaller extends _i1.Mock implements _i10.SafeApiCaller {
   MockSafeApiCaller() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<_i10.BaseResponse<T>> safeCall<T>(
-    _i6.Future<T> Function()? call,
+  _i7.Future<_i11.BaseResponse<T>> safeCall<T>(
+    _i7.Future<T> Function()? call,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#safeCall, [call]),
-            returnValue: _i6.Future<_i10.BaseResponse<T>>.value(
-              _i11.dummyValue<_i10.BaseResponse<T>>(
+            returnValue: _i7.Future<_i11.BaseResponse<T>>.value(
+              _i12.dummyValue<_i11.BaseResponse<T>>(
                 this,
                 Invocation.method(#safeCall, [call]),
               ),
             ),
           )
-          as _i6.Future<_i10.BaseResponse<T>>);
+          as _i7.Future<_i11.BaseResponse<T>>);
 }

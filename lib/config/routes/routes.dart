@@ -9,4 +9,5 @@ abstract class Routes {
   static const String resetPassword = '/reset-password';
   static const String editProfile = '/edit-profile';
   static const String editVehicleInfo = '/edit-vehicle-info';
+  static const String orderDetail = '/order-detail';
 }
