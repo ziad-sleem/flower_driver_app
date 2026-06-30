@@ -19,7 +19,10 @@ import 'package:tracking_app/features/profile/presentation/reset_password/pages/
 import 'package:tracking_app/features/edit_profile/presentation/cubit/edit_profile_cubit.dart';
 import 'package:tracking_app/features/edit_profile/presentation/pages/edit_profile_page.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
+import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_cubit.dart';
+import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_detail_page.dart';
+import 'package:tracking_app/features/oreder_details/presentation/pages/order_details_screen.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {
@@ -82,6 +85,16 @@ abstract class AppRouter {
         case Routes.orderDetail:
           final order = settings.arguments as OrderEntity;
           return PageTransitions.slide(OrderDetailPage(order: order));
+
+        case Routes.orderDetails:
+          final order = settings.arguments as OrderEntity;
+          return PageTransitions.slide(
+            BlocProvider(
+              create: (_) => getIt<OrderDetailsCubit>()
+                ..doIntent(StartOrderDetailsIntent(order)),
+              child: const OrderDetailsScreen(),
+            ),
+          );
 
         default:
           return PageTransitions.fade(

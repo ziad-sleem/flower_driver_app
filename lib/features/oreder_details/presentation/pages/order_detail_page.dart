@@ -181,7 +181,7 @@ class OrderDetailPage extends StatelessWidget {
                               ? null
                               : () {
                                   context.read<HomeCubit>().doEvent(
-                                    AcceptOrder(orderId: order.id ?? ""),
+                                    AcceptOrder(order: order),
                                   );
                                 },
                           child: acceptLoading
@@ -232,11 +232,11 @@ class OrderDetailPage extends StatelessWidget {
     switch (state) {
       case OrderState.pending:
         return "Pending";
-      case OrderState.accepted:
-        return "Accepted";
-      case OrderState.delivered:
+      case OrderState.inProgress:
+        return "In Progress";
+      case OrderState.completed:
         return "Delivered";
-      case OrderState.cancelled:
+      case OrderState.canceled:
         return "Cancelled";
       case null:
         return "";

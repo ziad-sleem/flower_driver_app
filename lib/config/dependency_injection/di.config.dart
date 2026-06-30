@@ -99,8 +99,11 @@ import '../../features/oreder_details/domain/use_cases/save_current_order_usecas
     as _i753;
 import '../../features/oreder_details/domain/use_cases/update_order_state_usecase.dart'
     as _i386;
+import '../../features/oreder_details/domain/use_cases/watch_order_state_usecase.dart'
+    as _i941;
 import '../../features/oreder_details/presentation/cubit/home_cubit.dart'
     as _i531;
+<<<<<<< HEAD
 import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
 import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
     as _i4;
@@ -118,6 +121,10 @@ import '../../features/profile/domain/use_cases/reset_password_use_case.dart'
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
     as _i786;
+=======
+import '../../features/oreder_details/presentation/cubit/order_details_cubit.dart'
+    as _i235;
+>>>>>>> origin/feature/SCRUM-50-order-details-module
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -215,6 +222,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i386.UpdateOrderStateUseCase>(
       () => _i386.UpdateOrderStateUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
+    gh.factory<_i941.WatchOrderStateUseCase>(
+      () => _i941.WatchOrderStateUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
+    );
     gh.factory<_i723.AuthRepo>(
       () => _i662.AuthRepoImpl(
         authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
@@ -243,6 +253,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i817.GetVehiclesUseCase>(
       () => _i817.GetVehiclesUseCase(gh<_i723.AuthRepo>()),
+    );
+    gh.factory<_i235.OrderDetailsCubit>(
+      () => _i235.OrderDetailsCubit(
+        gh<_i386.UpdateOrderStateUseCase>(),
+        gh<_i753.SaveCurrentOrderUseCase>(),
+        gh<_i941.WatchOrderStateUseCase>(),
+      ),
     );
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),

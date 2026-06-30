@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/config/base/base_state.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_params.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/get_all_pending_order.dart';
@@ -62,13 +63,16 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> _acceptOrder(AcceptOrder event) async {
     emit(
       state.copyWith(
-        acceptingOrderId: event.orderId,
+        acceptingOrderId: event.order.id ?? '',
         acceptOrderState: const BaseState(isLoading: true),
       ),
     );
 
     final result = await _updateOrderStateUseCase(
-      UpdateOrderStateParams(orderId: event.orderId, state: "inProgress"),
+      UpdateOrderStateParams(
+        orderId: event.order.id ?? '',
+        state: "inProgress",
+      ),
     );
 
     switch (result) {
@@ -77,6 +81,7 @@ class HomeCubit extends Cubit<HomeState> {
           state.copyWith(
             acceptingOrderId: null,
             acceptOrderState: const BaseState(data: true),
+            acceptedOrder: event.order,
           ),
         );
 

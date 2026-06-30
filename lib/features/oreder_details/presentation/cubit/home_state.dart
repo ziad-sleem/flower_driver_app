@@ -9,12 +9,15 @@ class HomeState extends Equatable {
   final String? acceptingOrderId;
   final String? rejectingOrderId;
 
+  final OrderEntity? acceptedOrder;
+
   const HomeState({
     this.ordersState = const BaseState(),
     this.acceptOrderState = const BaseState(),
     this.rejectOrderState = const BaseState(),
     this.acceptingOrderId,
     this.rejectingOrderId,
+    this.acceptedOrder,
   });
 
   HomeState copyWith({
@@ -23,6 +26,7 @@ class HomeState extends Equatable {
     BaseState<bool>? rejectOrderState,
     String? acceptingOrderId,
     String? rejectingOrderId,
+    OrderEntity? acceptedOrder,
   }) {
     return HomeState(
       ordersState: ordersState ?? this.ordersState,
@@ -30,6 +34,7 @@ class HomeState extends Equatable {
       rejectOrderState: rejectOrderState ?? this.rejectOrderState,
       acceptingOrderId: acceptingOrderId,
       rejectingOrderId: rejectingOrderId,
+      acceptedOrder: acceptedOrder ?? this.acceptedOrder,
     );
   }
 
@@ -40,5 +45,6 @@ class HomeState extends Equatable {
     rejectOrderState,
     acceptingOrderId,
     rejectingOrderId,
+    acceptedOrder,
   ];
 }

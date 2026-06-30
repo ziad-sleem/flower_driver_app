@@ -29,4 +29,13 @@ class OrderDetailsFireStoreDataSourceImpl
   Future<void> deleteCurrentOrder({required String driverId}) async {
     await firestore.collection(_collection).doc(driverId).delete();
   }
+
+  @override
+  Stream<String?> watchOrderState({required String driverId}) {
+    return firestore
+        .collection(_collection)
+        .doc(driverId)
+        .snapshots()
+        .map((snapshot) => snapshot.data()?["state"] as String?);
+  }
 }

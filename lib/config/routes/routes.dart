@@ -6,6 +6,7 @@ abstract class Routes {
   static const String succesApply = '/succes_apply';
   static const String onboarding = '/onboarding';
   static const String forgetPassword = '/forget-password';
+  static const String orderDetails = '/order-details';
   static const String resetPassword = '/reset-password';
   static const String editProfile = '/edit-profile';
   static const String editVehicleInfo = '/edit-vehicle-info';

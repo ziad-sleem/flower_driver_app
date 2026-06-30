@@ -16,4 +16,6 @@ abstract interface class OrderDetailsRepo {
   });
 
   Future<void> deleteCurrentOrder({required String driverId});
+
+  Stream<String?> watchOrderState({required String driverId});
 }
