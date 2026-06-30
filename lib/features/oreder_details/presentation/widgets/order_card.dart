@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
@@ -27,10 +26,7 @@ class OrderCard extends StatelessWidget {
           cubit.state.rejectOrderState.isLoading &&
           cubit.state.rejectingOrderId == order.id,
     );
-    return InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.orderDetail, arguments: order),
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
+    return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -159,7 +155,6 @@ class OrderCard extends StatelessWidget {
             ],
           ),
         ],
-      ),
       ),
     );
   }
