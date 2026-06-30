@@ -50,10 +50,6 @@
     "title": "مرحباً بك في",
     "description": "تطبيق Flowery رايدر"
   },
-  "onboarding": {
-    "title": "مرحباً بك في",
-    "description": "تطبيق Flowery رايدر"
-  },
   "validation": {
     "email_required": "البريد الإلكتروني مطلوب",
     "invalid_email": "البريد الإلكتروني غير صالح",
@@ -160,7 +156,8 @@
     "thank_you": "شكراً لك!!",
     "delivered_successfully": "تم توصيل الطلب بنجاح",
     "price": "600 ج.م",
-    "distance_time": "24 كم - 30 دقيقة للتوصيل"
+    "distance_time": "24 كم - 30 دقيقة للتوصيل",
+    "waiting_for_customer_confirmation":"في انتظار تأكيد العميل"
   },
   "status": {
     "pending": "قيد الانتظار",

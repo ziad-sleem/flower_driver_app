@@ -5,7 +5,9 @@ import 'package:tracking_app/features/oreder_details/data/datasources/order_deta
 import 'package:tracking_app/features/oreder_details/data/models/order_details_response_dto.dart';
 import 'package:tracking_app/features/oreder_details/data/models/request/update_order_state_request_dto.dart';
 import 'package:tracking_app/features/oreder_details/data/models/update_order_state_response_dto.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/current_order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_params.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/repositories/order_details_repo.dart';
@@ -20,8 +22,14 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
   });
 
   @override
-  Future<BaseResponse<OrdersResponseEntity>> getAllPendingOrders() async {
-    final response = await remoteDataSource.getAllPendingOrders();
+  Future<BaseResponse<OrdersResponseEntity>> getAllPendingOrders({
+    required int page,
+    required int limit,
+  }) async {
+    final response = await remoteDataSource.getAllPendingOrders(
+      page: page,
+      limit: limit,
+    );
 
     switch (response) {
       case SuccessBaseResponse<OrdersResponseDto>():
@@ -56,13 +64,15 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
   @override
   Future<void> saveCurrentOrder({
     required String driverId,
-    required String orderId,
+    required OrderEntity order,
     required String state,
+    required bool driverRequestedDelivery,
   }) {
     return firestoreDataSource.saveCurrentOrder(
       driverId: driverId,
-      orderId: orderId,
+      order: order,
       state: state,
+      driverRequestedDelivery: driverRequestedDelivery,
     );
   }
 
@@ -72,7 +82,18 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
   }
 
   @override
-  Stream<String?> watchOrderState({required String driverId}) {
-    return firestoreDataSource.watchOrderState(driverId: driverId);
+  Stream<CurrentOrderEntity?> watchCurrentOrder({required String driverId}) {
+    return firestoreDataSource
+        .watchCurrentOrder(driverId: driverId)
+        .map((event) => event?.toEntity());
+  }
+
+  @override
+  Future<CurrentOrderEntity?> getCurrentOrder({
+    required String driverId,
+  }) async {
+    final model = await firestoreDataSource.getCurrentOrder(driverId: driverId);
+
+    return model?.toEntity();
   }
 }

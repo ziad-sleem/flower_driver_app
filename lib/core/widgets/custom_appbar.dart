@@ -31,20 +31,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
+      automaticallyImplyLeading: false,
       backgroundColor: AppColors.background,
-      titleSpacing: 0,
+      titleSpacing: showBackButton ? 0 : 16,
       toolbarHeight: preferredSize.height,
       leading: showBackButton
           ? GestureDetector(
-              child: const Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.textPrimary,
-              ),
               onTap: () {
                 if (!buttonEnable) return;
                 (onBack ?? () => Navigator.pop(context))();
               },
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.textPrimary,
+              ),
             )
           : null,
       title: subtitle == null

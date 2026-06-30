@@ -17,12 +17,13 @@ class OrderDetailsRemoteDataSourceImpl implements OrderDetailsRemoteDataSource {
   });
 
   @override
-  Future<BaseResponse<OrdersResponseDto>> getAllPendingOrders() async {
-    final response = await safeApiCaller.safeCall(() async {
-      final dto = await apiClient.getAllPendingOrders();
-      return dto;
+  Future<BaseResponse<OrdersResponseDto>> getAllPendingOrders({
+    required int page,
+    required int limit,
+  }) async {
+    return await safeApiCaller.safeCall(() async {
+      return await apiClient.getAllPendingOrders(page, limit);
     });
-    return response;
   }
 
   @override

@@ -6,7 +6,9 @@ sealed class OrderDetailsIntent {
 
 class StartOrderDetailsIntent extends OrderDetailsIntent {
   final OrderEntity order;
-  const StartOrderDetailsIntent(this.order);
+  final String? initialState;
+
+  const StartOrderDetailsIntent({required this.order, this.initialState});
 }
 
 class AdvanceOrderStepIntent extends OrderDetailsIntent {

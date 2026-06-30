@@ -16,7 +16,10 @@ abstract interface class OrderDetailsApiClient {
       _OrderDetailsApiClient;
 
   @GET(OrdersEndPoints.getPendingOrder)
-  Future<OrdersResponseDto> getAllPendingOrders();
+  Future<OrdersResponseDto> getAllPendingOrders(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @PUT("${OrdersEndPoints.updateOrderState}/{orderId}")
   Future<UpdateOrderStateResponseDto> updateOrderState(

@@ -3,12 +3,12 @@ import 'package:tracking_app/features/oreder_details/domain/entities/current_ord
 import 'package:tracking_app/features/oreder_details/domain/repositories/order_details_repo.dart';
 
 @injectable
-class WatchCurrentOrderUseCase {
+class GetCurrentOrderUseCase {
   final OrderDetailsRepo repo;
 
-  const WatchCurrentOrderUseCase({required this.repo});
+  GetCurrentOrderUseCase({required this.repo});
 
-  Stream<CurrentOrderEntity?> call({required String driverId}) {
-    return repo.watchCurrentOrder(driverId: driverId);
+  Future<CurrentOrderEntity?> call({required String driverId}) {
+    return repo.getCurrentOrder(driverId: driverId);
   }
 }

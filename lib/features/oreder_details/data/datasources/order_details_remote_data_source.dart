@@ -4,7 +4,10 @@ import 'package:tracking_app/features/oreder_details/data/models/request/update_
 import 'package:tracking_app/features/oreder_details/data/models/update_order_state_response_dto.dart';
 
 abstract interface class OrderDetailsRemoteDataSource {
-  Future<BaseResponse<OrdersResponseDto>> getAllPendingOrders();
+  Future<BaseResponse<OrdersResponseDto>> getAllPendingOrders({
+    required int page,
+    required int limit,
+  });
   Future<BaseResponse<UpdateOrderStateResponseDto>> updateOrderState({
     required String orderId,
     required UpdateOrderStateRequestDto request,
