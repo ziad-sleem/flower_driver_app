@@ -19,6 +19,8 @@ import '../../core/network/safe_api_caller.dart' as _i563;
 import '../../core/service/crashlytics_service.dart' as _i776;
 import '../../core/service/image_picker_service.dart' as _i488;
 import '../../core/service/load_json_countries.dart' as _i923;
+import '../../features/app_section/presentation/cubit/app_launch_cubit.dart'
+    as _i545;
 import '../../features/app_section/presentation/cubit/app_section_cubit.dart'
     as _i999;
 import '../../features/auth/api/api_client/auth_api_client.dart' as _i824;
@@ -62,6 +64,8 @@ import '../../features/oreder_details/domain/use_cases/delete_current_order_usec
     as _i99;
 import '../../features/oreder_details/domain/use_cases/get_all_pending_order.dart'
     as _i945;
+import '../../features/oreder_details/domain/use_cases/get_current_order_usecase.dart'
+    as _i315;
 import '../../features/oreder_details/domain/use_cases/save_current_order_usecase.dart'
     as _i753;
 import '../../features/oreder_details/domain/use_cases/update_order_state_usecase.dart'
@@ -131,14 +135,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i99.DeleteCurrentOrderUseCase>(
       () => _i99.DeleteCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
+    gh.factory<_i315.GetCurrentOrderUseCase>(
+      () => _i315.GetCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
+    );
     gh.factory<_i753.SaveCurrentOrderUseCase>(
       () => _i753.SaveCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
     gh.factory<_i386.UpdateOrderStateUseCase>(
       () => _i386.UpdateOrderStateUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
-    gh.factory<_i941.WatchOrderStateUseCase>(
-      () => _i941.WatchOrderStateUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
+    gh.factory<_i941.WatchCurrentOrderUseCase>(
+      () => _i941.WatchCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
     gh.factory<_i723.AuthRepo>(
       () => _i662.AuthRepoImpl(
@@ -148,18 +155,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1038.LoginUseCase>(
       () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
     );
+    gh.factory<_i531.HomeCubit>(
+      () => _i531.HomeCubit(
+        gh<_i945.GetPendingOrdersUseCase>(),
+        gh<_i386.UpdateOrderStateUseCase>(),
+        gh<_i315.GetCurrentOrderUseCase>(),
+      ),
+    );
     gh.factory<_i724.ApplyNowUseCase>(
       () => _i724.ApplyNowUseCase(gh<_i723.AuthRepo>()),
     );
     gh.factory<_i817.GetVehiclesUseCase>(
       () => _i817.GetVehiclesUseCase(gh<_i723.AuthRepo>()),
-    );
-    gh.factory<_i235.OrderDetailsCubit>(
-      () => _i235.OrderDetailsCubit(
-        gh<_i386.UpdateOrderStateUseCase>(),
-        gh<_i753.SaveCurrentOrderUseCase>(),
-        gh<_i941.WatchOrderStateUseCase>(),
-      ),
     );
     gh.factory<_i179.LoginCubit>(
       () => _i179.LoginCubit(gh<_i1038.LoginUseCase>()),
@@ -167,11 +174,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i832.GetDriverProfileUseCase>(
       () => _i832.GetDriverProfileUseCase(gh<_i723.AuthRepo>()),
     );
-    gh.factory<_i531.HomeCubit>(
-      () => _i531.HomeCubit(
-        gh<_i945.GetPendingOrdersUseCase>(),
-        gh<_i386.UpdateOrderStateUseCase>(),
+    gh.factory<_i235.OrderDetailsCubit>(
+      () => _i235.OrderDetailsCubit(
+        gh<_i753.SaveCurrentOrderUseCase>(),
+        gh<_i941.WatchCurrentOrderUseCase>(),
       ),
+    );
+    gh.factory<_i545.AppLaunchCubit>(
+      () => _i545.AppLaunchCubit(gh<_i315.GetCurrentOrderUseCase>()),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),

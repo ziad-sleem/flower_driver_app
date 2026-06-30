@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tracking_app/config/dependency_injection/di.dart';
 import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/resources/app_svgs.dart';
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
+import 'package:tracking_app/features/oreder_details/domain/use_cases/get_current_order_usecase.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -49,11 +52,35 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (!mounted) return;
 
-    if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, Routes.appSection);
-    } else {
+    if (!isLoggedIn) {
       Navigator.pushReplacementNamed(context, Routes.onboarding);
+      return;
     }
+
+    final driverId = await SecureStorageService.getDriverId();
+    debugPrint("driverId = $driverId");
+
+    if (driverId != null && driverId.isNotEmpty) {
+      final currentOrder = await getIt<GetCurrentOrderUseCase>()(
+        driverId: driverId,
+      );
+      debugPrint("currentOrder = $currentOrder");
+      if (!mounted) return;
+
+      if (currentOrder != null) {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.orderDetails,
+          arguments: OrderDetailsArgs(
+            order: currentOrder.order,
+            state: currentOrder.state,
+          ),
+        );
+        return;
+      }
+    }
+
+    Navigator.pushReplacementNamed(context, Routes.appSection);
   }
 
   @override

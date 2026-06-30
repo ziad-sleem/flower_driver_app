@@ -16,8 +16,8 @@ class AppSectionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AppSectionsCubit(),
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => AppSectionsCubit())],
       child: const _AppSectionsView(),
     );
   }
@@ -48,9 +48,8 @@ class _AppSectionsView extends StatelessWidget {
             index: currentIndex,
             children: [
               BlocProvider(
-                create: (context) =>
-                    getIt<HomeCubit>()..doEvent(GetPendingOrders()),
-                child: HomeScreen(),
+                create: (_) => getIt<HomeCubit>()..doEvent(GetPendingOrders()),
+                child: const HomeScreen(),
               ),
               _PlaceholderScreen(title: TabsConstants.orders),
               ProfileScreen(),
