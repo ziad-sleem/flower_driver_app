@@ -4,6 +4,9 @@ import 'package:injectable/injectable.dart';
 import 'package:tracking_app/features/auth/api/api_client/auth_api_client.dart';
 import 'package:tracking_app/features/oreder_details/api/api_client/order_details_api_client.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tracking_app/features/edit_profile/api/api_client/edit_profile_api_client.dart';
+import 'package:tracking_app/features/edit_vehical_info/api/api_client/edit_vehicle_info_api_client.dart';
+import 'package:tracking_app/features/profile/api/api_client/profile_api_client.dart';
 
 @module
 abstract class NetworkModule {
@@ -19,4 +22,14 @@ abstract class NetworkModule {
   @singleton
   OrderDetailsApiClient orderDetailsApiClient(Dio dio) =>
       OrderDetailsApiClient(dio);
+
+  @singleton
+  ProfileApiClient profileApi(Dio dio) => ProfileApiClient(dio);
+
+  @singleton
+  EditProfileApiClient editProfileApi(Dio dio) => EditProfileApiClient(dio);
+
+  @singleton
+  EditVehicleInfoApiClient editVehicleInfoApi(Dio dio) =>
+      EditVehicleInfoApiClient(dio);
 }

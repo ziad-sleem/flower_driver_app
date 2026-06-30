@@ -6,11 +6,12 @@ import 'package:tracking_app/core/localization_constants/tabs_constants.dart';
 import 'package:tracking_app/core/resources/app_svgs.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/features/app_section/presentation/cubit/app_section_cubit.dart';
-import 'package:tracking_app/features/logout/log_out.dart';
+import 'package:tracking_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/home_screen.dart';
 
+ 
 class AppSectionsPage extends StatelessWidget {
   const AppSectionsPage({super.key});
 
@@ -52,8 +53,9 @@ class _AppSectionsView extends StatelessWidget {
                 child: const HomeScreen(),
               ),
               _PlaceholderScreen(title: TabsConstants.orders),
-              ProfileScreen(),
+              ProfilePage(),
             ],
+
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: currentIndex,

@@ -30,7 +30,7 @@ class _AuthApiClient implements AuthApiClient {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/signin',
+            'drivers/signin',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -62,7 +62,7 @@ class _AuthApiClient implements AuthApiClient {
           )
           .compose(
             _dio.options,
-            '/apply',
+            'drivers/apply',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -89,7 +89,7 @@ class _AuthApiClient implements AuthApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/vehicles',
+            'vehicles/',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -99,6 +99,33 @@ class _AuthApiClient implements AuthApiClient {
     late VehicleResponseDto _value;
     try {
       _value = VehicleResponseDto.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<DriverProfileResponseDto> getDriverProfile() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<DriverProfileResponseDto>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v1/drivers/profile-data',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DriverProfileResponseDto _value;
+    try {
+      _value = DriverProfileResponseDto.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

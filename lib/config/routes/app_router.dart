@@ -11,12 +11,21 @@ import 'package:tracking_app/features/auth/presentation/forget_password/cubit/fo
 import 'package:tracking_app/features/auth/presentation/forget_password/pages/forget_password_screen.dart';
 import 'package:tracking_app/features/auth/presentation/login/pages/login_screen.dart';
 import 'package:tracking_app/features/app_section/presentation/page/app_section_page.dart';
+import 'package:tracking_app/features/edit_vehical_info/presentation/cubit/edit_vehicle_info_cubit.dart';
+import 'package:tracking_app/features/edit_vehical_info/presentation/pages/edit_vehicle_info_page.dart';
 import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
+import 'package:tracking_app/features/profile/presentation/reset_password/cubit/reset_password_cubit.dart';
+import 'package:tracking_app/features/profile/presentation/reset_password/pages/reset_password_page.dart';
+import 'package:tracking_app/features/edit_profile/presentation/cubit/edit_profile_cubit.dart';
+import 'package:tracking_app/features/edit_profile/presentation/pages/edit_profile_page.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
+import 'package:tracking_app/features/oreder_details/presentation/pages/order_detail_page.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_details_screen.dart';
+import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -50,6 +59,34 @@ abstract class AppRouter {
               child: const ForgetPasswordScreen(),
             ),
           );
+
+        case Routes.editProfile:
+          return PageTransitions.slide(
+            BlocProvider(
+              create: (_) => getIt<EditProfileCubit>(),
+              child: const EditProfilePage(),
+            ),
+          );
+
+        case Routes.resetPassword:
+          return PageTransitions.fade(
+            BlocProvider(
+              create: (_) => getIt<ResetPasswordCubit>(),
+              child: const ResetPasswordPage(),
+            ),
+          );
+
+        case Routes.editVehicleInfo:
+          return PageTransitions.slide(
+            BlocProvider(
+              create: (_) => getIt<EditVehicleInfoCubit>(),
+              child: const EditVehicleInfoPage(),
+            ),
+          );
+
+        case Routes.orderDetail:
+          final order = settings.arguments as OrderEntity;
+          return PageTransitions.slide(OrderDetailPage(order: order));
 
         case Routes.orderDetails:
           final args = settings.arguments as OrderDetailsArgs;
