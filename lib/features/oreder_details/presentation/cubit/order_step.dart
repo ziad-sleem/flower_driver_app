@@ -37,14 +37,11 @@ enum OrderStep {
     OrderStep.accepted => OrderStateValues.picked,
     OrderStep.picked => OrderStateValues.outForDelivery,
     OrderStep.outForDelivery => OrderStateValues.arrived,
-    OrderStep.arrived => OrderStateValues.delivered,
+    OrderStep.arrived => null,
     OrderStep.delivered => null,
   };
 
   bool get isTerminal => this == OrderStep.delivered;
-
-  bool get completesOrderOnAdvance => this == OrderStep.arrived;
-
   String get statusLabel => switch (this) {
     OrderStep.accepted => StatusConstants.accepted,
     OrderStep.picked => StatusConstants.picked,
@@ -57,7 +54,7 @@ enum OrderStep {
     OrderStep.accepted => OrdersConstants.arrivedAtPickup,
     OrderStep.picked => OrdersConstants.startDeliver,
     OrderStep.outForDelivery => OrdersConstants.arrivedToUser,
-    OrderStep.arrived => OrdersConstants.deliveredToUser,
+    OrderStep.arrived => OrdersConstants.waitingForCustomerConfirmation,
     OrderStep.delivered => OrdersConstants.deliveredToUser,
   };
 }

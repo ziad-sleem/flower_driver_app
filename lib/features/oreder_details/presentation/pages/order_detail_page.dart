@@ -74,7 +74,9 @@ class OrderDetailPage extends StatelessWidget {
 
               const AppSizedBox(height: 20),
 
-              _SectionHeader(title: "Order items (${order.orderItems?.length ?? 0})"),
+              _SectionHeader(
+                title: "Order items (${order.orderItems?.length ?? 0})",
+              ),
               const AppSizedBox(height: 8),
               if (order.orderItems != null && order.orderItems!.isNotEmpty)
                 ...order.orderItems!.map((item) => _OrderItemTile(item: item))
@@ -144,14 +146,16 @@ class OrderDetailPage extends StatelessWidget {
                               ? null
                               : () {
                                   context.read<HomeCubit>().doEvent(
-                                    RejectOrder(orderId: order.id ?? ""),
+                                    RejectOrder(order: order),
                                   );
                                 },
                           child: rejectLoading
                               ? const SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : Text(
                                   "Reject",

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/localization_constants/orders_constants.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
@@ -19,85 +20,102 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) _handleBack(context);
-      },
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: OrdersConstants.orderDetails,
-          onBack: () => _handleBack(context),
-        ),
-        body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
-          listenWhen: (p, c) =>
-              p.updateState.errorMessage != c.updateState.errorMessage &&
-              c.updateState.errorMessage != null,
-          listener: (context, state) => CustomSnackBar.error(
-            context,
-            state.updateState.errorMessage!.tr(),
-          ),
-          builder: (context, state) {
-            final order = state.order;
-            final step = state.step;
-            if (order == null || step == null) {
-              return const Center(child: CircularProgressIndicator());
+    return BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
+      builder: (context, state) {
+        final canGoBack = state.step == OrderStep.delivered;
+
+        return PopScope(
+          canPop: canGoBack,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop && canGoBack) {
+              _handleBack(context);
             }
-            return Column(
-              children: [
-                _OrderProgressBar(step: step),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _OrderStatusBanner(order: order, step: step),
-                        const SizedBox(height: 20),
-                        _SectionTitle(OrdersConstants.pickupAddress),
-                        const SizedBox(height: 10),
-                        _AddressCard(
-                          title: order.store?.name ?? '',
-                          address: order.store?.address ?? '',
-                          image: order.store?.image,
-                        ),
-                        const SizedBox(height: 20),
-                        _SectionTitle(OrdersConstants.userAddress),
-                        const SizedBox(height: 10),
-                        _AddressCard(
-                          title: _userName(
-                            order.user,
-                            order.shippingAddress?.city,
-                          ),
-                          address: order.shippingAddress?.street ?? '',
-                        ),
-                        const SizedBox(height: 20),
-                        _SectionTitle(OrdersConstants.orderDetails),
-                        const SizedBox(height: 10),
-                        _OrderItemsSection(
-                          items: order.orderItems ?? const [],
-                        ),
-                        const SizedBox(height: 8),
-                        const Divider(),
-                        _SummaryRow(
-                          label: OrdersConstants.total,
-                          value: 'EGP ${order.totalPrice?.toInt() ?? 0}',
-                        ),
-                        const Divider(),
-                        _SummaryRow(
-                          label: OrdersConstants.paymentMethod,
-                          value: _paymentLabel(order.paymentType),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const _OrderActionButton(),
-              ],
-            );
           },
-        ),
-      ),
+          child: Scaffold(
+            appBar: CustomAppBar(
+              title: OrdersConstants.orderDetails,
+              showBackButton: canGoBack,
+              onBack: canGoBack ? () => _handleBack(context) : null,
+            ),
+            body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
+              listenWhen: (previous, current) {
+                return previous.step != current.step ||
+                    previous.updateState.errorMessage !=
+                        current.updateState.errorMessage;
+              },
+              listener: (context, state) {
+                if (state.updateState.errorMessage != null) {
+                  CustomSnackBar.error(
+                    context,
+                    state.updateState.errorMessage!.tr(),
+                  );
+                }
+              },
+              builder: (context, state) {
+                final order = state.order;
+                final step = state.step;
+
+                if (order == null || step == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return Column(
+                  children: [
+                    _OrderProgressBar(step: step),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _OrderStatusBanner(order: order, step: step),
+                            const SizedBox(height: 20),
+                            _SectionTitle(OrdersConstants.pickupAddress),
+                            const SizedBox(height: 10),
+                            _AddressCard(
+                              title: order.store?.name ?? '',
+                              address: order.store?.address ?? '',
+                              image: order.store?.image,
+                            ),
+                            const SizedBox(height: 20),
+                            _SectionTitle(OrdersConstants.userAddress),
+                            const SizedBox(height: 10),
+                            _AddressCard(
+                              title: _userName(
+                                order.user,
+                                order.shippingAddress?.city,
+                              ),
+                              address: order.shippingAddress?.street ?? '',
+                            ),
+                            const SizedBox(height: 20),
+                            _SectionTitle(OrdersConstants.orderDetails),
+                            const SizedBox(height: 10),
+                            _OrderItemsSection(
+                              items: order.orderItems ?? const [],
+                            ),
+                            const SizedBox(height: 8),
+                            const Divider(),
+                            _SummaryRow(
+                              label: OrdersConstants.total,
+                              value: 'EGP ${order.totalPrice?.toInt() ?? 0}',
+                            ),
+                            const Divider(),
+                            _SummaryRow(
+                              label: OrdersConstants.paymentMethod,
+                              value: _paymentLabel(order.paymentType),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const _OrderActionButton(),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -109,8 +127,8 @@ class OrderDetailsScreen extends StatelessWidget {
 
   static String _userName(Object? user, String? fallback) {
     if (user is Map) {
-      final name =
-          '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'.trim();
+      final name = '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'
+          .trim();
       if (name.isNotEmpty) return name;
     }
     return fallback ?? '';
@@ -426,12 +444,19 @@ class _OrderActionButton extends StatelessWidget {
     return BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
       buildWhen: (p, c) =>
           p.step != c.step ||
-          p.updateState.isLoading != c.updateState.isLoading,
+          p.updateState.isLoading != c.updateState.isLoading ||
+          p.updateState.data != c.updateState.data,
       builder: (context, state) {
         final step = state.step;
         if (step == null) return const SizedBox.shrink();
+
         final loading = state.updateState.isLoading;
-        final disabled = step.isTerminal || loading;
+
+        final waiting =
+            step == OrderStep.arrived && state.updateState.data == true;
+
+        final disabled = loading || waiting;
+
         return SafeArea(
           minimum: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: SizedBox(
@@ -440,9 +465,20 @@ class _OrderActionButton extends StatelessWidget {
             child: ElevatedButton(
               onPressed: disabled
                   ? null
-                  : () => context.read<OrderDetailsCubit>().doIntent(
-                      const AdvanceOrderStepIntent(),
-                    ),
+                  : () {
+                      if (step == OrderStep.delivered) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.appSection,
+                          (route) => false,
+                        );
+                        return;
+                      }
+
+                      context.read<OrderDetailsCubit>().doIntent(
+                        const AdvanceOrderStepIntent(),
+                      );
+                    },
               child: loading
                   ? const SizedBox(
                       width: 22,
@@ -452,7 +488,11 @@ class _OrderActionButton extends StatelessWidget {
                         color: AppColors.surface,
                       ),
                     )
-                  : Text(step.buttonLabel),
+                  : Text(
+                      waiting
+                          ? OrdersConstants.waitingForCustomerConfirmation
+                          : step.buttonLabel,
+                    ),
             ),
           ),
         );

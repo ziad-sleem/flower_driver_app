@@ -1,15 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tracking_app/config/routes/routes.dart';
+import 'package:tracking_app/core/resources/app_svgs.dart';
 import 'package:tracking_app/core/widgets/app_error_widget.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
-import 'package:tracking_app/features/oreder_details/presentation/widgets/loading_order.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/loading_order_widget.dart';
 import 'package:tracking_app/features/oreder_details/presentation/widgets/order_list.dart';
 import '../widgets/empty_orders_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = ScrollController()
+      ..addListener(() {
+        final cubit = context.read<HomeCubit>();
+
+        if (_controller.position.pixels >=
+                _controller.position.maxScrollExtent - 250 &&
+            !cubit.state.isLoadingMore &&
+            cubit.state.hasMore) {
+          cubit.doEvent(const LoadMoreOrders());
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,61 +56,79 @@ class HomeScreen extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 Routes.orderDetails,
-                arguments: state.acceptedOrder,
-              ).then((delivered) {
-                if (delivered == true && context.mounted) {
-                  context.read<HomeCubit>().doEvent(GetPendingOrders());
-                }
-              });
-            }
-
-            if (state.rejectOrderState.data == true) {
-              context.read<HomeCubit>().doEvent(GetPendingOrders());
-            }
-
-            /// Reject Error
-            if (state.rejectOrderState.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.rejectOrderState.errorMessage!)),
+                arguments: OrderDetailsArgs(
+                  order: state.acceptedOrder!,
+                  state: "inProgress",
+                ),
               );
             }
 
-            /// Accept Error
+            // if (state.rejectOrderState.data == true) {
+            //   context.read<HomeCubit>().doEvent(const GetPendingOrders());
+            // }
+
             if (state.acceptOrderState.errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.acceptOrderState.errorMessage!)),
               );
             }
+
+            if (state.rejectOrderState.errorMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.rejectOrderState.errorMessage!)),
+              );
+            }
+          },
+          listenWhen: (previous, current) {
+            return previous.acceptOrderState != current.acceptOrderState ||
+                previous.rejectOrderState != current.rejectOrderState;
           },
           builder: (context, state) {
             final ordersState = state.ordersState;
 
-            if (ordersState.isLoading) {
-              return const LoadingOrdersWidget();
+            if (ordersState.isLoading && state.orders.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 50,
+                ),
+                child: LoadingOrdersWidget(),
+              );
             }
 
             if (ordersState.errorMessage != null) {
               return AppErrorWidget(
                 errorMessage: ordersState.errorMessage!,
                 onRetry: () {
-                  context.read<HomeCubit>().doEvent(GetPendingOrders());
+                  context.read<HomeCubit>().doEvent(const GetPendingOrders());
                 },
               );
             }
 
-            final orders = ordersState.data?.orders ?? [];
-
-            if (orders.isEmpty) {
+            if (state.orders.isEmpty) {
               return const EmptyOrdersWidget();
             }
 
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<HomeCubit>().doEvent(GetPendingOrders());
+                context.read<HomeCubit>().doEvent(const GetPendingOrders());
               },
               child: Column(
                 children: [
-                  Expanded(child: OrdersList(orders: orders)),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: SvgPicture.asset(AppSvgs.homeLogo),
+                    ),
+                  ),
+                  Expanded(
+                    child: OrdersList(
+                      controller: _controller,
+                      orders: state.orders,
+                      isLoadingMore: state.isLoadingMore,
+                    ),
+                  ),
                 ],
               ),
             );

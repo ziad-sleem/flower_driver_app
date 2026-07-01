@@ -14,6 +14,8 @@ import 'package:tracking_app/features/app_section/presentation/page/app_section_
 import 'package:tracking_app/features/edit_vehical_info/presentation/cubit/edit_vehicle_info_cubit.dart';
 import 'package:tracking_app/features/edit_vehical_info/presentation/pages/edit_vehicle_info_page.dart';
 import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
+import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/pages/reset_password_page.dart';
 import 'package:tracking_app/features/edit_profile/presentation/cubit/edit_profile_cubit.dart';
@@ -87,11 +89,17 @@ abstract class AppRouter {
           return PageTransitions.slide(OrderDetailPage(order: order));
 
         case Routes.orderDetails:
-          final order = settings.arguments as OrderEntity;
+          final args = settings.arguments as OrderDetailsArgs;
+
           return PageTransitions.slide(
             BlocProvider(
               create: (_) => getIt<OrderDetailsCubit>()
-                ..doIntent(StartOrderDetailsIntent(order)),
+                ..doIntent(
+                  StartOrderDetailsIntent(
+                    order: args.order,
+                    initialState: args.state,
+                  ),
+                ),
               child: const OrderDetailsScreen(),
             ),
           );

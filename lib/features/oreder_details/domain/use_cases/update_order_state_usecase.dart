@@ -25,8 +25,9 @@ class UpdateOrderStateUseCase {
           if (params.state == "inProgress") {
             await repo.saveCurrentOrder(
               driverId: driverId,
-              orderId: params.orderId,
+              order: params.order,
               state: params.state,
+              driverRequestedDelivery: false,
             );
           } else if (params.state == "canceled") {
             await repo.deleteCurrentOrder(driverId: driverId);

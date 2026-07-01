@@ -10,7 +10,13 @@ class GetPendingOrdersUseCase {
   GetPendingOrdersUseCase({required OrderDetailsRepo orderDetailsRepo})
     : _orderDetailsRepo = orderDetailsRepo;
 
-  Future<BaseResponse<OrdersResponseEntity>> call() async {
-    return await _orderDetailsRepo.getAllPendingOrders();
+  Future<BaseResponse<OrdersResponseEntity>> call({
+    required int page,
+    required int limit,
+  }) async {
+    return await _orderDetailsRepo.getAllPendingOrders(
+      page: page,
+      limit: limit,
+    );
   }
 }

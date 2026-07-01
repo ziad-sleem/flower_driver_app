@@ -23,7 +23,10 @@ class OrdersConstants {
   static String get arrivedToUser => "orders.arrived_to_user".tr();
   static String get deliveredToUser => "orders.delivered_to_user".tr();
   static String get thankYou => "orders.thank_you".tr();
-  static String get deliveredSuccessfully => "orders.delivered_successfully".tr();
+  static String get deliveredSuccessfully =>
+      "orders.delivered_successfully".tr();
   static String get price => "orders.price".tr();
   static String get distanceTime => "orders.distance_time".tr();
+  static String get waitingForCustomerConfirmation =>
+      "orders.waiting_for_customer_confirmation".tr();
 }
