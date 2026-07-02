@@ -14,11 +14,20 @@ class ShippingAddressDto {
   @JsonKey(name: "phone")
   String? phone;
   @JsonKey(name: "lat")
-  String? lat;
+  dynamic lat;
   @JsonKey(name: "long")
-  String? long;
+  dynamic long;
+  @JsonKey(name: "lng")
+  dynamic lng;
 
-  ShippingAddressDto({this.street, this.city, this.phone, this.lat, this.long});
+  ShippingAddressDto({
+    this.street,
+    this.city,
+    this.phone,
+    this.lat,
+    this.long,
+    this.lng,
+  });
 
   factory ShippingAddressDto.fromJson(Map<String, dynamic> json) =>
       _$ShippingAddressDtoFromJson(json);
@@ -29,7 +38,7 @@ class ShippingAddressDto {
     street: street,
     city: city,
     phone: phone,
-    lat: lat,
-    long: long,
+    lat: lat?.toString(),
+    long: (long ?? lng)?.toString(),
   );
 }

@@ -131,11 +131,10 @@ class OrderDetailsScreen extends StatelessWidget {
     LatLng? storeLoc;
     LatLng? userLoc;
 
-    final storeParts = order.store?.latLong?.split(',');
-    if (storeParts != null && storeParts.length == 2) {
-      final lat = double.tryParse(storeParts[0].trim());
-      final lng = double.tryParse(storeParts[1].trim());
-      if (lat != null && lng != null) storeLoc = LatLng(lat, lng);
+    final storeLat = double.tryParse(order.store?.lat ?? '');
+    final storeLng = double.tryParse(order.store?.long ?? '');
+    if (storeLat != null && storeLng != null) {
+      storeLoc = LatLng(storeLat, storeLng);
     }
     storeLoc ??= await GeocodingHelper.geocodeAddress(
       [
@@ -158,27 +157,40 @@ class OrderDetailsScreen extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    if (storeLoc == null || userLoc == null) {
+    if (storeLoc == null && userLoc == null) {
       CustomSnackBar.error(
         context,
-        'Could not find location for ${storeLoc == null ? 'store' : 'user'}',
+        'Could not find store or user location',
       );
       return;
     }
+    final paymentLabel = switch (order.paymentType) {
+      PaymentType.cash => 'Cash on Delivery',
+      PaymentType.visa => 'Visa',
+      PaymentType.wallet => 'Wallet',
+      null => '-',
+    };
+
     Navigator.pushNamed(
       context,
       Routes.driverMap,
       arguments: DriverMapParams(
         mode: mode,
-        storeLat: storeLoc.latitude,
-        storeLng: storeLoc.longitude,
-        userLat: userLoc.latitude,
-        userLng: userLoc.longitude,
+        storeLat: storeLoc?.latitude,
+        storeLng: storeLoc?.longitude,
+        userLat: userLoc?.latitude,
+        userLng: userLoc?.longitude,
         storeName: order.store?.name ?? '',
+        storeAddress: order.store?.address ?? '',
+        storePhone: order.store?.phoneNumber,
         userAddress: [
           order.shippingAddress?.street,
           order.shippingAddress?.city,
         ].where((s) => s != null && s.isNotEmpty).join(', '),
+        userPhone: order.shippingAddress?.phone,
+        orderNumber: order.orderNumber,
+        totalPrice: order.totalPrice,
+        paymentType: paymentLabel,
       ),
     );
   }

@@ -9,28 +9,22 @@ import 'package:tracking_app/features/driver_map/domain/entities/driver_map_para
 
 class MapBottomSheet extends StatelessWidget {
   final DriverMapParams params;
-  final double? distance;
-  final double? duration;
+  final double? storeDistance;
+  final double? storeDuration;
+  final double? userDistance;
+  final double? userDuration;
 
   const MapBottomSheet({
     super.key,
     required this.params,
-    this.distance,
-    this.duration,
+    this.storeDistance,
+    this.storeDuration,
+    this.userDistance,
+    this.userDuration,
   });
 
   @override
   Widget build(BuildContext context) {
-    final targetLabel = params.mode == MapMode.toStore
-        ? OrdersConstants.pickupAddress.tr()
-        : OrdersConstants.userAddress.tr();
-    final targetName = params.mode == MapMode.toStore
-        ? params.storeName
-        : params.userAddress;
-    final targetSvg = params.mode == MapMode.toStore
-        ? 'assets/svgs/flowery_location.svg'
-        : 'assets/svgs/user_location.svg';
-
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.surface,
@@ -43,7 +37,7 @@ class MapBottomSheet extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -56,48 +50,69 @@ class MapBottomSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _LocationRow(
+          if (params.orderNumber != null) ...[
+            Row(
+              children: [
+                Icon(Icons.receipt, size: 16, color: AppColors.textSecondary),
+                const SizedBox(width: 6),
+                Text(
+                  'Order #${params.orderNumber}',
+                  style: getSemiBoldStyle(
+                    context: context,
+                    color: AppColors.textPrimary,
+                    fontSize: FontSizeManager.s16,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+          ],
+          _LocationSection(
             icon: 'assets/svgs/my_location.svg',
-            label: OrdersConstants.yourLocation.tr(),
-            value: OrdersConstants.yourLocation.tr(),
-            iconWidth: 90,
-            iconHeight: 20,
+            iconBgColor: const Color(0xFF4CAF50),
+            title: OrdersConstants.yourLocation.tr(),
+            subtitle: OrdersConstants.yourLocation.tr(),
           ),
           const SizedBox(height: 12),
-          _LocationRow(
-            icon: targetSvg,
-            label: targetLabel,
-            value: targetName,
-            iconWidth: params.mode == MapMode.toStore ? 56 : 44,
-            iconHeight: params.mode == MapMode.toStore ? 20 : 24,
+          _LocationSection(
+            icon: 'assets/svgs/flowery_location.svg',
+            iconBgColor: AppColors.primary,
+            title: params.storeName,
+            subtitle: params.storeAddress.isNotEmpty ? params.storeAddress : null,
+            phone: params.storePhone,
+            distance: storeDistance,
+            duration: storeDuration,
           ),
-          if (distance != null && duration != null) ...[
-            const SizedBox(height: 16),
-            const Divider(),
+          if (params.userAddress.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _LocationSection(
+              icon: 'assets/svgs/user_location.svg',
+              iconBgColor: const Color(0xFF2196F3),
+              title: OrdersConstants.userAddress.tr(),
+              subtitle: params.userAddress,
+              phone: params.userPhone,
+              distance: userDistance,
+              duration: userDuration,
+            ),
+          ],
+          if (params.totalPrice != null || params.paymentType != null) ...[
+            const SizedBox(height: 14),
+            const Divider(height: 1, color: AppColors.border),
             const SizedBox(height: 12),
             Row(
               children: [
-                Icon(Icons.route, size: 18, color: AppColors.primary),
-                const SizedBox(width: 6),
-                Text(
-                  _formatDistance(distance!),
-                  style: getMediumStyle(
-                    context: context,
-                    color: AppColors.textPrimary,
-                    fontSize: FontSizeManager.s14,
+                if (params.totalPrice != null) ...[
+                  _InfoChip(
+                    icon: Icons.attach_money,
+                    label: '\$${params.totalPrice!.toStringAsFixed(2)}',
                   ),
-                ),
-                const SizedBox(width: 16),
-                Icon(Icons.access_time, size: 18, color: AppColors.primary),
-                const SizedBox(width: 6),
-                Text(
-                  _formatDuration(duration!),
-                  style: getMediumStyle(
-                    context: context,
-                    color: AppColors.textPrimary,
-                    fontSize: FontSizeManager.s14,
+                  const SizedBox(width: 16),
+                ],
+                if (params.paymentType != null)
+                  _InfoChip(
+                    icon: Icons.payment,
+                    label: params.paymentType!,
                   ),
-                ),
               ],
             ),
           ],
@@ -124,30 +139,51 @@ class MapBottomSheet extends StatelessWidget {
   }
 }
 
-class _LocationRow extends StatelessWidget {
+class _LocationSection extends StatelessWidget {
   final String icon;
-  final String label;
-  final String value;
-  final double iconWidth;
-  final double iconHeight;
+  final Color iconBgColor;
+  final String title;
+  final String? subtitle;
+  final String? phone;
+  final double? distance;
+  final double? duration;
 
-  const _LocationRow({
+  const _LocationSection({
     required this.icon,
-    required this.label,
-    required this.value,
-    required this.iconWidth,
-    required this.iconHeight,
+    required this.iconBgColor,
+    required this.title,
+    this.subtitle,
+    this.phone,
+    this.distance,
+    this.duration,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SvgPicture.asset(
-          icon,
-          width: iconWidth,
-          height: iconHeight,
-          fit: BoxFit.contain,
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: iconBgColor.withValues(alpha: 0.12),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: SvgPicture.asset(
+                icon,
+                fit: BoxFit.contain,
+                colorFilter: ColorFilter.mode(
+                  iconBgColor,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -155,25 +191,118 @@ class _LocationRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                label,
-                style: getRegularStyle(
-                  context: context,
-                  color: AppColors.textSecondary,
-                  fontSize: FontSizeManager.s12,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: getMediumStyle(
+                title,
+                style: getSemiBoldStyle(
                   context: context,
                   color: AppColors.textPrimary,
                   fontSize: FontSizeManager.s14,
                 ),
               ),
+              if (subtitle != null && subtitle!.isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(
+                  subtitle!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: getRegularStyle(
+                    context: context,
+                    color: AppColors.textSecondary,
+                    fontSize: FontSizeManager.s12,
+                  ),
+                ),
+              ],
+              if (phone != null && phone!.isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Icon(Icons.phone, size: 12, color: AppColors.primary),
+                    const SizedBox(width: 4),
+                    Text(
+                      phone!,
+                      style: getMediumStyle(
+                        context: context,
+                        color: AppColors.primary,
+                        fontSize: FontSizeManager.s12,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (distance != null && duration != null) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.route, size: 14, color: AppColors.textSecondary),
+                    const SizedBox(width: 4),
+                    Text(
+                      _formatDistance(distance!),
+                      style: getMediumStyle(
+                        context: context,
+                        color: AppColors.textPrimary,
+                        fontSize: FontSizeManager.s12,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
+                    const SizedBox(width: 4),
+                    Text(
+                      _formatDuration(duration!),
+                      style: getMediumStyle(
+                        context: context,
+                        color: AppColors.textPrimary,
+                        fontSize: FontSizeManager.s12,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatDistance(double meters) {
+    if (meters >= 1000) {
+      return '${(meters / 1000).toStringAsFixed(1)} km';
+    }
+    return '${meters.toStringAsFixed(0)} m';
+  }
+
+  String _formatDuration(double seconds) {
+    final minutes = (seconds / 60).round();
+    if (minutes >= 60) {
+      final hours = minutes ~/ 60;
+      final mins = minutes % 60;
+      return '${hours}h ${mins}min';
+    }
+    return '$minutes min';
+  }
+}
+
+class _InfoChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _InfoChip({
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: AppColors.primary),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: getSemiBoldStyle(
+            context: context,
+            color: AppColors.textPrimary,
+            fontSize: FontSizeManager.s12,
           ),
         ),
       ],

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -20,15 +21,21 @@ class DriverMapPage extends StatefulWidget {
 class _DriverMapPageState extends State<DriverMapPage> {
   final MapController _mapController = MapController();
   LatLng? _driverLocation;
-  List<LatLng> _routePoints = [];
-  double? _distance;
-  double? _duration;
+  List<LatLng> _storeRoutePoints = [];
+  List<LatLng> _userRoutePoints = [];
+  double? _storeDistance;
+  double? _storeDuration;
+  double? _userDistance;
+  double? _userDuration;
   bool _loading = true;
   String? _error;
+  double _currentZoom = 13;
 
   // Pending bounds fit — applied after the map renders for the first time.
   List<LatLng>? _pendingFitPoints;
   bool _mapReady = false;
+
+  StreamSubscription<Position>? _positionSubscription;
 
   @override
   void initState() {
@@ -36,13 +43,35 @@ class _DriverMapPageState extends State<DriverMapPage> {
     _initMap();
   }
 
+  @override
+  void dispose() {
+    _positionSubscription?.cancel();
+    super.dispose();
+  }
+
+  double _markerScale(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenFactor = screenWidth / 400;
+    final zoomFactor = _currentZoom / 13;
+    return (screenFactor * zoomFactor).clamp(0.8, 1.2);
+  }
+
   Future<void> _initMap() async {
     try {
-      final permission = await Geolocator.checkPermission();
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        setState(() {
+          _error =
+              'Location services are disabled. Please enable them in Settings.';
+          _loading = false;
+        });
+        return;
+      }
+
+      var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
-        final granted = await Geolocator.requestPermission();
-        if (granted == LocationPermission.denied ||
-            granted == LocationPermission.deniedForever) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
           setState(() {
             _error =
                 'Location permission denied. Please enable it in Settings.';
@@ -66,66 +95,123 @@ class _DriverMapPageState extends State<DriverMapPage> {
           timeLimit: Duration(seconds: 10),
         ),
       );
-      final driverLoc = LatLng(position.latitude, position.longitude);
+      final initialLoc = LatLng(position.latitude, position.longitude);
 
-      final from = widget.params.mode == MapMode.toStore
-          ? driverLoc
-          : LatLng(widget.params.storeLat, widget.params.storeLng);
-      final to = widget.params.mode == MapMode.toStore
-          ? LatLng(widget.params.storeLat, widget.params.storeLng)
-          : LatLng(widget.params.userLat, widget.params.userLng);
+      await _updateRouteAndPosition(initialLoc, isInitial: true);
 
-      List<LatLng> routePoints = [from, to]; // straight-line fallback
-      double? distance;
-      double? duration;
+      // Start listening to live location stream
+      _positionSubscription =
+          Geolocator.getPositionStream(
+            locationSettings: const LocationSettings(
+              accuracy: LocationAccuracy.high,
+              distanceFilter: 10,
+            ),
+          ).listen(
+            (Position newPosition) {
+              final newLoc = LatLng(
+                newPosition.latitude,
+                newPosition.longitude,
+              );
+              _updateRouteAndPosition(newLoc, isInitial: false);
+            },
+            onError: (err) {
+              debugPrint('Location stream error: $err');
+            },
+          );
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'Could not get your location: ${e.toString()}';
+          _loading = false;
+        });
+      }
+    }
+  }
 
-      try {
-        final dio = Dio();
-        final response = await dio
-            .get(
-              'https://router.project-osrm.org/route/v1/driving/'
-              '${from.longitude},${from.latitude};${to.longitude},${to.latitude}',
-              queryParameters: {'geometries': 'geojson', 'overview': 'full'},
-            )
-            .timeout(const Duration(seconds: 8));
+  Future<void> _updateRouteAndPosition(
+    LatLng driverLoc, {
+    required bool isInitial,
+  }) async {
+    LatLng? storeLoc =
+        widget.params.storeLat != null && widget.params.storeLng != null
+        ? LatLng(widget.params.storeLat!, widget.params.storeLng!)
+        : null;
+    LatLng? userLoc =
+        widget.params.userLat != null && widget.params.userLng != null
+        ? LatLng(widget.params.userLat!, widget.params.userLng!)
+        : null;
 
-        final data = response.data;
+    final storeFuture = storeLoc != null
+        ? _fetchRoute(driverLoc, storeLoc)
+        : Future<_RouteResult?>.value(null);
+    final userFuture = userLoc != null
+        ? _fetchRoute(driverLoc, userLoc)
+        : Future<_RouteResult?>.value(null);
+    final results = await Future.wait<_RouteResult?>([storeFuture, userFuture]);
+    final storeResult = results[0];
+    final userResult = results[1];
+
+    final allPoints = <LatLng>[
+      driverLoc,
+      if (storeLoc != null) storeLoc,
+      if (userLoc != null) userLoc,
+      if (storeResult != null) ...storeResult.points,
+      if (userResult != null) ...userResult.points,
+    ];
+
+    if (!mounted) return;
+
+    setState(() {
+      _driverLocation = driverLoc;
+      _storeRoutePoints =
+          storeResult?.points ??
+          (storeLoc != null ? [driverLoc, storeLoc] : []);
+      _userRoutePoints =
+          userResult?.points ?? (userLoc != null ? [driverLoc, userLoc] : []);
+      _storeDistance = storeResult?.distance;
+      _storeDuration = storeResult?.duration;
+      _userDistance = userResult?.distance;
+      _userDuration = userResult?.duration;
+      _loading = false;
+      if (isInitial) {
+        _pendingFitPoints = allPoints;
+      }
+    });
+
+    if (isInitial && _mapReady) {
+      _fitBounds(allPoints);
+      _pendingFitPoints = null;
+    }
+  }
+
+  Future<_RouteResult?> _fetchRoute(LatLng from, LatLng to) async {
+    try {
+      final dio = Dio();
+      final response = await dio
+          .get(
+            'https://router.project-osrm.org/route/v1/driving/'
+            '${from.longitude},${from.latitude};'
+            '${to.longitude},${to.latitude}',
+            queryParameters: {'geometries': 'geojson', 'overview': 'full'},
+          )
+          .timeout(const Duration(seconds: 15));
+      final data = response.data;
+      if (data != null &&
+          data['routes'] != null &&
+          (data['routes'] as List).isNotEmpty) {
         final route = data['routes'][0];
         final coords = route['geometry']['coordinates'] as List;
-        routePoints = coords
+        final points = coords
             .map((c) => LatLng(c[1] as double, c[0] as double))
             .toList();
-        distance = (route['distance'] as num).toDouble();
-        duration = (route['duration'] as num).toDouble();
-      } catch (_) {
-        // OSRM unavailable — keep straight-line fallback
+        return _RouteResult(
+          points: points,
+          distance: (route['distance'] as num).toDouble(),
+          duration: (route['duration'] as num).toDouble(),
+        );
       }
-
-      final allPoints = [
-        driverLoc,
-        LatLng(widget.params.storeLat, widget.params.storeLng),
-        LatLng(widget.params.userLat, widget.params.userLng),
-        ...routePoints,
-      ];
-
-      setState(() {
-        _driverLocation = driverLoc;
-        _routePoints = routePoints;
-        _distance = distance;
-        _duration = duration;
-        _loading = false;
-        _pendingFitPoints = allPoints;
-      });
-
-      // If the map is already ready, fit immediately; otherwise it will be
-      // applied in onMapReady (called after the first frame).
-      if (_mapReady) _fitBounds(allPoints);
-    } catch (e) {
-      setState(() {
-        _error = 'Could not get your location: ${e.toString()}';
-        _loading = false;
-      });
-    }
+    } catch (_) {}
+    return null;
   }
 
   void _fitBounds(List<LatLng> points) {
@@ -138,6 +224,8 @@ class _DriverMapPageState extends State<DriverMapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scale = _markerScale(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -147,8 +235,13 @@ class _DriverMapPageState extends State<DriverMapPage> {
               options: MapOptions(
                 initialCenter: _driverLocation!,
                 initialZoom: 13,
-                // Called once the map widget is fully rendered and the
-                // MapController is ready to accept commands.
+                onMapEvent: (event) {
+                  if (event is MapEventMoveEnd) {
+                    setState(() {
+                      _currentZoom = event.camera.zoom;
+                    });
+                  }
+                },
                 onMapReady: () {
                   _mapReady = true;
                   if (_pendingFitPoints != null) {
@@ -160,15 +253,24 @@ class _DriverMapPageState extends State<DriverMapPage> {
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  // Required by OSM tile usage policy to avoid 403 blocks.
                   userAgentPackageName: 'com.elevate.trackingapp',
                 ),
-                if (_routePoints.isNotEmpty)
+                if (_storeRoutePoints.isNotEmpty)
                   PolylineLayer(
                     polylines: [
                       Polyline(
-                        points: _routePoints,
+                        points: _storeRoutePoints,
                         color: AppColors.primary,
+                        strokeWidth: 4,
+                      ),
+                    ],
+                  ),
+                if (_userRoutePoints.isNotEmpty)
+                  PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: _userRoutePoints,
+                        color: const Color(0xFF2196F3),
                         strokeWidth: 4,
                       ),
                     ],
@@ -177,36 +279,39 @@ class _DriverMapPageState extends State<DriverMapPage> {
                   markers: [
                     Marker(
                       point: _driverLocation!,
-                      child: const MapMarker(
-                        svgAsset: 'assets/svgs/my_location.svg',
-                        width: 90,
-                        height: 20,
-                        alignment: Alignment.center,
+                      alignment: Alignment.bottomCenter,
+                      child: MapMarker(
+                        kind: MapMarkerKind.driver,
+                        size: 52 * scale,
+                        showPulse: true,
                       ),
                     ),
-                    Marker(
-                      point: LatLng(
-                        widget.params.storeLat,
-                        widget.params.storeLng,
+                    if (widget.params.storeLat != null &&
+                        widget.params.storeLng != null)
+                      Marker(
+                        point: LatLng(
+                          widget.params.storeLat!,
+                          widget.params.storeLng!,
+                        ),
+                        alignment: Alignment.bottomCenter,
+                        child: MapMarker(
+                          kind: MapMarkerKind.store,
+                          size: 48 * scale,
+                        ),
                       ),
-                      child: const MapMarker(
-                        svgAsset: 'assets/svgs/flowery_location.svg',
-                        width: 56,
-                        height: 20,
-                        alignment: Alignment.center,
+                    if (widget.params.userLat != null &&
+                        widget.params.userLng != null)
+                      Marker(
+                        point: LatLng(
+                          widget.params.userLat!,
+                          widget.params.userLng!,
+                        ),
+                        alignment: Alignment.bottomCenter,
+                        child: MapMarker(
+                          kind: MapMarkerKind.user,
+                          size: 48 * scale,
+                        ),
                       ),
-                    ),
-                    Marker(
-                      point: LatLng(
-                        widget.params.userLat,
-                        widget.params.userLng,
-                      ),
-                      child: const MapMarker(
-                        svgAsset: 'assets/svgs/user_location.svg',
-                        width: 44,
-                        height: 24,
-                      ),
-                    ),
                   ],
                 ),
               ],
@@ -220,10 +325,32 @@ class _DriverMapPageState extends State<DriverMapPage> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
-                child: Text(
-                  _error!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.error),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _error!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                    const SizedBox(height: 20),
+                    FilledButton.icon(
+                      onPressed: () => Geolocator.openLocationSettings(),
+                      icon: const Icon(Icons.settings),
+                      label: const Text('Open Settings'),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _error = null;
+                          _loading = true;
+                        });
+                        _initMap();
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -234,8 +361,27 @@ class _DriverMapPageState extends State<DriverMapPage> {
               bottom: 0,
               child: MapBottomSheet(
                 params: widget.params,
-                distance: _distance,
-                duration: _duration,
+                storeDistance: _storeDistance,
+                storeDuration: _storeDuration,
+                userDistance: _userDistance,
+                userDuration: _userDuration,
+              ),
+            ),
+          if (_driverLocation != null)
+            Positioned(
+              right: 16,
+              bottom: 250 + MediaQuery.of(context).padding.bottom,
+              child: FloatingActionButton(
+                heroTag: 'recenter_fab',
+                mini: true,
+                backgroundColor: AppColors.surface,
+                foregroundColor: AppColors.primary,
+                onPressed: () {
+                  if (_driverLocation != null) {
+                    _mapController.move(_driverLocation!, 15);
+                  }
+                },
+                child: const Icon(Icons.my_location),
               ),
             ),
           Positioned(
@@ -256,4 +402,16 @@ class _DriverMapPageState extends State<DriverMapPage> {
       ),
     );
   }
+}
+
+class _RouteResult {
+  final List<LatLng> points;
+  final double distance;
+  final double duration;
+
+  const _RouteResult({
+    required this.points,
+    required this.distance,
+    required this.duration,
+  });
 }

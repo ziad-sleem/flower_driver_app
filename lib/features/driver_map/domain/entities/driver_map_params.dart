@@ -2,20 +2,32 @@ enum MapMode { toStore, toUser }
 
 class DriverMapParams {
   final MapMode mode;
-  final double storeLat;
-  final double storeLng;
-  final double userLat;
-  final double userLng;
+  final double? storeLat;
+  final double? storeLng;
+  final double? userLat;
+  final double? userLng;
   final String storeName;
+  final String storeAddress;
+  final String? storePhone;
   final String userAddress;
+  final String? userPhone;
+  final String? orderNumber;
+  final double? totalPrice;
+  final String? paymentType;
 
   const DriverMapParams({
     required this.mode,
-    required this.storeLat,
-    required this.storeLng,
-    required this.userLat,
-    required this.userLng,
+    this.storeLat,
+    this.storeLng,
+    this.userLat,
+    this.userLng,
     required this.storeName,
+    this.storeAddress = '',
+    this.storePhone,
     required this.userAddress,
+    this.userPhone,
+    this.orderNumber,
+    this.totalPrice,
+    this.paymentType,
   });
 }

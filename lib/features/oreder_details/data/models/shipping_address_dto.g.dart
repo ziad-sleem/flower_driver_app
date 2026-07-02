@@ -11,8 +11,9 @@ ShippingAddressDto _$ShippingAddressDtoFromJson(Map<String, dynamic> json) =>
       street: json['street'] as String?,
       city: json['city'] as String?,
       phone: json['phone'] as String?,
-      lat: json['lat'] as String?,
-      long: json['long'] as String?,
+      lat: json['lat'],
+      long: json['long'],
+      lng: json['lng'],
     );
 
 Map<String, dynamic> _$ShippingAddressDtoToJson(ShippingAddressDto instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$ShippingAddressDtoToJson(ShippingAddressDto instance) =>
       'phone': instance.phone,
       'lat': instance.lat,
       'long': instance.long,
+      'lng': instance.lng,
     };
