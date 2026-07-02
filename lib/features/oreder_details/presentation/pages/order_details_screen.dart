@@ -1,12 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/localization_constants/orders_constants.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/theme/font_size_manager.dart';
+import 'package:tracking_app/core/utils/geocoding_helper.dart';
 import 'package:tracking_app/core/widgets/custom_appbar.dart';
 import 'package:tracking_app/core/widgets/custom_snack_bar.dart';
+import 'package:tracking_app/features/driver_map/domain/entities/driver_map_params.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
@@ -60,6 +64,9 @@ class OrderDetailsScreen extends StatelessWidget {
                           title: order.store?.name ?? '',
                           address: order.store?.address ?? '',
                           image: order.store?.image,
+                          onNavigate: () {
+                            _openMap(context, MapMode.toStore);
+                          },
                         ),
                         const SizedBox(height: 20),
                         _SectionTitle(OrdersConstants.userAddress),
@@ -70,13 +77,14 @@ class OrderDetailsScreen extends StatelessWidget {
                             order.shippingAddress?.city,
                           ),
                           address: order.shippingAddress?.street ?? '',
+                          onNavigate: () {
+                            _openMap(context, MapMode.toUser);
+                          },
                         ),
                         const SizedBox(height: 20),
                         _SectionTitle(OrdersConstants.orderDetails),
                         const SizedBox(height: 10),
-                        _OrderItemsSection(
-                          items: order.orderItems ?? const [],
-                        ),
+                        _OrderItemsSection(items: order.orderItems ?? const []),
                         const SizedBox(height: 8),
                         const Divider(),
                         _SummaryRow(
@@ -109,11 +117,70 @@ class OrderDetailsScreen extends StatelessWidget {
 
   static String _userName(Object? user, String? fallback) {
     if (user is Map) {
-      final name =
-          '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'.trim();
+      final name = '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'
+          .trim();
       if (name.isNotEmpty) return name;
     }
     return fallback ?? '';
+  }
+
+  Future<void> _openMap(BuildContext context, MapMode mode) async {
+    final order = context.read<OrderDetailsCubit>().state.order;
+    if (order == null) return;
+
+    LatLng? storeLoc;
+    LatLng? userLoc;
+
+    final storeParts = order.store?.latLong?.split(',');
+    if (storeParts != null && storeParts.length == 2) {
+      final lat = double.tryParse(storeParts[0].trim());
+      final lng = double.tryParse(storeParts[1].trim());
+      if (lat != null && lng != null) storeLoc = LatLng(lat, lng);
+    }
+    storeLoc ??= await GeocodingHelper.geocodeAddress(
+      [
+        order.store?.name,
+        order.store?.address,
+      ].where((s) => s != null && s.isNotEmpty).join(', '),
+    );
+
+    final userLat = double.tryParse(order.shippingAddress?.lat ?? '');
+    final userLng = double.tryParse(order.shippingAddress?.long ?? '');
+    if (userLat != null && userLng != null) {
+      userLoc = LatLng(userLat, userLng);
+    }
+    userLoc ??= await GeocodingHelper.geocodeAddress(
+      [
+        order.shippingAddress?.street,
+        order.shippingAddress?.city,
+      ].where((s) => s != null && s.isNotEmpty).join(', '),
+    );
+
+    if (!context.mounted) return;
+
+    if (storeLoc == null || userLoc == null) {
+      CustomSnackBar.error(
+        context,
+        'Could not find location for ${storeLoc == null ? 'store' : 'user'}',
+      );
+      return;
+    }
+    Navigator.pushNamed(
+      context,
+      Routes.driverMap,
+      arguments: DriverMapParams(
+        mode: mode,
+        storeLat: storeLoc.latitude,
+        storeLng: storeLoc.longitude,
+        userLat: userLoc.latitude,
+        userLng: userLoc.longitude,
+        storeName: order.store?.name ?? '',
+        userAddress: [
+          order.shippingAddress?.street,
+          order.shippingAddress?.city,
+        ].where((s) => s != null && s.isNotEmpty).join(', '),
+      ),
+    );
   }
 
   static String _paymentLabel(PaymentType? type) => switch (type) {
@@ -236,7 +303,16 @@ class _AddressCard extends StatelessWidget {
   final String title;
   final String address;
   final String? image;
-  const _AddressCard({required this.title, required this.address, this.image});
+  final VoidCallback? onNavigate;
+  const _AddressCard({
+    required this.title,
+    required this.address,
+    this.image,
+    this.onNavigate,
+  });
+
+  static bool _isValidUrl(String url) =>
+      url.startsWith('http://') || url.startsWith('https://');
 
   @override
   Widget build(BuildContext context) {
@@ -251,10 +327,11 @@ class _AddressCard extends StatelessWidget {
           CircleAvatar(
             radius: 18,
             backgroundColor: AppColors.background,
-            backgroundImage: (image != null && image!.isNotEmpty)
+            backgroundImage:
+                (image != null && image!.isNotEmpty && _isValidUrl(image!))
                 ? NetworkImage(image!)
                 : null,
-            child: (image == null || image!.isEmpty)
+            child: (image == null || image!.isEmpty || !_isValidUrl(image!))
                 ? const Icon(Icons.store, size: 18)
                 : null,
           ),
@@ -296,6 +373,12 @@ class _AddressCard extends StatelessWidget {
               ],
             ),
           ),
+          if (onNavigate != null)
+            GestureDetector(
+              onTap: onNavigate,
+              child: const Icon(Icons.map, color: AppColors.primary, size: 20),
+            ),
+          const SizedBox(width: 12),
           const Icon(Icons.call, color: AppColors.primary, size: 20),
           const SizedBox(width: 12),
           const Icon(Icons.chat, color: AppColors.primary, size: 20),

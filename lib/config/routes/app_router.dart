@@ -5,6 +5,8 @@ import 'package:tracking_app/config/routes/page_transitions.dart';
 import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/widgets/not_found_screen.dart';
 import 'package:tracking_app/features/auth/presentation/apply/cubit/apply_cubit.dart';
+import 'package:tracking_app/features/driver_map/domain/entities/driver_map_params.dart';
+import 'package:tracking_app/features/driver_map/presentation/pages/driver_map_page.dart';
 import 'package:tracking_app/features/auth/presentation/apply/pages/apply_page.dart';
 import 'package:tracking_app/features/auth/presentation/apply/pages/success_apply_page.dart';
 import 'package:tracking_app/features/auth/presentation/forget_password/cubit/forget_password_cubit.dart';
@@ -95,6 +97,10 @@ abstract class AppRouter {
               child: const OrderDetailsScreen(),
             ),
           );
+
+        case Routes.driverMap:
+          final params = settings.arguments as DriverMapParams;
+          return PageTransitions.slide(DriverMapPage(params: params));
 
         default:
           return PageTransitions.fade(

@@ -13,6 +13,9 @@ class AddressTile extends StatelessWidget {
     this.image,
   });
 
+  static bool _isValidUrl(String url) =>
+      url.startsWith('http://') || url.startsWith('https://');
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,10 +28,12 @@ class AddressTile extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 18,
-            backgroundImage: image != null && image!.isNotEmpty
+            backgroundImage: image != null && image!.isNotEmpty && _isValidUrl(image!)
                 ? NetworkImage(image!)
                 : null,
-            child: image == null ? const Icon(Icons.person) : null,
+            child: image == null || !_isValidUrl(image!)
+                ? const Icon(Icons.person)
+                : null,
           ),
           const SizedBox(width: 10),
           Expanded(

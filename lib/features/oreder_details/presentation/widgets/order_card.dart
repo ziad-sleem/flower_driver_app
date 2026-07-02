@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tracking_app/config/routes/routes.dart';
+import 'package:tracking_app/config/routes/page_transitions.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
+import 'package:tracking_app/features/oreder_details/presentation/pages/order_detail_page.dart';
 import 'package:tracking_app/features/oreder_details/presentation/widgets/address_tile.dart';
 
 class OrderCard extends StatelessWidget {
@@ -28,7 +29,15 @@ class OrderCard extends StatelessWidget {
           cubit.state.rejectingOrderId == order.id,
     );
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.orderDetail, arguments: order),
+      onTap: () => Navigator.push(
+        context,
+        PageTransitions.slide(
+          BlocProvider.value(
+            value: context.read<HomeCubit>(),
+            child: OrderDetailPage(order: order),
+          ),
+        ),
+      ),
       borderRadius: BorderRadius.circular(12),
       child: Container(
       padding: const EdgeInsets.all(14),

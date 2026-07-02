@@ -103,7 +103,8 @@ import '../../features/oreder_details/domain/use_cases/watch_order_state_usecase
     as _i941;
 import '../../features/oreder_details/presentation/cubit/home_cubit.dart'
     as _i531;
-<<<<<<< HEAD
+import '../../features/oreder_details/presentation/cubit/order_details_cubit.dart'
+    as _i235;
 import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
 import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
     as _i4;
@@ -121,10 +122,6 @@ import '../../features/profile/domain/use_cases/reset_password_use_case.dart'
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
     as _i786;
-=======
-import '../../features/oreder_details/presentation/cubit/order_details_cubit.dart'
-    as _i235;
->>>>>>> origin/feature/SCRUM-50-order-details-module
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
