@@ -1,6 +1,10 @@
+import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
+
 class UpdateOrderStateParams {
-  final String orderId;
+  final OrderEntity order;
   final String state;
 
-  const UpdateOrderStateParams({required this.orderId, required this.state});
+  const UpdateOrderStateParams({required this.order, required this.state});
+
+  String get orderId => order.id ?? '';
 }

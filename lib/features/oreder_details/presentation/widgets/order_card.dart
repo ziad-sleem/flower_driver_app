@@ -40,135 +40,135 @@ class OrderCard extends StatelessWidget {
       ),
       borderRadius: BorderRadius.circular(12),
       child: Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Flower order",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Flower order",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
 
-          const SizedBox(height: 10),
+            const SizedBox(height: 10),
 
-          const Text("Pickup address"),
+            const Text("Pickup address"),
 
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
 
-          AddressTile(
-            title: order.store?.name ?? "",
-            address: order.store?.address ?? "",
-            image: order.store?.image,
-          ),
+            AddressTile(
+              title: order.store?.name ?? "",
+              address: order.store?.address ?? "",
+              image: order.store?.image,
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          const Text("User address"),
+            const Text("User address"),
 
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
 
-          AddressTile(
-            title: "Customer",
-            address: order.shippingAddress?.street ?? "",
-          ),
+            AddressTile(
+              title: "Customer",
+              address: order.shippingAddress?.street ?? "",
+            ),
 
-          const SizedBox(height: 14),
+            const SizedBox(height: 14),
 
-          Row(
-            children: [
-              Text(
-                "EGP ${order.totalPrice?.toInt() ?? 0}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const Spacer(),
-
-              SizedBox(
-                width: 90,
-                height: 35,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.primary),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: EdgeInsets.zero,
+            Row(
+              children: [
+                Text(
+                  "EGP ${order.totalPrice?.toInt() ?? 0}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                  onPressed: rejectLoading
-                      ? null
-                      : () {
-                          context.read<HomeCubit>().doEvent(
-                            RejectOrder(orderId: order.id ?? ""),
-                          );
-                        },
-                  child: rejectLoading
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(
-                          "Reject",
-                          style: getMediumStyle(
-                            context: context,
-                            color: AppColors.primary,
-                            fontSize: 14,
-                          ),
-                        ),
                 ),
-              ),
+                const Spacer(),
 
-              AppSizedBox(width: 10),
-
-              SizedBox(
-                width: 90,
-                height: 35,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.background,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                SizedBox(
+                  width: 90,
+                  height: 35,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.zero,
                     ),
-                    padding: EdgeInsets.zero,
-                    elevation: 0,
+                    onPressed: rejectLoading
+                        ? null
+                        : () {
+                            context.read<HomeCubit>().doEvent(
+                              RejectOrder(order: order),
+                            );
+                          },
+                    child: rejectLoading
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            "Reject",
+                            style: getMediumStyle(
+                              context: context,
+                              color: AppColors.primary,
+                              fontSize: 14,
+                            ),
+                          ),
                   ),
-                  onPressed: acceptLoading
-                      ? null
-                      : () {
-                          context.read<HomeCubit>().doEvent(
-                            AcceptOrder(order: order),
-                          );
-                        },
-                  child: acceptLoading
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(
-                          "Accept",
-                          style: getMediumStyle(
-                            context: context,
-                            color: AppColors.background,
-                            fontSize: 14,
-                          ),
-                        ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
+
+                AppSizedBox(width: 10),
+
+                SizedBox(
+                  width: 90,
+                  height: 35,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.background,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.zero,
+                      elevation: 0,
+                    ),
+                    onPressed: acceptLoading
+                        ? null
+                        : () {
+                            context.read<HomeCubit>().doEvent(
+                              AcceptOrder(order: order),
+                            );
+                          },
+                    child: acceptLoading
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            "Accept",
+                            style: getMediumStyle(
+                              context: context,
+                              color: AppColors.background,
+                              fontSize: 14,
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

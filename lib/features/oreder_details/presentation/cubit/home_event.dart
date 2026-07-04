@@ -1,17 +1,29 @@
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 
-sealed class HomeEvent {}
+sealed class HomeEvent {
+  const HomeEvent();
+}
 
-class GetPendingOrders extends HomeEvent {}
+class GetPendingOrders extends HomeEvent {
+  const GetPendingOrders();
+}
+
+class CheckCurrentOrder extends HomeEvent {
+  const CheckCurrentOrder();
+}
 
 class AcceptOrder extends HomeEvent {
   final OrderEntity order;
 
-  AcceptOrder({required this.order});
+  const AcceptOrder({required this.order});
 }
 
 class RejectOrder extends HomeEvent {
-  final String orderId;
+  final OrderEntity order;
 
-  RejectOrder({required this.orderId});
+  const RejectOrder({required this.order});
+}
+
+class LoadMoreOrders extends HomeEvent {
+  const LoadMoreOrders();
 }

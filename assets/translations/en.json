@@ -50,10 +50,6 @@
     "title": "Welcome to",
     "description": "Flowery rider app"
   },
-  "onboarding": {
-    "title": "Welcome to",
-    "description": "Flowery rider app"
-  },
   "validation": {
     "email_required": "Email is required",
     "invalid_email": "This Email is not valid",
@@ -160,7 +156,8 @@
     "thank_you": "Thank you!!",
     "delivered_successfully": "The order delivered successfully",
     "price": "EGP 600",
-    "distance_time": "24 Km - 30 mins to deliver"
+    "distance_time": "24 Km - 30 mins to deliver",
+    "waiting_for_customer_confirmation":"waiting For Customer Confirmation"
   },
   "status": {
     "pending": "Pending",

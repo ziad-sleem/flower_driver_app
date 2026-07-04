@@ -37,7 +37,7 @@ class ProfilePage extends StatelessWidget {
           listener: (context, state) {
             Navigator.pushNamedAndRemoveUntil(
               context,
-              Routes.login,
+              Routes.onboarding,
               (_) => false,
             );
           },
@@ -85,7 +85,9 @@ class _ProfileBody extends StatelessWidget {
                 return ProfileContainer(
                   onArrowPressed: () {
                     Navigator.pushNamed(context, Routes.editProfile).then((_) {
-                      context.read<ProfileCubit>().doEvent(GetDriverDataEvent());
+                      context.read<ProfileCubit>().doEvent(
+                        GetDriverDataEvent(),
+                      );
                     });
                   },
                   child: Row(
@@ -95,7 +97,11 @@ class _ProfileBody extends StatelessWidget {
                           : CircleAvatar(
                               radius: 30,
                               backgroundColor: AppColors.primary,
-                              child: Icon(Icons.person, color: Colors.white, size: 32),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 32,
+                              ),
                             ),
                       const AppSizedBox(width: 10),
                       Expanded(

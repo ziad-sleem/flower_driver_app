@@ -8,8 +8,12 @@ import 'dart:async' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:tracking_app/config/base/base_response.dart' as _i4;
+import 'package:tracking_app/features/oreder_details/domain/entities/current_order_entity.dart'
+    as _i10;
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart'
     as _i5;
+import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart'
+    as _i9;
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_params.dart'
     as _i8;
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_response_entity.dart'
@@ -41,15 +45,23 @@ class MockOrderDetailsRepo extends _i1.Mock implements _i2.OrderDetailsRepo {
   }
 
   @override
-  _i3.Future<_i4.BaseResponse<_i5.OrdersResponseEntity>>
-  getAllPendingOrders() =>
+  _i3.Future<_i4.BaseResponse<_i5.OrdersResponseEntity>> getAllPendingOrders({
+    required int? page,
+    required int? limit,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#getAllPendingOrders, []),
+            Invocation.method(#getAllPendingOrders, [], {
+              #page: page,
+              #limit: limit,
+            }),
             returnValue:
                 _i3.Future<_i4.BaseResponse<_i5.OrdersResponseEntity>>.value(
                   _i6.dummyValue<_i4.BaseResponse<_i5.OrdersResponseEntity>>(
                     this,
-                    Invocation.method(#getAllPendingOrders, []),
+                    Invocation.method(#getAllPendingOrders, [], {
+                      #page: page,
+                      #limit: limit,
+                    }),
                   ),
                 ),
           )
@@ -74,14 +86,16 @@ class MockOrderDetailsRepo extends _i1.Mock implements _i2.OrderDetailsRepo {
   @override
   _i3.Future<void> saveCurrentOrder({
     required String? driverId,
-    required String? orderId,
+    required _i9.OrderEntity? order,
     required String? state,
+    required bool? driverRequestedDelivery,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#saveCurrentOrder, [], {
               #driverId: driverId,
-              #orderId: orderId,
+              #order: order,
               #state: state,
+              #driverRequestedDelivery: driverRequestedDelivery,
             }),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
@@ -98,10 +112,22 @@ class MockOrderDetailsRepo extends _i1.Mock implements _i2.OrderDetailsRepo {
           as _i3.Future<void>);
 
   @override
-  _i3.Stream<String?> watchOrderState({required String? driverId}) =>
+  _i3.Stream<_i10.CurrentOrderEntity?> watchCurrentOrder({
+    required String? driverId,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#watchOrderState, [], {#driverId: driverId}),
-            returnValue: _i3.Stream<String?>.empty(),
+            Invocation.method(#watchCurrentOrder, [], {#driverId: driverId}),
+            returnValue: _i3.Stream<_i10.CurrentOrderEntity?>.empty(),
           )
-          as _i3.Stream<String?>);
+          as _i3.Stream<_i10.CurrentOrderEntity?>);
+
+  @override
+  _i3.Future<_i10.CurrentOrderEntity?> getCurrentOrder({
+    required String? driverId,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#getCurrentOrder, [], {#driverId: driverId}),
+            returnValue: _i3.Future<_i10.CurrentOrderEntity?>.value(),
+          )
+          as _i3.Future<_i10.CurrentOrderEntity?>);
 }
