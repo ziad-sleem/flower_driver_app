@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/localization_constants/orders_constants.dart';
 import 'package:tracking_app/core/localization_constants/status_constants.dart';
 import 'package:tracking_app/core/resources/app_svgs.dart';
@@ -20,58 +21,66 @@ class RecentOrderCard extends StatelessWidget {
     final order = driverOrder.order;
     final store = driverOrder.store;
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => Navigator.pushNamed(
+        context,
+        Routes.driverOrderDetails,
+        arguments: driverOrder,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                OrdersConstants.flowerOrder,
-                style: getSemiBoldStyle(
-                  context: context,
-                  color: AppColors.textPrimary,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  OrdersConstants.flowerOrder,
+                  style: getSemiBoldStyle(
+                    context: context,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                '#${order?.orderNumber ?? ''}',
-                style: getMediumStyle(
-                  context: context,
-                  color: AppColors.grey800,
+                const Spacer(),
+                Text(
+                  order?.orderNumber ?? '',
+                  style: getMediumStyle(
+                    context: context,
+                    color: AppColors.grey800,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
-          const AppSizedBox(height: 8),
+            const AppSizedBox(height: 8),
 
-          _StatusBadge(state: order?.state),
+            _StatusBadge(state: order?.state),
 
-          const AppSizedBox(height: 12),
+            const AppSizedBox(height: 12),
 
-          Text(OrdersConstants.pickupAddress),
-          const AppSizedBox(height: 8),
-          AddressTile(
-            title: store?.name ?? '',
-            address: store?.address ?? '',
-            image: store?.image,
-          ),
+            Text(OrdersConstants.pickupAddress),
+            const AppSizedBox(height: 8),
+            AddressTile(
+              title: store?.name ?? '',
+              address: store?.address ?? '',
+              image: store?.image,
+            ),
 
-          const AppSizedBox(height: 12),
+            const AppSizedBox(height: 12),
 
-          Text(OrdersConstants.userAddress),
-          const AppSizedBox(height: 8),
-          AddressTile(
-            title: 'Customer',
-            address: order?.shippingAddress?.street ?? '',
-          ),
-        ],
+            Text(OrdersConstants.userAddress),
+            const AppSizedBox(height: 8),
+            AddressTile(
+              title: 'Customer',
+              address: order?.shippingAddress?.street ?? '',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -100,7 +109,10 @@ class _StatusBadge extends StatelessWidget {
           colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
         ),
         const AppSizedBox(width: 6),
-        Text(label, style: getMediumStyle(context: context, color: color)),
+        Text(
+          label,
+          style: getMediumStyle(context: context, color: color),
+        ),
       ],
     );
   }

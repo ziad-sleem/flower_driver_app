@@ -25,6 +25,8 @@ import 'package:tracking_app/features/oreder_details/presentation/cubit/order_de
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_detail_page.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_details_screen.dart';
+import 'package:tracking_app/features/orders/driver_order_details/presentation/pages/driver_order_details_page.dart';
+import 'package:tracking_app/features/orders/order_page/domain/entities/driver_order_entity.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {
@@ -102,6 +104,12 @@ abstract class AppRouter {
                 ),
               child: const OrderDetailsScreen(),
             ),
+          );
+
+        case Routes.driverOrderDetails:
+          final driverOrder = settings.arguments as DriverOrderEntity;
+          return PageTransitions.slide(
+            DriverOrderDetailsPage(driverOrder: driverOrder),
           );
 
         default:
