@@ -284,6 +284,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i545.AppLaunchCubit>(
       () => _i545.AppLaunchCubit(gh<_i315.GetCurrentOrderUseCase>()),
+    );
     gh.factory<_i903.EditVehicleInfoCubit>(
       () => _i903.EditVehicleInfoCubit(
         gh<_i365.GetVehiclesUseCase>(),
@@ -299,12 +300,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i786.ResetPasswordCubit>(
       () => _i786.ResetPasswordCubit(gh<_i641.ResetPasswordUseCase>()),
-    );
-    gh.factory<_i531.HomeCubit>(
-      () => _i531.HomeCubit(
-        gh<_i945.GetPendingOrdersUseCase>(),
-        gh<_i386.UpdateOrderStateUseCase>(),
-      ),
     );
     gh.factory<_i657.EditProfileCubit>(
       () => _i657.EditProfileCubit(

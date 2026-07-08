@@ -20,9 +20,9 @@ class _OrderDetailsApiClient implements OrderDetailsApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<OrdersResponseDto> getAllPendingOrders() async {
+  Future<OrdersResponseDto> getAllPendingOrders(int page, int limit) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<OrdersResponseDto>(
