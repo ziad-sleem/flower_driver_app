@@ -282,6 +282,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i941.WatchCurrentOrderUseCase>(),
       ),
     );
+    );
     gh.factory<_i903.EditVehicleInfoCubit>(
       () => _i903.EditVehicleInfoCubit(
         gh<_i365.GetVehiclesUseCase>(),

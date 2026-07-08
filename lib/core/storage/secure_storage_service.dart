@@ -41,6 +41,19 @@ class SecureStorageService {
   static Future<void> deleteToken() async {
     await _storage.delete(key: AppKeys.tokenKey);
     await _storage.delete(key: AppKeys.driverIdKey);
+    await _storage.delete(key: AppKeys.currentOrderIdKey);
+  }
+
+  static Future<void> saveCurrentOrderId(String orderId) async {
+    await _storage.write(key: AppKeys.currentOrderIdKey, value: orderId);
+  }
+
+  static Future<String?> getCurrentOrderId() async {
+    return await _storage.read(key: AppKeys.currentOrderIdKey);
+  }
+
+  static Future<void> deleteCurrentOrderId() async {
+    await _storage.delete(key: AppKeys.currentOrderIdKey);
   }
 
   static String? extractDriverIdFromToken(String? token) {

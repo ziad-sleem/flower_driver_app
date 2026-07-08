@@ -8,7 +8,7 @@ class WatchCurrentOrderUseCase {
 
   const WatchCurrentOrderUseCase({required this.repo});
 
-  Stream<CurrentOrderEntity?> call({required String driverId}) {
-    return repo.watchCurrentOrder(driverId: driverId);
+  Stream<CurrentOrderEntity?> call({required String orderId}) {
+    return repo.watchCurrentOrder(orderId: orderId);
   }
 }
