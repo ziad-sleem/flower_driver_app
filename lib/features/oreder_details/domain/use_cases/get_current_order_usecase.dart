@@ -8,7 +8,7 @@ class GetCurrentOrderUseCase {
 
   GetCurrentOrderUseCase({required this.repo});
 
-  Future<CurrentOrderEntity?> call({required String driverId}) {
-    return repo.getCurrentOrder(driverId: driverId);
+  Future<CurrentOrderEntity?> call({required String orderId}) {
+    return repo.getCurrentOrder(orderId: orderId);
   }
 }

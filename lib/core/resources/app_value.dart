@@ -7,4 +7,5 @@ abstract class AppKeys {
   static const String female = "female";
   static const tokenKey = "token";
   static const driverIdKey = "driverId";
+  static const currentOrderIdKey = "currentOrderId";
 }

@@ -19,22 +19,19 @@ class UpdateOrderStateUseCase {
 
     if (response is SuccessBaseResponse<UpdateOrderStateResponseEntity>) {
       final driverId = await SecureStorageService.getDriverId();
-
-      if (driverId != null && driverId.isNotEmpty) {
-        try {
-          if (params.state == "inProgress") {
-            await repo.saveCurrentOrder(
-              driverId: driverId,
-              order: params.order,
-              state: params.state,
-              driverRequestedDelivery: false,
-            );
-          } else if (params.state == "canceled") {
-            await repo.deleteCurrentOrder(driverId: driverId);
-          }
-        } catch (error) {
-          debugPrint('Current order sync failed: $error');
+      try {
+        if (params.state == "inProgress") {
+          await repo.saveCurrentOrder(
+            order: params.order,
+            state: params.state,
+            driverRequestedDelivery: false,
+            driverId: driverId,
+          );
+        } else if (params.state == "canceled") {
+          await repo.deleteCurrentOrder(orderId: params.orderId);
         }
+      } catch (error) {
+        debugPrint('Current order sync failed: $error');
       }
     }
 

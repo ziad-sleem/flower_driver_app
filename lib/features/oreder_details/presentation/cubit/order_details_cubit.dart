@@ -51,11 +51,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
     _driverId = await SecureStorageService.getDriverId();
 
-    if (_driverId == null) return;
-
     await _stateSubscription?.cancel();
 
-    _stateSubscription = _watchCurrentOrderUseCase(driverId: _driverId!).listen(
+    _stateSubscription = _watchCurrentOrderUseCase(orderId: order.id!).listen(
       (currentOrder) {
         // اليوزر أكد الاستلام ومسح الدوكيومنت
         if (currentOrder == null) {
@@ -74,7 +72,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           emit(
             state.copyWith(
               order: currentOrder.order,
-              step: OrderStep.arrived,
+              step: OrderStep.delivered,
               updateState: const BaseState(data: true),
             ),
           );
@@ -93,10 +91,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   Future<void> _advance() async {
     final order = state.order;
     final current = state.step;
-    final driverId = _driverId;
     final next = current?.nextStateValue;
 
-    if (order == null || current == null || driverId == null) {
+    if (order == null || current == null) {
       return;
     }
 
@@ -105,10 +102,10 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     // أول ما الدرايفر يوصل للعميل
     if (current == OrderStep.outForDelivery) {
       await _saveCurrentOrderUseCase(
-        driverId: driverId,
         order: order,
         state: OrderStateValues.arrived,
         driverRequestedDelivery: true,
+        driverId: _driverId,
       );
 
       emit(
@@ -127,10 +124,10 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     }
 
     await _saveCurrentOrderUseCase(
-      driverId: driverId,
       order: order,
       state: next!,
       driverRequestedDelivery: false,
+      driverId: _driverId,
     );
 
     emit(

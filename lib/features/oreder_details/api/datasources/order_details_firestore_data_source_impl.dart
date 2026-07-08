@@ -15,29 +15,44 @@ class OrderDetailsFireStoreDataSourceImpl
 
   @override
   Future<void> saveCurrentOrder({
-    required String driverId,
     required OrderEntity order,
     required String state,
     required bool driverRequestedDelivery,
+    String? driverId,
+    double? userLat,
+    double? userLong,
+    String? driverName,
+    String? driverPhone,
+    String? vehicleType,
+    String? vehicleNumber,
+    String? vehicleLicense,
   }) async {
     final model = CurrentOrderModel(
       driverId: driverId,
       state: state,
       driverRequestedDelivery: driverRequestedDelivery,
       order: order,
+      userLat: userLat,
+      userLong: userLong,
+      driverName: driverName,
+      driverPhone: driverPhone,
+      vehicleType: vehicleType,
+      vehicleNumber: vehicleNumber,
+      vehicleLicense: vehicleLicense,
     );
 
-    await firestore.collection(_collection).doc(driverId).set(model.toJson());
+    final orderId = order.id ?? '';
+    await firestore.collection(_collection).doc(orderId).set(model.toJson());
   }
 
   @override
-  Future<void> deleteCurrentOrder({required String driverId}) async {
-    await firestore.collection(_collection).doc(driverId).delete();
+  Future<void> deleteCurrentOrder({required String orderId}) async {
+    await firestore.collection(_collection).doc(orderId).delete();
   }
 
   @override
-  Stream<CurrentOrderModel?> watchCurrentOrder({required String driverId}) {
-    return firestore.collection(_collection).doc(driverId).snapshots().map((
+  Stream<CurrentOrderModel?> watchCurrentOrder({required String orderId}) {
+    return firestore.collection(_collection).doc(orderId).snapshots().map((
       snapshot,
     ) {
       if (!snapshot.exists || snapshot.data() == null) {
@@ -49,10 +64,10 @@ class OrderDetailsFireStoreDataSourceImpl
   }
 
   @override
-  Future<CurrentOrderModel?> getCurrentOrder({required String driverId}) async {
+  Future<CurrentOrderModel?> getCurrentOrder({required String orderId}) async {
     final snapshot = await firestore
         .collection(_collection)
-        .doc(driverId)
+        .doc(orderId)
         .get();
 
     if (!snapshot.exists) {

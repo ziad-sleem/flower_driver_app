@@ -15,15 +15,22 @@ abstract class OrderDetailsRepo {
   );
 
   Future<void> saveCurrentOrder({
-    required String driverId,
     required OrderEntity order,
     required String state,
     required bool driverRequestedDelivery,
+    String? driverId,
+    double? userLat,
+    double? userLong,
+    String? driverName,
+    String? driverPhone,
+    String? vehicleType,
+    String? vehicleNumber,
+    String? vehicleLicense,
   });
 
-  Future<void> deleteCurrentOrder({required String driverId});
+  Future<void> deleteCurrentOrder({required String orderId});
 
-  Stream<CurrentOrderEntity?> watchCurrentOrder({required String driverId});
+  Stream<CurrentOrderEntity?> watchCurrentOrder({required String orderId});
 
-  Future<CurrentOrderEntity?> getCurrentOrder({required String driverId});
+  Future<CurrentOrderEntity?> getCurrentOrder({required String orderId});
 }
