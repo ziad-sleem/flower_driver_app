@@ -223,9 +223,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i753.SaveCurrentOrderUseCase>(
       () => _i753.SaveCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
-    gh.factory<_i386.UpdateOrderStateUseCase>(
-      () => _i386.UpdateOrderStateUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
-    );
     gh.factory<_i941.WatchCurrentOrderUseCase>(
       () => _i941.WatchCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
@@ -252,13 +249,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1038.LoginUseCase>(
       () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
     );
-    gh.factory<_i531.HomeCubit>(
-      () => _i531.HomeCubit(
-        gh<_i945.GetPendingOrdersUseCase>(),
-        gh<_i386.UpdateOrderStateUseCase>(),
-        gh<_i315.GetCurrentOrderUseCase>(),
-      ),
-    );
     gh.factory<_i724.ApplyNowUseCase>(
       () => _i724.ApplyNowUseCase(gh<_i723.AuthRepo>()),
     );
@@ -275,12 +265,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i832.GetDriverProfileUseCase>(
       () => _i832.GetDriverProfileUseCase(gh<_i723.AuthRepo>()),
-    );
-    gh.factory<_i235.OrderDetailsCubit>(
-      () => _i235.OrderDetailsCubit(
-        gh<_i753.SaveCurrentOrderUseCase>(),
-        gh<_i941.WatchCurrentOrderUseCase>(),
-      ),
     );
     gh.factory<_i903.EditVehicleInfoCubit>(
       () => _i903.EditVehicleInfoCubit(
@@ -338,10 +322,30 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i348.ResetPasswordUseCase>(),
       ),
     );
+    gh.factory<_i235.OrderDetailsCubit>(
+      () => _i235.OrderDetailsCubit(
+        gh<_i753.SaveCurrentOrderUseCase>(),
+        gh<_i941.WatchCurrentOrderUseCase>(),
+        gh<_i141.GetDriverDataUseCase>(),
+      ),
+    );
+    gh.factory<_i386.UpdateOrderStateUseCase>(
+      () => _i386.UpdateOrderStateUseCase(
+        repo: gh<_i1004.OrderDetailsRepo>(),
+        getDriverDataUseCase: gh<_i141.GetDriverDataUseCase>(),
+      ),
+    );
     gh.factory<_i36.ProfileCubit>(
       () => _i36.ProfileCubit(
         gh<_i141.GetDriverDataUseCase>(),
         gh<_i151.GetVehiclesUseCase>(),
+      ),
+    );
+    gh.factory<_i531.HomeCubit>(
+      () => _i531.HomeCubit(
+        gh<_i945.GetPendingOrdersUseCase>(),
+        gh<_i386.UpdateOrderStateUseCase>(),
+        gh<_i315.GetCurrentOrderUseCase>(),
       ),
     );
     return this;
