@@ -13,6 +13,8 @@ class MapBottomSheet extends StatelessWidget {
   final double? storeDuration;
   final double? userDistance;
   final double? userDuration;
+  final VoidCallback? onStoreTap;
+  final VoidCallback? onUserTap;
 
   const MapBottomSheet({
     super.key,
@@ -21,6 +23,8 @@ class MapBottomSheet extends StatelessWidget {
     this.storeDuration,
     this.userDistance,
     this.userDuration,
+    this.onStoreTap,
+    this.onUserTap,
   });
 
   @override
@@ -74,25 +78,31 @@ class MapBottomSheet extends StatelessWidget {
             subtitle: OrdersConstants.yourLocation.tr(),
           ),
           const SizedBox(height: 12),
-          _LocationSection(
-            icon: 'assets/svgs/flowery_location.svg',
-            iconBgColor: AppColors.primary,
-            title: params.storeName,
-            subtitle: params.storeAddress.isNotEmpty ? params.storeAddress : null,
-            phone: params.storePhone,
-            distance: storeDistance,
-            duration: storeDuration,
+          GestureDetector(
+            onTap: onStoreTap,
+            child: _LocationSection(
+              icon: 'assets/svgs/flowery_location.svg',
+              iconBgColor: AppColors.primary,
+              title: params.storeName,
+              subtitle: params.storeAddress.isNotEmpty ? params.storeAddress : null,
+              phone: params.storePhone,
+              distance: storeDistance,
+              duration: storeDuration,
+            ),
           ),
           if (params.userAddress.isNotEmpty) ...[
             const SizedBox(height: 12),
-            _LocationSection(
-              icon: 'assets/svgs/user_location.svg',
-              iconBgColor: const Color(0xFF2196F3),
-              title: OrdersConstants.userAddress.tr(),
-              subtitle: params.userAddress,
-              phone: params.userPhone,
-              distance: userDistance,
-              duration: userDuration,
+            GestureDetector(
+              onTap: onUserTap,
+              child: _LocationSection(
+                icon: 'assets/svgs/user_location.svg',
+                iconBgColor: const Color(0xFF2196F3),
+                title: OrdersConstants.userAddress.tr(),
+                subtitle: params.userAddress,
+                phone: params.userPhone,
+                distance: userDistance,
+                duration: userDuration,
+              ),
             ),
           ],
           if (params.totalPrice != null || params.paymentType != null) ...[

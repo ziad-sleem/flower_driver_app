@@ -282,7 +282,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
                       alignment: Alignment.bottomCenter,
                       child: MapMarker(
                         kind: MapMarkerKind.driver,
-                        size: 52 * scale,
+                        size: 34 * scale,
                         showPulse: true,
                       ),
                     ),
@@ -296,7 +296,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
                         alignment: Alignment.bottomCenter,
                         child: MapMarker(
                           kind: MapMarkerKind.store,
-                          size: 48 * scale,
+                          size: 34 * scale,
                         ),
                       ),
                     if (widget.params.userLat != null &&
@@ -309,7 +309,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
                         alignment: Alignment.bottomCenter,
                         child: MapMarker(
                           kind: MapMarkerKind.user,
-                          size: 48 * scale,
+                          size: 34 * scale,
                         ),
                       ),
                   ],
@@ -365,6 +365,26 @@ class _DriverMapPageState extends State<DriverMapPage> {
                 storeDuration: _storeDuration,
                 userDistance: _userDistance,
                 userDuration: _userDuration,
+                onStoreTap: widget.params.storeLat != null &&
+                        widget.params.storeLng != null
+                    ? () => _mapController.move(
+                          LatLng(
+                            widget.params.storeLat!,
+                            widget.params.storeLng!,
+                          ),
+                          16,
+                        )
+                    : null,
+                onUserTap: widget.params.userLat != null &&
+                        widget.params.userLng != null
+                    ? () => _mapController.move(
+                          LatLng(
+                            widget.params.userLat!,
+                            widget.params.userLng!,
+                          ),
+                          16,
+                        )
+                    : null,
               ),
             ),
           if (_driverLocation != null)

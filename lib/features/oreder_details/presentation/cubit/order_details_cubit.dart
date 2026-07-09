@@ -24,8 +24,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     this._watchCurrentOrderUseCase,
   ) : super(const OrderDetailsState());
 
-  String? _driverId;
-
   StreamSubscription<CurrentOrderEntity?>? _stateSubscription;
 
   void doIntent(OrderDetailsIntent intent) {
@@ -48,8 +46,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         emit(state.copyWith(order: order, step: step));
       }
     }
-
-    _driverId = await SecureStorageService.getDriverId();
 
     await _stateSubscription?.cancel();
 
@@ -105,7 +101,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         order: order,
         state: OrderStateValues.arrived,
         driverRequestedDelivery: true,
-        driverId: _driverId,
       );
 
       emit(
@@ -127,7 +122,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       order: order,
       state: next!,
       driverRequestedDelivery: false,
-      driverId: _driverId,
     );
 
     emit(
