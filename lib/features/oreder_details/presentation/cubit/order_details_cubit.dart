@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+
+import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/config/base/base_state.dart';
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/current_order_entity.dart';
@@ -11,6 +13,8 @@ import 'package:tracking_app/features/oreder_details/domain/use_cases/save_curre
 import 'package:tracking_app/features/oreder_details/domain/use_cases/watch_order_state_usecase.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_step.dart';
+import 'package:tracking_app/features/profile/domain/entities/profile_data_response_entity.dart';
+import 'package:tracking_app/features/profile/domain/use_cases/get_driver_data_use_case.dart';
 
 part 'order_details_state.dart';
 
@@ -18,13 +22,20 @@ part 'order_details_state.dart';
 class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final SaveCurrentOrderUseCase _saveCurrentOrderUseCase;
   final WatchCurrentOrderUseCase _watchCurrentOrderUseCase;
+  final GetDriverDataUseCase _getDriverDataUseCase;
 
   OrderDetailsCubit(
     this._saveCurrentOrderUseCase,
     this._watchCurrentOrderUseCase,
+    this._getDriverDataUseCase,
   ) : super(const OrderDetailsState());
 
   String? _driverId;
+  String? _driverName;
+  String? _driverPhone;
+  String? _vehicleType;
+  String? _vehicleNumber;
+  String? _vehicleLicense;
 
   StreamSubscription<CurrentOrderEntity?>? _stateSubscription;
 
@@ -50,6 +61,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     }
 
     _driverId = await SecureStorageService.getDriverId();
+
+    _loadDriverProfile();
 
     await _stateSubscription?.cancel();
 
@@ -107,6 +120,13 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         state: OrderStateValues.arrived,
         driverRequestedDelivery: true,
         driverId: _driverId,
+        userLat: double.tryParse(order.shippingAddress?.lat ?? ''),
+        userLong: double.tryParse(order.shippingAddress?.long ?? ''),
+        driverName: _driverName,
+        driverPhone: _driverPhone,
+        vehicleType: _vehicleType,
+        vehicleNumber: _vehicleNumber,
+        vehicleLicense: _vehicleLicense,
       );
 
       emit(
@@ -129,6 +149,13 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       state: next!,
       driverRequestedDelivery: false,
       driverId: _driverId,
+      userLat: double.tryParse(order.shippingAddress?.lat ?? ''),
+      userLong: double.tryParse(order.shippingAddress?.long ?? ''),
+      driverName: _driverName,
+      driverPhone: _driverPhone,
+      vehicleType: _vehicleType,
+      vehicleNumber: _vehicleNumber,
+      vehicleLicense: _vehicleLicense,
     );
 
     emit(
@@ -137,6 +164,19 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         updateState: const BaseState(data: true),
       ),
     );
+  }
+
+  void _loadDriverProfile() {
+    _getDriverDataUseCase.call().then((result) {
+      if (result is SuccessBaseResponse<ProfileDataResponseEntity>) {
+        final driver = result.data.driver;
+        _driverName = driver?.name;
+        _driverPhone = driver?.phone;
+        _vehicleType = driver?.vehicleType;
+        _vehicleNumber = driver?.vehicleNumber;
+        _vehicleLicense = driver?.vehicleLicense;
+      }
+    });
   }
 
   @override
