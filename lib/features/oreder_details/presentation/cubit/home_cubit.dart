@@ -11,6 +11,7 @@ import 'package:tracking_app/features/oreder_details/domain/entities/update_orde
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/get_all_pending_order.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/get_current_order_usecase.dart';
+import 'package:tracking_app/features/oreder_details/domain/use_cases/save_order_history_usecase.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/update_order_state_usecase.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
 part 'home_state.dart';
@@ -20,11 +21,13 @@ class HomeCubit extends Cubit<HomeState> {
   final GetPendingOrdersUseCase _getPendingOrdersUseCase;
   final UpdateOrderStateUseCase _updateOrderStateUseCase;
   final GetCurrentOrderUseCase _getCurrentOrderUseCase;
+  final SaveOrderHistoryUseCase _saveOrderHistoryUseCase;
 
   HomeCubit(
     this._getPendingOrdersUseCase,
     this._updateOrderStateUseCase,
     this._getCurrentOrderUseCase,
+    this._saveOrderHistoryUseCase,
   ) : super(const HomeState());
 
   Future<void> refresh() => _getPendingOrders();
@@ -177,6 +180,15 @@ class HomeCubit extends Cubit<HomeState> {
             orders: state.orders.where((e) => e.id != event.order.id).toList(),
           ),
         );
+        SecureStorageService.getDriverId().then((driverId) {
+          if (driverId != null) {
+            _saveOrderHistoryUseCase(
+              driverId: driverId,
+              status: 'canceled',
+              order: event.order,
+            );
+          }
+        });
         break;
 
       case ErrorBaseResponse<UpdateOrderStateResponseEntity>():

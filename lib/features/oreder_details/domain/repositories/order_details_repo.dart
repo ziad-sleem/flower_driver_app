@@ -33,4 +33,10 @@ abstract class OrderDetailsRepo {
   Stream<CurrentOrderEntity?> watchCurrentOrder({required String orderId});
 
   Future<CurrentOrderEntity?> getCurrentOrder({required String orderId});
+
+  Future<void> saveOrderHistory({
+    required String driverId,
+    required String status,
+    required OrderEntity order,
+  });
 }

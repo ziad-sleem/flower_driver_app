@@ -116,4 +116,17 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
 
     return model?.toEntity();
   }
+
+  @override
+  Future<void> saveOrderHistory({
+    required String driverId,
+    required String status,
+    required OrderEntity order,
+  }) {
+    return firestoreDataSource.saveOrderHistory(
+      driverId: driverId,
+      status: status,
+      order: order,
+    );
+  }
 }

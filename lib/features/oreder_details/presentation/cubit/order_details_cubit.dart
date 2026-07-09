@@ -8,6 +8,7 @@ import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/current_order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/save_current_order_usecase.dart';
+import 'package:tracking_app/features/oreder_details/domain/use_cases/save_order_history_usecase.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/watch_order_state_usecase.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_step.dart';
@@ -18,10 +19,12 @@ part 'order_details_state.dart';
 class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final SaveCurrentOrderUseCase _saveCurrentOrderUseCase;
   final WatchCurrentOrderUseCase _watchCurrentOrderUseCase;
+  final SaveOrderHistoryUseCase _saveOrderHistoryUseCase;
 
   OrderDetailsCubit(
     this._saveCurrentOrderUseCase,
     this._watchCurrentOrderUseCase,
+    this._saveOrderHistoryUseCase,
   ) : super(const OrderDetailsState());
 
   String? _driverId;
@@ -64,6 +67,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
               ),
             );
             SecureStorageService.deleteCurrentOrderId();
+            _saveToHistory(status: 'completed');
           }
           return;
         }
@@ -77,6 +81,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
             ),
           );
           SecureStorageService.deleteCurrentOrderId();
+          _saveToHistory(status: 'completed');
           return;
         }
 
@@ -136,6 +141,17 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         step: OrderStep.fromState(next),
         updateState: const BaseState(data: true),
       ),
+    );
+  }
+
+  void _saveToHistory({required String status}) {
+    final order = state.order;
+    final driverId = _driverId;
+    if (order == null || driverId == null) return;
+    _saveOrderHistoryUseCase(
+      driverId: driverId,
+      status: status,
+      order: order,
     );
   }
 

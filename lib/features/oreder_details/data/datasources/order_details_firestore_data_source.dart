@@ -21,4 +21,10 @@ abstract class OrderDetailsFireStoreDataSource {
   Stream<CurrentOrderModel?> watchCurrentOrder({required String orderId});
 
   Future<CurrentOrderModel?> getCurrentOrder({required String orderId});
+
+  Future<void> saveOrderHistory({
+    required String driverId,
+    required String status,
+    required OrderEntity order,
+  });
 }
