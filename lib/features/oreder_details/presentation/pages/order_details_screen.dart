@@ -6,6 +6,7 @@ import 'package:tracking_app/core/localization_constants/orders_constants.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/theme/font_size_manager.dart';
+import 'package:tracking_app/core/widgets/button_loading_widget.dart';
 import 'package:tracking_app/core/widgets/custom_appbar.dart';
 import 'package:tracking_app/core/widgets/custom_snack_bar.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_entity.dart';
@@ -22,20 +23,12 @@ class OrderDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
       builder: (context, state) {
-        final canGoBack = state.step == OrderStep.delivered;
-
         return PopScope(
-          canPop: canGoBack,
-          onPopInvokedWithResult: (didPop, result) {
-            if (!didPop && canGoBack) {
-              _handleBack(context);
-            }
-          },
+          canPop: false,
           child: Scaffold(
             appBar: CustomAppBar(
               title: OrdersConstants.orderDetails,
-              showBackButton: canGoBack,
-              onBack: canGoBack ? () => _handleBack(context) : null,
+              showBackButton: false,
             ),
             body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
               listenWhen: (previous, current) {
@@ -117,12 +110,6 @@ class OrderDetailsScreen extends StatelessWidget {
         );
       },
     );
-  }
-
-  void _handleBack(BuildContext context) {
-    final delivered =
-        context.read<OrderDetailsCubit>().state.step == OrderStep.delivered;
-    Navigator.pop(context, delivered);
   }
 
   static String _userName(Object? user, String? fallback) {
@@ -457,6 +444,13 @@ class _OrderActionButton extends StatelessWidget {
 
         final disabled = loading || waiting;
 
+        if (loading) {
+          return const Padding(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: ButtonLoadingWidget(),
+          );
+        }
+
         return SafeArea(
           minimum: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: SizedBox(
@@ -479,20 +473,11 @@ class _OrderActionButton extends StatelessWidget {
                         const AdvanceOrderStepIntent(),
                       );
                     },
-              child: loading
-                  ? const SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.surface,
-                      ),
-                    )
-                  : Text(
-                      waiting
-                          ? OrdersConstants.waitingForCustomerConfirmation
-                          : step.buttonLabel,
-                    ),
+              child: Text(
+                waiting
+                    ? OrdersConstants.waitingForCustomerConfirmation
+                    : step.buttonLabel,
+              ),
             ),
           ),
         );

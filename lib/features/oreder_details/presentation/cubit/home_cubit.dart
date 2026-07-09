@@ -27,6 +27,8 @@ class HomeCubit extends Cubit<HomeState> {
     this._getCurrentOrderUseCase,
   ) : super(const HomeState());
 
+  Future<void> refresh() => _getPendingOrders();
+
   void doEvent(HomeEvent event) {
     switch (event) {
       case CheckCurrentOrder():

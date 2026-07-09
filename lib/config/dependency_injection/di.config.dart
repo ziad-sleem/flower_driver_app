@@ -107,6 +107,8 @@ import '../../features/oreder_details/domain/use_cases/watch_order_state_usecase
     as _i941;
 import '../../features/oreder_details/presentation/cubit/home_cubit.dart'
     as _i531;
+import '../../features/oreder_details/presentation/cubit/order_details_cubit.dart'
+    as _i235;
 import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
 import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
     as _i4;
@@ -124,8 +126,6 @@ import '../../features/profile/domain/use_cases/reset_password_use_case.dart'
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
     as _i786;
-import '../../features/oreder_details/presentation/cubit/order_details_cubit.dart'
-    as _i235;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -282,9 +282,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i941.WatchCurrentOrderUseCase>(),
       ),
     );
-    gh.factory<_i545.AppLaunchCubit>(
-      () => _i545.AppLaunchCubit(gh<_i315.GetCurrentOrderUseCase>()),
-    );
     gh.factory<_i903.EditVehicleInfoCubit>(
       () => _i903.EditVehicleInfoCubit(
         gh<_i365.GetVehiclesUseCase>(),
@@ -313,6 +310,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i151.GetVehiclesUseCase>(
       () => _i151.GetVehiclesUseCase(profileRepo: gh<_i790.ProfileRepo>()),
+    );
+    gh.factory<_i545.AppLaunchCubit>(
+      () => _i545.AppLaunchCubit(gh<_i315.GetCurrentOrderUseCase>()),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),

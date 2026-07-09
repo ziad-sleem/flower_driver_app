@@ -55,7 +55,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
     _stateSubscription = _watchCurrentOrderUseCase(orderId: order.id!).listen(
       (currentOrder) {
-        // اليوزر أكد الاستلام ومسح الدوكيومنت
         if (currentOrder == null) {
           if (state.step == OrderStep.arrived) {
             emit(
@@ -64,6 +63,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
                 updateState: const BaseState(data: true),
               ),
             );
+            SecureStorageService.deleteCurrentOrderId();
           }
           return;
         }
@@ -76,6 +76,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
               updateState: const BaseState(data: true),
             ),
           );
+          SecureStorageService.deleteCurrentOrderId();
           return;
         }
 
