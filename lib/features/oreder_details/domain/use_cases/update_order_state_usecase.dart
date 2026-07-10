@@ -48,8 +48,6 @@ class UpdateOrderStateUseCase {
             state: params.state,
             driverRequestedDelivery: false,
             driverId: driverId,
-            userLat: double.tryParse(params.order.shippingAddress?.lat ?? ''),
-            userLong: double.tryParse(params.order.shippingAddress?.long ?? ''),
             driverName: driverName,
             driverPhone: driverPhone,
             vehicleType: vehicleType,

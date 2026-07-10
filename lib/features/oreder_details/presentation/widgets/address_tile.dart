@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
+import 'package:tracking_app/core/widgets/cached_network_image.dart';
 
 class AddressTile extends StatelessWidget {
   final String title;
@@ -13,9 +14,6 @@ class AddressTile extends StatelessWidget {
     this.image,
   });
 
-  static bool _isValidUrl(String url) =>
-      url.startsWith('http://') || url.startsWith('https://');
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,15 +24,18 @@ class AddressTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 18,
-            backgroundImage: image != null && image!.isNotEmpty && _isValidUrl(image!)
-                ? NetworkImage(image!)
-                : null,
-            child: image == null || !_isValidUrl(image!)
-                ? const Icon(Icons.person)
-                : null,
-          ),
+          image != null && image!.isNotEmpty
+              ? ClipOval(
+                  child: CachedNetworkImageWidget(
+                    urlToImage: image!,
+                    width: 36,
+                    height: 36,
+                  ),
+                )
+              : const CircleAvatar(
+                  radius: 18,
+                  child: Icon(Icons.person),
+                ),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

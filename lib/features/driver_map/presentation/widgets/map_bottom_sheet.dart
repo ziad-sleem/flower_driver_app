@@ -5,6 +5,8 @@ import 'package:tracking_app/core/localization_constants/orders_constants.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/theme/font_size_manager.dart';
+import 'package:tracking_app/core/utils/launch_utils.dart';
+import 'package:tracking_app/core/widgets/cached_network_image.dart';
 import 'package:tracking_app/features/driver_map/domain/entities/driver_map_params.dart';
 
 class MapBottomSheet extends StatelessWidget {
@@ -92,14 +94,17 @@ class MapBottomSheet extends StatelessWidget {
           ),
           if (params.userAddress.isNotEmpty) ...[
             const SizedBox(height: 12),
-            GestureDetector(
+              GestureDetector(
               onTap: onUserTap,
               child: _LocationSection(
                 icon: 'assets/svgs/user_location.svg',
                 iconBgColor: const Color(0xFF2196F3),
-                title: OrdersConstants.userAddress.tr(),
+                title: params.userName?.isNotEmpty == true
+                    ? params.userName!
+                    : OrdersConstants.userAddress.tr(),
                 subtitle: params.userAddress,
                 phone: params.userPhone,
+                image: params.userImage,
                 distance: userDistance,
                 duration: userDuration,
               ),
@@ -130,23 +135,6 @@ class MapBottomSheet extends StatelessWidget {
       ),
     );
   }
-
-  String _formatDistance(double meters) {
-    if (meters >= 1000) {
-      return '${(meters / 1000).toStringAsFixed(1)} km';
-    }
-    return '${meters.toStringAsFixed(0)} m';
-  }
-
-  String _formatDuration(double seconds) {
-    final minutes = (seconds / 60).round();
-    if (minutes >= 60) {
-      final hours = minutes ~/ 60;
-      final mins = minutes % 60;
-      return '${hours}h ${mins}min';
-    }
-    return '$minutes min';
-  }
 }
 
 class _LocationSection extends StatelessWidget {
@@ -155,6 +143,7 @@ class _LocationSection extends StatelessWidget {
   final String title;
   final String? subtitle;
   final String? phone;
+  final String? image;
   final double? distance;
   final double? duration;
 
@@ -164,6 +153,7 @@ class _LocationSection extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.phone,
+    this.image,
     this.distance,
     this.duration,
   });
@@ -173,28 +163,30 @@ class _LocationSection extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: iconBgColor.withValues(alpha: 0.12),
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: SizedBox(
-              width: 22,
-              height: 22,
-              child: SvgPicture.asset(
-                icon,
-                fit: BoxFit.contain,
-                colorFilter: ColorFilter.mode(
-                  iconBgColor,
-                  BlendMode.srcIn,
+        image != null && image!.isNotEmpty
+            ? ClipOval(
+                child: CachedNetworkImageWidget(
+                  urlToImage: image!,
+                  width: 36,
+                  height: 36,
+                ),
+              )
+            : CircleAvatar(
+                radius: 18,
+                backgroundColor: iconBgColor.withValues(alpha: 0.12),
+                child: SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: SvgPicture.asset(
+                    icon,
+                    fit: BoxFit.contain,
+                    colorFilter: ColorFilter.mode(
+                      iconBgColor,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -225,8 +217,16 @@ class _LocationSection extends StatelessWidget {
                 const SizedBox(height: 2),
                 Row(
                   children: [
-                    Icon(Icons.phone, size: 12, color: AppColors.primary),
+                    GestureDetector(
+                      onTap: () => makePhoneCall(phone!),
+                      child: Icon(Icons.call, size: 14, color: AppColors.primary),
+                    ),
                     const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () => openWhatsApp(phone!),
+                      child: Icon(Icons.chat, size: 14, color: AppColors.primary),
+                    ),
+                    const SizedBox(width: 8),
                     Text(
                       phone!,
                       style: getMediumStyle(

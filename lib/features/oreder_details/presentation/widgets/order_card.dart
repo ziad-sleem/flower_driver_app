@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tracking_app/config/routes/page_transitions.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
+import 'package:tracking_app/core/utils/launch_utils.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
+import 'package:tracking_app/features/oreder_details/data/models/order_user_info_model.dart';
+import 'package:tracking_app/features/oreder_details/presentation/cubit/order_user_info_cubit.dart';
+import 'package:tracking_app/features/oreder_details/presentation/cubit/order_user_info_state.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
@@ -28,12 +32,24 @@ class OrderCard extends StatelessWidget {
           cubit.state.rejectOrderState.isLoading &&
           cubit.state.rejectingOrderId == order.id,
     );
-    return InkWell(
+
+    return BlocSelector<OrderUserInfoCubit, OrderUserInfoState,
+        OrderUserInfoModel?>(
+      selector: (state) => state.userInfoMap[order.id],
+      builder: (context, userInfo) {
+        final userName = userInfo?.userName.isNotEmpty == true
+            ? userInfo!.userName
+            : null;
+
+        return InkWell(
       onTap: () => Navigator.push(
         context,
         PageTransitions.slide(
-          BlocProvider.value(
-            value: context.read<HomeCubit>(),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: context.read<HomeCubit>()),
+              BlocProvider.value(value: context.read<OrderUserInfoCubit>()),
+            ],
             child: OrderDetailPage(order: order),
           ),
         ),
@@ -72,9 +88,46 @@ class OrderCard extends StatelessWidget {
             const SizedBox(height: 8),
 
             AddressTile(
-              title: "Customer",
+              title: userName ?? "Customer",
               address: order.shippingAddress?.street ?? "",
+              image: userInfo?.userImage,
             ),
+
+            if (userInfo?.userPhone.isNotEmpty == true) ...[
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Row(
+                  children: [
+                    Text(
+                      userInfo!.userPhone,
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => makePhoneCall(userInfo.userPhone),
+                      child: const Icon(
+                        Icons.call,
+                        size: 16,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => openWhatsApp(userInfo.userPhone),
+                      child: const Icon(
+                        Icons.chat,
+                        size: 16,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
 
             const SizedBox(height: 14),
 
@@ -171,5 +224,7 @@ class OrderCard extends StatelessWidget {
         ),
       ),
     );
+        },
+      );
   }
 }

@@ -68,6 +68,7 @@ class _MapMarkerState extends State<MapMarker>
         return const _MarkerStyle(
           color: Color(0xFF2196F3),
           assetPath: 'assets/svgs/user_location.svg',
+          hasBuiltInNeedle: true,
         );
     }
   }
@@ -79,7 +80,9 @@ class _MapMarkerState extends State<MapMarker>
     final needleHeight = badgeHeight * 0.45;
     final needleWidth = badgeHeight * 0.25;
     final shadowHeight = badgeHeight * 0.12;
-    final totalHeight = badgeHeight + needleHeight + shadowHeight + 2;
+    final totalHeight = style.hasBuiltInNeedle
+        ? badgeHeight + 2
+        : badgeHeight + needleHeight + shadowHeight + 2;
 
     return SizedBox(
       width: badgeHeight * 3.5,
@@ -121,26 +124,28 @@ class _MapMarkerState extends State<MapMarker>
               colorFilter: ColorFilter.mode(style.color, BlendMode.srcIn),
             ),
           ),
-          Positioned(
-            top: badgeHeight - 1,
-            left: (badgeHeight * 3.5 - needleWidth) / 2,
-            child: CustomPaint(
-              size: Size(needleWidth, needleHeight),
-              painter: _PinNeedlePainter(color: style.color),
-            ),
-          ),
-          Positioned(
-            top: badgeHeight + needleHeight - 1,
-            left: (badgeHeight * 3.5 - badgeHeight * 0.35) / 2,
-            child: Container(
-              width: badgeHeight * 0.35,
-              height: shadowHeight,
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.18),
-                borderRadius: BorderRadius.circular(999),
+          if (!style.hasBuiltInNeedle) ...[
+            Positioned(
+              top: badgeHeight - 1,
+              left: (badgeHeight * 3.5 - needleWidth) / 2,
+              child: CustomPaint(
+                size: Size(needleWidth, needleHeight),
+                painter: _PinNeedlePainter(color: style.color),
               ),
             ),
-          ),
+            Positioned(
+              top: badgeHeight + needleHeight - 1,
+              left: (badgeHeight * 3.5 - badgeHeight * 0.35) / 2,
+              child: Container(
+                width: badgeHeight * 0.35,
+                height: shadowHeight,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -150,10 +155,12 @@ class _MapMarkerState extends State<MapMarker>
 class _MarkerStyle {
   final Color color;
   final String assetPath;
+  final bool hasBuiltInNeedle;
 
   const _MarkerStyle({
     required this.color,
     required this.assetPath,
+    this.hasBuiltInNeedle = false,
   });
 }
 

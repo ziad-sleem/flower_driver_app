@@ -11,6 +11,8 @@ class DriverMapParams {
   final String? storePhone;
   final String userAddress;
   final String? userPhone;
+  final String? userImage;
+  final String? userName;
   final String? orderNumber;
   final double? totalPrice;
   final String? paymentType;
@@ -26,6 +28,8 @@ class DriverMapParams {
     this.storePhone,
     required this.userAddress,
     this.userPhone,
+    this.userImage,
+    this.userName,
     this.orderNumber,
     this.totalPrice,
     this.paymentType,

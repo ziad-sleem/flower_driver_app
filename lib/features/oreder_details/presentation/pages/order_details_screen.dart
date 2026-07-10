@@ -9,9 +9,13 @@ import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/theme/font_size_manager.dart';
 import 'package:tracking_app/core/widgets/button_loading_widget.dart';
 import 'package:tracking_app/core/utils/geocoding_helper.dart';
+import 'package:tracking_app/core/utils/launch_utils.dart';
+import 'package:tracking_app/core/widgets/cached_network_image.dart';
 import 'package:tracking_app/core/widgets/custom_appbar.dart';
 import 'package:tracking_app/core/widgets/custom_snack_bar.dart';
 import 'package:tracking_app/features/driver_map/domain/entities/driver_map_params.dart';
+import 'package:tracking_app/features/oreder_details/data/models/order_user_info_model.dart';
+import 'package:tracking_app/features/oreder_details/presentation/cubit/order_user_info_cubit.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
@@ -55,6 +59,12 @@ class OrderDetailsScreen extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
 
+                final userInfo = context
+                    .select<OrderUserInfoCubit, OrderUserInfoModel?>(
+                      (cubit) => cubit.state.userInfoMap[order.id]
+                          ?? cubit.state.userInfoMap[_userId(order.user)],
+                    );
+
                 return Column(
                   children: [
                     _OrderProgressBar(step: step),
@@ -72,6 +82,7 @@ class OrderDetailsScreen extends StatelessWidget {
                               title: order.store?.name ?? '',
                               address: order.store?.address ?? '',
                               image: order.store?.image,
+                              phone: order.store?.phoneNumber,
                               onNavigate: () => _openMap(context, MapMode.toStore),
                             ),
                             const SizedBox(height: 20),
@@ -80,9 +91,16 @@ class OrderDetailsScreen extends StatelessWidget {
                             _AddressCard(
                               title: _userName(
                                 order.user,
-                                order.shippingAddress?.city,
+                                userInfo?.city ?? order.shippingAddress?.city,
+                                userInfo,
                               ),
-                              address: order.shippingAddress?.street ?? '',
+                              address: order.shippingAddress?.street
+                                  ?? userInfo?.street
+                                  ?? '',
+                              image: userInfo?.userImage,
+                              phone: userInfo?.userPhone.isNotEmpty == true
+                                  ? userInfo!.userPhone
+                                  : order.shippingAddress?.phone,
                               onNavigate: () => _openMap(context, MapMode.toUser),
                             ),
                             const SizedBox(height: 20),
@@ -117,7 +135,22 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  static String _userName(Object? user, String? fallback) {
+  static String? _userId(Object? user) {
+    if (user is Map) {
+      final id = user['_id']?.toString();
+      if (id != null && id.isNotEmpty) return id;
+    }
+    return null;
+  }
+
+  static String _userName(
+    Object? user,
+    String? fallback,
+    OrderUserInfoModel? userInfo,
+  ) {
+    if (userInfo?.userName.isNotEmpty == true) {
+      return userInfo!.userName;
+    }
     if (user is Map) {
       final name = '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'
           .trim();
@@ -129,6 +162,13 @@ class OrderDetailsScreen extends StatelessWidget {
   Future<void> _openMap(BuildContext context, MapMode mode) async {
     final order = context.read<OrderDetailsCubit>().state.order;
     if (order == null) return;
+
+    final userInfo = context
+        .read<OrderUserInfoCubit>()
+        .state
+        .userInfoMap[order.id] ??
+        context.read<OrderUserInfoCubit>().state
+            .userInfoMap[_userId(order.user)];
 
     LatLng? storeLoc;
     LatLng? userLoc;
@@ -145,15 +185,22 @@ class OrderDetailsScreen extends StatelessWidget {
       ].where((s) => s != null && s.isNotEmpty).join(', '),
     );
 
-    final userLat = double.tryParse(order.shippingAddress?.lat ?? '');
-    final userLng = double.tryParse(order.shippingAddress?.long ?? '');
-    if (userLat != null && userLng != null) {
-      userLoc = LatLng(userLat, userLng);
+    // Try user info lat/long first, fall back to shipping address
+    final userInfoLat = double.tryParse(userInfo?.lat ?? '');
+    final userInfoLng = double.tryParse(userInfo?.long ?? '');
+    if (userInfoLat != null && userInfoLng != null) {
+      userLoc = LatLng(userInfoLat, userInfoLng);
+    } else {
+      final userLat = double.tryParse(order.shippingAddress?.lat ?? '');
+      final userLng = double.tryParse(order.shippingAddress?.long ?? '');
+      if (userLat != null && userLng != null) {
+        userLoc = LatLng(userLat, userLng);
+      }
     }
     userLoc ??= await GeocodingHelper.geocodeAddress(
       [
-        order.shippingAddress?.street,
-        order.shippingAddress?.city,
+        order.shippingAddress?.street ?? userInfo?.street,
+        order.shippingAddress?.city ?? userInfo?.city,
       ].where((s) => s != null && s.isNotEmpty).join(', '),
     );
 
@@ -186,10 +233,14 @@ class OrderDetailsScreen extends StatelessWidget {
         storeAddress: order.store?.address ?? '',
         storePhone: order.store?.phoneNumber,
         userAddress: [
-          order.shippingAddress?.street,
-          order.shippingAddress?.city,
+          order.shippingAddress?.street ?? userInfo?.street,
+          order.shippingAddress?.city ?? userInfo?.city,
         ].where((s) => s != null && s.isNotEmpty).join(', '),
-        userPhone: order.shippingAddress?.phone,
+        userPhone: userInfo?.userPhone.isNotEmpty == true
+            ? userInfo!.userPhone
+            : (order.shippingAddress?.phone ?? userInfo?.phone),
+        userImage: userInfo?.userImage,
+        userName: userInfo?.userName,
         orderNumber: order.orderNumber,
         totalPrice: order.totalPrice,
         paymentType: paymentLabel,
@@ -317,16 +368,15 @@ class _AddressCard extends StatelessWidget {
   final String title;
   final String address;
   final String? image;
+  final String? phone;
   final VoidCallback? onNavigate;
   const _AddressCard({
     required this.title,
     required this.address,
     this.image,
+    this.phone,
     this.onNavigate,
   });
-
-  static bool _isValidUrl(String url) =>
-      url.startsWith('http://') || url.startsWith('https://');
 
   @override
   Widget build(BuildContext context) {
@@ -338,17 +388,19 @@ class _AddressCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: AppColors.background,
-            backgroundImage:
-                (image != null && image!.isNotEmpty && _isValidUrl(image!))
-                ? NetworkImage(image!)
-                : null,
-            child: (image == null || image!.isEmpty || !_isValidUrl(image!))
-                ? const Icon(Icons.store, size: 18)
-                : null,
-          ),
+          image != null && image!.isNotEmpty
+              ? ClipOval(
+                  child: CachedNetworkImageWidget(
+                    urlToImage: image!,
+                    width: 36,
+                    height: 36,
+                  ),
+                )
+              : const CircleAvatar(
+                  radius: 18,
+                  backgroundColor: AppColors.background,
+                  child: Icon(Icons.store, size: 18),
+                ),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -392,10 +444,18 @@ class _AddressCard extends StatelessWidget {
               onTap: onNavigate,
               child: const Icon(Icons.map, color: AppColors.primary, size: 20),
             ),
-          const SizedBox(width: 12),
-          const Icon(Icons.call, color: AppColors.primary, size: 20),
-          const SizedBox(width: 12),
-          const Icon(Icons.chat, color: AppColors.primary, size: 20),
+          if (phone != null && phone!.isNotEmpty) ...[
+            const SizedBox(width: 12),
+            GestureDetector(
+              onTap: () => makePhoneCall(phone!),
+              child: const Icon(Icons.call, color: AppColors.primary, size: 20),
+            ),
+            const SizedBox(width: 12),
+            GestureDetector(
+              onTap: () => openWhatsApp(phone!),
+              child: const Icon(Icons.chat, color: AppColors.primary, size: 20),
+            ),
+          ],
         ],
       ),
     );
@@ -431,11 +491,10 @@ class _OrderItemRow extends StatelessWidget {
               width: 44,
               height: 44,
               child: (image != null && image.isNotEmpty)
-                  ? Image.network(
-                      image,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) =>
-                          const Icon(Icons.local_florist),
+                  ? CachedNetworkImageWidget(
+                      urlToImage: image,
+                      width: 44,
+                      height: 44,
                     )
                   : const Icon(Icons.local_florist),
             ),
