@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
+import 'package:tracking_app/features/notifications/data_source/notification_queue_firestore_data_source.dart';
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/data/datasources/order_details_firestore_data_source.dart';
 import 'package:tracking_app/features/oreder_details/data/datasources/order_details_remote_data_source.dart';
@@ -17,9 +18,12 @@ import 'package:tracking_app/features/oreder_details/domain/repositories/order_d
 class OrderDetailsRepoImpl implements OrderDetailsRepo {
   final OrderDetailsRemoteDataSource remoteDataSource;
   final OrderDetailsFireStoreDataSource firestoreDataSource;
+  final NotificationQueueFirestoreDataSource
+  notificationRequestFirestoreDataSource;
   OrderDetailsRepoImpl({
     required this.remoteDataSource,
     required this.firestoreDataSource,
+    required this.notificationRequestFirestoreDataSource,
   });
 
   @override
@@ -111,5 +115,22 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
     final model = await firestoreDataSource.getCurrentOrder(orderId: orderId);
 
     return model?.toEntity();
+  }
+
+  @override
+  Future<void> createNotificationRequest({
+    required String userId,
+    required String title,
+    required String body,
+    required String orderId,
+    required String type,
+  }) {
+    return notificationRequestFirestoreDataSource.createNotification(
+      userId: userId,
+      title: title,
+      body: body,
+      orderId: orderId,
+      type: type,
+    );
   }
 }

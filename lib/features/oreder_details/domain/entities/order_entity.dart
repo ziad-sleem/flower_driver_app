@@ -3,10 +3,11 @@ import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/shipping_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/store_entity.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/users_entity.dart';
 
 class OrderEntity extends Equatable {
   final String? id;
-  final Object? user;
+  final UsersEntity? user;
   final List<OrderItemEntity>? orderItems;
   final double? totalPrice;
   final PaymentType? paymentType;

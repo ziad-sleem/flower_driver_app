@@ -3,6 +3,7 @@ import 'package:tracking_app/features/oreder_details/data/models/enums/order_det
 import 'package:tracking_app/features/oreder_details/data/models/order_item_dto.dart';
 import 'package:tracking_app/features/oreder_details/data/models/shipping_address_dto.dart';
 import 'package:tracking_app/features/oreder_details/data/models/store_dto.dart';
+import 'package:tracking_app/features/oreder_details/data/models/users_dto.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart'
     as entity;
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart'
@@ -15,7 +16,7 @@ class OrderDto {
   @JsonKey(name: "_id")
   String? id;
   @JsonKey(name: "user")
-  dynamic user;
+  UsersDto user;
   @JsonKey(name: "orderItems")
   List<OrderItemDto>? orderItems;
   @JsonKey(name: "totalPrice")
@@ -45,7 +46,7 @@ class OrderDto {
 
   OrderDto({
     this.id,
-    this.user,
+    required this.user,
     this.orderItems,
     this.totalPrice,
     this.paymentType,
@@ -68,7 +69,7 @@ class OrderDto {
 
   entity.OrderEntity toEntity() => entity.OrderEntity(
     id: id,
-    user: user,
+    user: user.toEntity(),
     orderItems: orderItems?.map((item) => item.toEntity()).toList(),
     totalPrice: totalPrice,
     paymentType: _mapPaymentType(paymentType),

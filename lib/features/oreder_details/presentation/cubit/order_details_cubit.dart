@@ -9,6 +9,7 @@ import 'package:tracking_app/config/base/base_state.dart';
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/current_order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
+import 'package:tracking_app/features/oreder_details/domain/use_cases/create_notification_request_use_case.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/save_current_order_usecase.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/watch_order_state_usecase.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
@@ -22,11 +23,13 @@ part 'order_details_state.dart';
 class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final SaveCurrentOrderUseCase _saveCurrentOrderUseCase;
   final WatchCurrentOrderUseCase _watchCurrentOrderUseCase;
+  final CreateNotificationRequestUseCase _createNotificationRequestUseCase;
   final GetDriverDataUseCase _getDriverDataUseCase;
 
   OrderDetailsCubit(
     this._saveCurrentOrderUseCase,
     this._watchCurrentOrderUseCase,
+    this._createNotificationRequestUseCase,
     this._getDriverDataUseCase,
   ) : super(const OrderDetailsState());
   String? _driverName;
@@ -109,7 +112,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
     emit(state.copyWith(updateState: const BaseState(isLoading: true)));
 
-    // أول ما الدرايفر يوصل للعميل
+    // ================================
+    // Driver Arrived
+    // ================================
     if (current == OrderStep.outForDelivery) {
       await _saveCurrentOrderUseCase(
         order: order,
@@ -120,6 +125,14 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         vehicleType: _vehicleType,
         vehicleNumber: _vehicleNumber,
         vehicleLicense: _vehicleLicense,
+      );
+
+      await _createNotificationRequestUseCase(
+        userId: order.user!.id!,
+        orderId: order.id!,
+        title: "Driver Arrived",
+        body: "Your driver has arrived.",
+        type: "driver_arrived",
       );
 
       emit(
@@ -137,6 +150,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       return;
     }
 
+    // ================================
+    // Save Current Order
+    // ================================
     await _saveCurrentOrderUseCase(
       order: order,
       state: next!,
@@ -147,6 +163,37 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       vehicleNumber: _vehicleNumber,
       vehicleLicense: _vehicleLicense,
     );
+
+    // ================================
+    // Send Notification
+    // ================================
+    String title = "";
+    String body = "";
+    String type = "";
+
+    switch (next) {
+      case OrderStateValues.picked:
+        title = "Order Picked Up";
+        body = "Your order has been picked up.";
+        type = "order_picked_up";
+        break;
+
+      case OrderStateValues.outForDelivery:
+        title = "Out For Delivery";
+        body = "Your order is on the way.";
+        type = "out_for_delivery";
+        break;
+    }
+
+    if (title.isNotEmpty) {
+      await _createNotificationRequestUseCase(
+        userId: order.user!.id!,
+        orderId: order.id!,
+        title: title,
+        body: body,
+        type: type,
+      );
+    }
 
     emit(
       state.copyWith(

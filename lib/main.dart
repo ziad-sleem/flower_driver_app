@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:tracking_app/app.dart';
 import 'package:tracking_app/config/dependency_injection/di.dart';
 import 'package:tracking_app/core/network/dio_helper.dart';
+import 'package:tracking_app/core/notifications/notification_initializer.dart';
 import 'package:tracking_app/core/resources/app_value.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
@@ -14,6 +15,7 @@ Future<void> main() async {
 
   DioHelper.init();
   configureDependencies();
+  await getIt<NotificationInitializer>().initialize();
   await EasyLocalization.ensureInitialized();
 
   runApp(

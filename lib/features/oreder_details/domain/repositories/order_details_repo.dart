@@ -30,5 +30,13 @@ abstract class OrderDetailsRepo {
 
   Stream<CurrentOrderEntity?> watchCurrentOrder({required String orderId});
 
-  Future<CurrentOrderEntity?> getCurrentOrder({required String orderId});
+  Future<CurrentOrderEntity?> getCurrentOrder({required String driverId});
+
+  Future<void> createNotificationRequest({
+    required String userId,
+    required String title,
+    required String body,
+    required String orderId,
+    required String type,
+  });
 }

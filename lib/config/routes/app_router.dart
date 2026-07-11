@@ -27,7 +27,6 @@ import 'package:tracking_app/features/oreder_details/presentation/cubit/order_de
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_detail_page.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_details_screen.dart';
-import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
