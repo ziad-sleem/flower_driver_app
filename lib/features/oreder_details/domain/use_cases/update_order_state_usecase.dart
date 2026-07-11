@@ -6,6 +6,8 @@ import 'package:tracking_app/features/oreder_details/domain/entities/update_orde
 import 'package:tracking_app/features/oreder_details/domain/entities/update_order_state_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/repositories/order_details_repo.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/create_notification_request_use_case.dart';
+import 'package:tracking_app/features/profile/domain/entities/profile_data_response_entity.dart';
+import 'package:tracking_app/features/profile/domain/use_cases/get_driver_data_use_case.dart';
 
 @injectable
 class UpdateOrderStateUseCase {
@@ -24,6 +26,13 @@ class UpdateOrderStateUseCase {
 
     if (response is SuccessBaseResponse<UpdateOrderStateResponseEntity>) {
       final driverId = await SecureStorageService.getDriverId();
+      try {
+        if (params.state == "inProgress") {
+          String? driverName;
+          String? driverPhone;
+          String? vehicleType;
+          String? vehicleNumber;
+          String? vehicleLicense;
 
       if (driverId != null && driverId.isNotEmpty) {
         try {
@@ -66,6 +75,8 @@ class UpdateOrderStateUseCase {
         } catch (error) {
           debugPrint("Current order sync failed: $error");
         }
+      } catch (error) {
+        debugPrint('Current order sync failed: $error');
       }
     }
 

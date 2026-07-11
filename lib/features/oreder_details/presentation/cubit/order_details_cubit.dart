@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+
+import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/config/base/base_state.dart';
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/current_order_entity.dart';
@@ -12,6 +14,8 @@ import 'package:tracking_app/features/oreder_details/domain/use_cases/save_curre
 import 'package:tracking_app/features/oreder_details/domain/use_cases/watch_order_state_usecase.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_step.dart';
+import 'package:tracking_app/features/profile/domain/entities/profile_data_response_entity.dart';
+import 'package:tracking_app/features/profile/domain/use_cases/get_driver_data_use_case.dart';
 
 part 'order_details_state.dart';
 
@@ -20,14 +24,19 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final SaveCurrentOrderUseCase _saveCurrentOrderUseCase;
   final WatchCurrentOrderUseCase _watchCurrentOrderUseCase;
   final CreateNotificationRequestUseCase _createNotificationRequestUseCase;
+  final GetDriverDataUseCase _getDriverDataUseCase;
 
   OrderDetailsCubit(
     this._saveCurrentOrderUseCase,
     this._watchCurrentOrderUseCase,
     this._createNotificationRequestUseCase,
+    this._getDriverDataUseCase,
   ) : super(const OrderDetailsState());
-
-  String? _driverId;
+  String? _driverName;
+  String? _driverPhone;
+  String? _vehicleType;
+  String? _vehicleNumber;
+  String? _vehicleLicense;
 
   StreamSubscription<CurrentOrderEntity?>? _stateSubscription;
 
@@ -52,13 +61,11 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       }
     }
 
-    _driverId = await SecureStorageService.getDriverId();
-
-    if (_driverId == null) return;
+    _loadDriverProfile();
 
     await _stateSubscription?.cancel();
 
-    _stateSubscription = _watchCurrentOrderUseCase(driverId: _driverId!).listen(
+    _stateSubscription = _watchCurrentOrderUseCase(orderId: order.id!).listen(
       (currentOrder) {
         if (currentOrder == null) {
           if (state.step == OrderStep.arrived) {
@@ -68,6 +75,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
                 updateState: const BaseState(data: true),
               ),
             );
+            SecureStorageService.deleteCurrentOrderId();
           }
           return;
         }
@@ -76,10 +84,11 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           emit(
             state.copyWith(
               order: currentOrder.order,
-              step: OrderStep.arrived,
+              step: OrderStep.delivered,
               updateState: const BaseState(data: true),
             ),
           );
+          SecureStorageService.deleteCurrentOrderId();
           return;
         }
 
@@ -95,10 +104,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   Future<void> _advance() async {
     final order = state.order;
     final current = state.step;
-    final driverId = _driverId;
     final next = current?.nextStateValue;
 
-    if (order == null || current == null || driverId == null) {
+    if (order == null || current == null) {
       return;
     }
 
@@ -109,10 +117,14 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     // ================================
     if (current == OrderStep.outForDelivery) {
       await _saveCurrentOrderUseCase(
-        driverId: driverId,
         order: order,
         state: OrderStateValues.arrived,
         driverRequestedDelivery: true,
+        driverName: _driverName,
+        driverPhone: _driverPhone,
+        vehicleType: _vehicleType,
+        vehicleNumber: _vehicleNumber,
+        vehicleLicense: _vehicleLicense,
       );
 
       await _createNotificationRequestUseCase(
@@ -142,10 +154,14 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     // Save Current Order
     // ================================
     await _saveCurrentOrderUseCase(
-      driverId: driverId,
       order: order,
       state: next!,
       driverRequestedDelivery: false,
+      driverName: _driverName,
+      driverPhone: _driverPhone,
+      vehicleType: _vehicleType,
+      vehicleNumber: _vehicleNumber,
+      vehicleLicense: _vehicleLicense,
     );
 
     // ================================
@@ -185,6 +201,19 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         updateState: const BaseState(data: true),
       ),
     );
+  }
+
+  void _loadDriverProfile() {
+    _getDriverDataUseCase.call().then((result) {
+      if (result is SuccessBaseResponse<ProfileDataResponseEntity>) {
+        final driver = result.data.driver;
+        _driverName = driver?.name;
+        _driverPhone = driver?.phone;
+        _vehicleType = driver?.vehicleType;
+        _vehicleNumber = driver?.vehicleNumber;
+        _vehicleLicense = driver?.vehicleLicense;
+      }
+    });
   }
 
   @override

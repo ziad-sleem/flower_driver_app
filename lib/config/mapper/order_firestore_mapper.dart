@@ -35,7 +35,8 @@ class OrderFirestoreMapper {
               "image": order.store!.image,
               "address": order.store!.address,
               "phoneNumber": order.store!.phoneNumber,
-              "latLong": order.store!.latLong,
+              "lat": order.store!.lat,
+              "long": order.store!.long,
             },
 
       "shippingAddress": order.shippingAddress == null
@@ -110,7 +111,8 @@ class OrderFirestoreMapper {
               image: json["store"]["image"],
               address: json["store"]["address"],
               phoneNumber: json["store"]["phoneNumber"],
-              latLong: json["store"]["latLong"],
+              lat: json["store"]["lat"],
+              long: json["store"]["long"],
             ),
 
       shippingAddress: json["shippingAddress"] == null

@@ -13,16 +13,19 @@ class AppLaunchCubit extends Cubit<AppLaunchState> {
   AppLaunchCubit(this._getCurrentOrderUseCase) : super(AppLaunchLoading());
 
   Future<void> checkCurrentOrder() async {
-    final driverId = await SecureStorageService.getDriverId();
+    final orderId = await SecureStorageService.getCurrentOrderId();
 
-    if (driverId == null || driverId.isEmpty) {
+    if (orderId == null || orderId.isEmpty) {
       emit(AppLaunchNoOrder());
       return;
     }
 
-    final currentOrder = await _getCurrentOrderUseCase(driverId: driverId);
+    final currentOrder = await _getCurrentOrderUseCase(
+      orderId: orderId,
+    );
 
     if (currentOrder == null) {
+      await SecureStorageService.deleteCurrentOrderId();
       emit(AppLaunchNoOrder());
     } else {
       emit(AppLaunchHasOrder(currentOrder));

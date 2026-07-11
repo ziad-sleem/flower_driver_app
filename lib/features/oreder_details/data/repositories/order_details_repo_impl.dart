@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
 import 'package:tracking_app/features/notifications/data_source/notification_queue_firestore_data_source.dart';
+import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/data/datasources/order_details_firestore_data_source.dart';
 import 'package:tracking_app/features/oreder_details/data/datasources/order_details_remote_data_source.dart';
 import 'package:tracking_app/features/oreder_details/data/models/order_details_response_dto.dart';
@@ -67,36 +68,51 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
 
   @override
   Future<void> saveCurrentOrder({
-    required String driverId,
     required OrderEntity order,
     required String state,
     required bool driverRequestedDelivery,
-  }) {
-    return firestoreDataSource.saveCurrentOrder(
-      driverId: driverId,
+    String? driverId,
+    String? driverName,
+    String? driverPhone,
+    String? vehicleType,
+    String? vehicleNumber,
+    String? vehicleLicense,
+  }) async {
+    await firestoreDataSource.saveCurrentOrder(
       order: order,
       state: state,
       driverRequestedDelivery: driverRequestedDelivery,
+      driverId: driverId,
+      driverName: driverName,
+      driverPhone: driverPhone,
+      vehicleType: vehicleType,
+      vehicleNumber: vehicleNumber,
+      vehicleLicense: vehicleLicense,
     );
+
+    final orderId = order.id;
+    if (orderId != null && orderId.isNotEmpty) {
+      await SecureStorageService.saveCurrentOrderId(orderId);
+    }
   }
 
   @override
-  Future<void> deleteCurrentOrder({required String driverId}) {
-    return firestoreDataSource.deleteCurrentOrder(driverId: driverId);
+  Future<void> deleteCurrentOrder({required String orderId}) {
+    return firestoreDataSource.deleteCurrentOrder(orderId: orderId);
   }
 
   @override
-  Stream<CurrentOrderEntity?> watchCurrentOrder({required String driverId}) {
+  Stream<CurrentOrderEntity?> watchCurrentOrder({required String orderId}) {
     return firestoreDataSource
-        .watchCurrentOrder(driverId: driverId)
+        .watchCurrentOrder(orderId: orderId)
         .map((event) => event?.toEntity());
   }
 
   @override
   Future<CurrentOrderEntity?> getCurrentOrder({
-    required String driverId,
+    required String orderId,
   }) async {
-    final model = await firestoreDataSource.getCurrentOrder(driverId: driverId);
+    final model = await firestoreDataSource.getCurrentOrder(orderId: orderId);
 
     return model?.toEntity();
   }

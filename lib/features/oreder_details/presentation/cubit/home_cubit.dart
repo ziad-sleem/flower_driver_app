@@ -27,6 +27,8 @@ class HomeCubit extends Cubit<HomeState> {
     this._getCurrentOrderUseCase,
   ) : super(const HomeState());
 
+  Future<void> refresh() => _getPendingOrders();
+
   void doEvent(HomeEvent event) {
     switch (event) {
       case CheckCurrentOrder():
@@ -189,14 +191,14 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> _checkCurrentOrder() async {
-    final driverId = await SecureStorageService.getDriverId();
+    final orderId = await SecureStorageService.getCurrentOrderId();
 
-    if (driverId == null || driverId.isEmpty) {
+    if (orderId == null || orderId.isEmpty) {
       doEvent(GetPendingOrders());
       return;
     }
 
-    final currentOrder = await _getCurrentOrderUseCase(driverId: driverId);
+    final currentOrder = await _getCurrentOrderUseCase(orderId: orderId);
 
     if (currentOrder == null) {
       doEvent(GetPendingOrders());

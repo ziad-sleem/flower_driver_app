@@ -64,7 +64,7 @@ const _$PaymentTypeEnumMap = {
 
 const _$OrderStateEnumMap = {
   OrderState.pending: 'pending',
-  OrderState.accepted: 'accepted',
-  OrderState.delivered: 'delivered',
-  OrderState.cancelled: 'cancelled',
+  OrderState.inProgress: 'inProgress',
+  OrderState.canceled: 'canceled',
+  OrderState.completed: 'completed',
 };
