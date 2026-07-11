@@ -63,10 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            // if (state.rejectOrderState.data == true) {
-            //   context.read<HomeCubit>().doEvent(const GetPendingOrders());
-            // }
-
             if (state.acceptOrderState.errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.acceptOrderState.errorMessage!)),

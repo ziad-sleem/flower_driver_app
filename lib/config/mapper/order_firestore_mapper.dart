@@ -4,12 +4,20 @@ import 'package:tracking_app/features/oreder_details/domain/entities/product_ent
 import 'package:tracking_app/features/oreder_details/domain/entities/shipping_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/store_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/users_entity.dart';
 
 class OrderFirestoreMapper {
   static Map<String, dynamic> toFirestore(OrderEntity order) {
     return {
       "id": order.id,
-      "user": order.user,
+      "user": order.user == null
+          ? null
+          : {
+              "id": order.user!.id,
+              "firstName": order.user!.firstName,
+              "lastName": order.user!.lastName,
+              "email": order.user!.email,
+            },
       "totalPrice": order.totalPrice,
       "paymentType": order.paymentType?.name,
       "isPaid": order.isPaid,
@@ -64,7 +72,14 @@ class OrderFirestoreMapper {
     return OrderEntity(
       id: json["id"],
 
-      user: json["user"],
+      user: json["user"] == null
+          ? null
+          : UsersEntity(
+              id: json["user"]["id"],
+              firstName: json["user"]["firstName"],
+              lastName: json["user"]["lastName"],
+              email: json["user"]["email"],
+            ),
 
       totalPrice: (json["totalPrice"] as num?)?.toDouble(),
 
