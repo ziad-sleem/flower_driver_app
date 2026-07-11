@@ -29,8 +29,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     this._watchCurrentOrderUseCase,
     this._getDriverDataUseCase,
   ) : super(const OrderDetailsState());
-
-  String? _driverId;
   String? _driverName;
   String? _driverPhone;
   String? _vehicleType;
@@ -59,8 +57,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         emit(state.copyWith(order: order, step: step));
       }
     }
-
-    _driverId = await SecureStorageService.getDriverId();
 
     _loadDriverProfile();
 
@@ -119,9 +115,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         order: order,
         state: OrderStateValues.arrived,
         driverRequestedDelivery: true,
-        driverId: _driverId,
-        userLat: double.tryParse(order.shippingAddress?.lat ?? ''),
-        userLong: double.tryParse(order.shippingAddress?.long ?? ''),
         driverName: _driverName,
         driverPhone: _driverPhone,
         vehicleType: _vehicleType,
@@ -148,9 +141,6 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       order: order,
       state: next!,
       driverRequestedDelivery: false,
-      driverId: _driverId,
-      userLat: double.tryParse(order.shippingAddress?.lat ?? ''),
-      userLong: double.tryParse(order.shippingAddress?.long ?? ''),
       driverName: _driverName,
       driverPhone: _driverPhone,
       vehicleType: _vehicleType,

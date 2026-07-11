@@ -7,8 +7,6 @@ abstract class OrderDetailsFireStoreDataSource {
     required String state,
     required bool driverRequestedDelivery,
     String? driverId,
-    double? userLat,
-    double? userLong,
     String? driverName,
     String? driverPhone,
     String? vehicleType,

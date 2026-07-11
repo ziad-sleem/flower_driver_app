@@ -7,8 +7,6 @@ class CurrentOrderModel {
   final String state;
   final bool driverRequestedDelivery;
   final OrderEntity order;
-  final double? userLat;
-  final double? userLong;
   final String? driverName;
   final String? driverPhone;
   final String? vehicleType;
@@ -20,8 +18,6 @@ class CurrentOrderModel {
     required this.state,
     required this.driverRequestedDelivery,
     required this.order,
-    this.userLat,
-    this.userLong,
     this.driverName,
     this.driverPhone,
     this.vehicleType,
@@ -38,8 +34,6 @@ class CurrentOrderModel {
       order: OrderFirestoreMapper.fromFirestore(
         json["order"] as Map<String, dynamic>,
       ),
-      userLat: (json["userLat"] as num?)?.toDouble(),
-      userLong: (json["userLong"] as num?)?.toDouble(),
       driverName: json["driverName"] as String?,
       driverPhone: json["driverPhone"] as String?,
       vehicleType: json["vehicleType"] as String?,
@@ -62,8 +56,6 @@ class CurrentOrderModel {
       "driverRequestedDelivery": driverRequestedDelivery,
       "order": OrderFirestoreMapper.toFirestore(order),
       if (driverId != null) "driverId": driverId,
-      if (userLat != null) "userLat": userLat,
-      if (userLong != null) "userLong": userLong,
       if (driverName != null) "driverName": driverName,
       if (driverPhone != null) "driverPhone": driverPhone,
       if (vehicleType != null) "vehicleType": vehicleType,

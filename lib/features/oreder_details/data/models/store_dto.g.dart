@@ -12,6 +12,9 @@ StoreDto _$StoreDtoFromJson(Map<String, dynamic> json) => StoreDto(
   address: json['address'] as String?,
   phoneNumber: json['phoneNumber'] as String?,
   latLong: json['latLong'] as String?,
+  lat: json['lat'],
+  long: json['long'],
+  lng: json['lng'],
 );
 
 Map<String, dynamic> _$StoreDtoToJson(StoreDto instance) => <String, dynamic>{
@@ -20,4 +23,7 @@ Map<String, dynamic> _$StoreDtoToJson(StoreDto instance) => <String, dynamic>{
   'address': instance.address,
   'phoneNumber': instance.phoneNumber,
   'latLong': instance.latLong,
+  'lat': instance.lat,
+  'long': instance.long,
+  'lng': instance.lng,
 };

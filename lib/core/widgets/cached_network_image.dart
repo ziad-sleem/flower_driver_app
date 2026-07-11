@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tracking_app/core/layout/app_size.dart';
+import 'package:tracking_app/core/network/endpoints.dart';
 import 'package:tracking_app/core/widgets/shimmer_loading_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -14,13 +15,20 @@ class CachedNetworkImageWidget extends StatelessWidget {
     this.height = AppSize.s60,
   });
 
+  String get _fullUrl {
+    if (urlToImage.startsWith('http://') || urlToImage.startsWith('https://')) {
+      return urlToImage;
+    }
+    return '${AppConfig.uploadsUrl}$urlToImage';
+  }
+
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       height: height,
       memCacheHeight: 400,
       width: width,
-      imageUrl: urlToImage,
+      imageUrl: _fullUrl,
       fit: BoxFit.cover,
       placeholder: (context, url) => ImageShimmer(width: width, height: height),
       errorWidget: (context, url, error) =>
