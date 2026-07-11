@@ -11,6 +11,8 @@ import 'package:tracking_app/features/profile/presentation/pages/profile_page.da
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/home_screen.dart';
+import 'package:tracking_app/features/orders/order_page/presentation/cubit/order_page_cubit.dart';
+import 'package:tracking_app/features/orders/order_page/presentation/pages/order_page.dart';
 
   
 class AppSectionsPage extends StatelessWidget {
@@ -58,7 +60,10 @@ class _AppSectionsView extends StatelessWidget {
                 create: (_) => getIt<HomeCubit>()..doEvent(GetPendingOrders()),
                 child: const HomeScreen(),
               ),
-              _PlaceholderScreen(title: TabsConstants.orders),
+              BlocProvider(
+                create: (_) => getIt<OrderPageCubit>()..loadDriverOrders(),
+                child: const OrderPage(),
+              ),
               ProfilePage(),
             ],
 
@@ -110,24 +115,4 @@ class _BottomNavItem {
   final String icon;
 
   const _BottomNavItem({required this.label, required this.icon});
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  final String title;
-
-  const _PlaceholderScreen({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
 }

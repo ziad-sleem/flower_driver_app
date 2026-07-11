@@ -37,6 +37,7 @@ class CheckoutEndPoints {}
 class OrdersEndPoints {
   static const getPendingOrder = "orders/pending-orders";
   static const String updateOrderState = "orders/state";
+  static const getDriverOrders = "orders/driver-orders";
 }
 
 class NotificationsEndPoints {}
