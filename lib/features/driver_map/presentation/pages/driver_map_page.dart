@@ -89,12 +89,22 @@ class _DriverMapPageState extends State<DriverMapPage> {
         return;
       }
 
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );
+      Position position;
+      try {
+        position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            timeLimit: Duration(seconds: 30),
+          ),
+        );
+      } on TimeoutException {
+        position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.medium,
+            timeLimit: Duration(seconds: 30),
+          ),
+        );
+      }
       final initialLoc = LatLng(position.latitude, position.longitude);
 
       await _updateRouteAndPosition(initialLoc, isInitial: true);
