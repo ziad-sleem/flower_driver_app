@@ -12,4 +12,5 @@ abstract class Routes {
   static const String editVehicleInfo = '/edit-vehicle-info';
   static const String orderDetail = '/order-detail';
   static const String driverOrderDetails = '/driver-order-details';
+  static const String driverMap = '/driver-map';
 }

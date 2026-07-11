@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
+import 'package:tracking_app/core/widgets/cached_network_image.dart';
 import 'package:tracking_app/features/edit_profile/presentation/cubit/edit_profile_cubit.dart';
 import 'package:tracking_app/features/edit_profile/presentation/cubit/edit_profile_event.dart';
 
@@ -48,10 +49,10 @@ class EditProfilePhotoHeader extends StatelessWidget {
               child: photo != null
                   ? Image.file(photo!, fit: BoxFit.cover)
                   : (profilePhotoUrl != null && profilePhotoUrl!.isNotEmpty)
-                      ? Image.network(
-                          profilePhotoUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stack) => _placeholder(),
+                      ? CachedNetworkImageWidget(
+                          urlToImage: profilePhotoUrl!,
+                          width: 100,
+                          height: 100,
                         )
                       : _placeholder(),
             ),

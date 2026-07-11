@@ -9,16 +9,26 @@ class SaveCurrentOrderUseCase {
   SaveCurrentOrderUseCase({required this.repo});
 
   Future<void> call({
-    required String driverId,
     required OrderEntity order,
     required String state,
     required bool driverRequestedDelivery,
+    String? driverId,
+    String? driverName,
+    String? driverPhone,
+    String? vehicleType,
+    String? vehicleNumber,
+    String? vehicleLicense,
   }) {
     return repo.saveCurrentOrder(
-      driverId: driverId,
       order: order,
       state: state,
       driverRequestedDelivery: driverRequestedDelivery,
+      driverId: driverId,
+      driverName: driverName,
+      driverPhone: driverPhone,
+      vehicleType: vehicleType,
+      vehicleNumber: vehicleNumber,
+      vehicleLicense: vehicleLicense,
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
 import 'package:tracking_app/features/oreder_details/domain/use_cases/get_current_order_usecase.dart';
 
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -57,12 +58,12 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
 
-    final driverId = await SecureStorageService.getDriverId();
-    debugPrint("driverId = $driverId");
+    final orderId = await SecureStorageService.getCurrentOrderId();
+    debugPrint("orderId = $orderId");
 
-    if (driverId != null && driverId.isNotEmpty) {
+    if (orderId != null && orderId.isNotEmpty) {
       final currentOrder = await getIt<GetCurrentOrderUseCase>()(
-        driverId: driverId,
+        orderId: orderId,
       );
       debugPrint("currentOrder = $currentOrder");
       if (!mounted) return;

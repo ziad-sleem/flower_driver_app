@@ -4,12 +4,20 @@ import 'package:tracking_app/features/oreder_details/domain/entities/product_ent
 import 'package:tracking_app/features/oreder_details/domain/entities/shipping_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/store_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
+import 'package:tracking_app/features/oreder_details/domain/entities/users_entity.dart';
 
 class OrderFirestoreMapper {
   static Map<String, dynamic> toFirestore(OrderEntity order) {
     return {
       "id": order.id,
-      "user": order.user,
+      "user": order.user == null
+          ? null
+          : {
+              "id": order.user!.id,
+              "firstName": order.user!.firstName,
+              "lastName": order.user!.lastName,
+              "email": order.user!.email,
+            },
       "totalPrice": order.totalPrice,
       "paymentType": order.paymentType?.name,
       "isPaid": order.isPaid,
@@ -27,7 +35,8 @@ class OrderFirestoreMapper {
               "image": order.store!.image,
               "address": order.store!.address,
               "phoneNumber": order.store!.phoneNumber,
-              "latLong": order.store!.latLong,
+              "lat": order.store!.lat,
+              "long": order.store!.long,
             },
 
       "shippingAddress": order.shippingAddress == null
@@ -64,7 +73,14 @@ class OrderFirestoreMapper {
     return OrderEntity(
       id: json["id"],
 
-      user: json["user"],
+      user: json["user"] == null
+          ? null
+          : UsersEntity(
+              id: json["user"]["id"],
+              firstName: json["user"]["firstName"],
+              lastName: json["user"]["lastName"],
+              email: json["user"]["email"],
+            ),
 
       totalPrice: (json["totalPrice"] as num?)?.toDouble(),
 
@@ -95,7 +111,8 @@ class OrderFirestoreMapper {
               image: json["store"]["image"],
               address: json["store"]["address"],
               phoneNumber: json["store"]["phoneNumber"],
-              latLong: json["store"]["latLong"],
+              lat: json["store"]["lat"],
+              long: json["store"]["long"],
             ),
 
       shippingAddress: json["shippingAddress"] == null

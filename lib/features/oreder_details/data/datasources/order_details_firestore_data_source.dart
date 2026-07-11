@@ -3,15 +3,20 @@ import 'package:tracking_app/features/oreder_details/domain/entities/order_entit
 
 abstract class OrderDetailsFireStoreDataSource {
   Future<void> saveCurrentOrder({
-    required String driverId,
     required OrderEntity order,
     required String state,
     required bool driverRequestedDelivery,
+    String? driverId,
+    String? driverName,
+    String? driverPhone,
+    String? vehicleType,
+    String? vehicleNumber,
+    String? vehicleLicense,
   });
 
-  Future<void> deleteCurrentOrder({required String driverId});
+  Future<void> deleteCurrentOrder({required String orderId});
 
-  Stream<CurrentOrderModel?> watchCurrentOrder({required String driverId});
+  Stream<CurrentOrderModel?> watchCurrentOrder({required String orderId});
 
-  Future<CurrentOrderModel?> getCurrentOrder({required String driverId});
+  Future<CurrentOrderModel?> getCurrentOrder({required String orderId});
 }

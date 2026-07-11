@@ -7,7 +7,7 @@ class DeleteCurrentOrderUseCase {
 
   DeleteCurrentOrderUseCase({required this.repo});
 
-  Future<void> call({required String driverId}) {
-    return repo.deleteCurrentOrder(driverId: driverId);
+  Future<void> call({required String orderId}) {
+    return repo.deleteCurrentOrder(orderId: orderId);
   }
 }

@@ -63,10 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            // if (state.rejectOrderState.data == true) {
-            //   context.read<HomeCubit>().doEvent(const GetPendingOrders());
-            // }
-
             if (state.acceptOrderState.errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.acceptOrderState.errorMessage!)),
@@ -106,13 +102,20 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state.orders.isEmpty) {
-              return const EmptyOrdersWidget();
+              return RefreshIndicator(
+                onRefresh: () => context.read<HomeCubit>().refresh(),
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: const EmptyOrdersWidget(),
+                  ),
+                ),
+              );
             }
 
             return RefreshIndicator(
-              onRefresh: () async {
-                context.read<HomeCubit>().doEvent(const GetPendingOrders());
-              },
+              onRefresh: () => context.read<HomeCubit>().refresh(),
               child: Column(
                 children: [
                   Padding(

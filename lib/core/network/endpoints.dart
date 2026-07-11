@@ -1,12 +1,17 @@
-class AuthEndPoint {
+class AppConfig {
   static const baseUrl = "https://flower.elevateegy.com/api/v1/";
+  static const uploadsUrl = "https://flower.elevateegy.com/uploads/";
+}
+
+class AuthEndPoint {
+  static const baseUrl = AppConfig.baseUrl;
   static const signIn = "drivers/signin";
   static const applyNow = "drivers/apply";
   static const vehicles = "vehicles/";
 }
 
 class ProfileEndPoint {
-  static const baseUrl = "https://flower.elevateegy.com/api/v1/";
+  static const baseUrl = AppConfig.baseUrl;
   static const profileData = "drivers/profile-data";
   static const vehicleId = "vehicle/";
   static const vehicles = "vehicles";
