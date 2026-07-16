@@ -4,7 +4,7 @@ import 'package:tracking_app/features/profile/domain/entities/vehicle_entity.dar
 part 'vehicle_dto.g.dart';
 
 @JsonSerializable()
-class ProfileVehicleDto {
+class VehicleDto {
   @JsonKey(name: "_id")
   final String? id;
   @JsonKey(name: "type")
@@ -18,7 +18,7 @@ class ProfileVehicleDto {
   @JsonKey(name: "__v")
   final int? v;
 
-  ProfileVehicleDto({
+  VehicleDto({
     this.id,
     this.type,
     this.image,
@@ -27,12 +27,12 @@ class ProfileVehicleDto {
     this.v,
   });
 
-  factory ProfileVehicleDto.fromJson(Map<String, dynamic> json) =>
-      _$ProfileVehicleDtoFromJson(json);
+  factory VehicleDto.fromJson(Map<String, dynamic> json) =>
+      _$VehicleDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ProfileVehicleDtoToJson(this);
+  Map<String, dynamic> toJson() => _$VehicleDtoToJson(this);
 
-  ProfileVehicleEntity toEntity() {
-    return ProfileVehicleEntity(id: id, type: type, image: image);
+  VehicleEntity toEntity() {
+    return VehicleEntity(id: id, type: type, image: image);
   }
 }

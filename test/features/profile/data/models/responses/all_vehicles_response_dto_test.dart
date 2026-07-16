@@ -6,9 +6,9 @@ import 'package:tracking_app/features/profile/domain/entities/all_vehicles_respo
 void main() {
   group('AllVehiclesResponseDto', () {
     const tMessage = "success";
-    final tVehicles = <ProfileVehicleDto>[
-      ProfileVehicleDto(id: "1", type: "car", image: "car.jpg"),
-      ProfileVehicleDto(id: "2", type: "truck", image: "truck.jpg"),
+    final tVehicles = <VehicleDto>[
+      VehicleDto(id: "1", type: "car", image: "car.jpg"),
+      VehicleDto(id: "2", type: "truck", image: "truck.jpg"),
     ];
 
     final tJson = {

@@ -4,12 +4,15 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
+import 'dart:io' as _i12;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:tracking_app/config/base/base_response.dart' as _i4;
 import 'package:tracking_app/features/profile/data/datasources/profile_remote_data_source.dart'
     as _i2;
+import 'package:tracking_app/features/profile/data/models/edit_profile_request.dart'
+    as _i11;
 import 'package:tracking_app/features/profile/data/models/requests/reset_password_request_dto.dart'
     as _i9;
 import 'package:tracking_app/features/profile/data/models/responses/all_vehicles_response_dto.dart'
@@ -18,6 +21,12 @@ import 'package:tracking_app/features/profile/data/models/responses/profile_data
     as _i5;
 import 'package:tracking_app/features/profile/data/models/responses/reset_password_response_dto.dart'
     as _i8;
+import 'package:tracking_app/features/profile/data/models/responses/update_vehicle_response_dto.dart'
+    as _i13;
+import 'package:tracking_app/features/profile/domain/entities/driver_entity.dart'
+    as _i10;
+import 'package:tracking_app/features/profile/domain/entities/edit_vehicle_params.dart'
+    as _i14;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -87,4 +96,50 @@ class MockProfileRemoteDataSourceContract extends _i1.Mock
                 ),
           )
           as _i3.Future<_i4.BaseResponse<_i8.ResetPasswordResponseDto>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i10.ProfileDriverEntity>> editProfile(
+    _i11.EditProfileParams? params,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#editProfile, [params]),
+            returnValue:
+                _i3.Future<_i4.BaseResponse<_i10.ProfileDriverEntity>>.value(
+                  _i6.dummyValue<_i4.BaseResponse<_i10.ProfileDriverEntity>>(
+                    this,
+                    Invocation.method(#editProfile, [params]),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i10.ProfileDriverEntity>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<void>> uploadPhoto(_i12.File? photo) =>
+      (super.noSuchMethod(
+            Invocation.method(#uploadPhoto, [photo]),
+            returnValue: _i3.Future<_i4.BaseResponse<void>>.value(
+              _i6.dummyValue<_i4.BaseResponse<void>>(
+                this,
+                Invocation.method(#uploadPhoto, [photo]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.BaseResponse<void>>);
+
+  @override
+  _i3.Future<_i4.BaseResponse<_i13.UpdateVehicleResponseDto>> updateVehicle(
+    _i14.EditVehicleParams? params,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateVehicle, [params]),
+            returnValue:
+                _i3.Future<
+                  _i4.BaseResponse<_i13.UpdateVehicleResponseDto>
+                >.value(
+                  _i6.dummyValue<
+                    _i4.BaseResponse<_i13.UpdateVehicleResponseDto>
+                  >(this, Invocation.method(#updateVehicle, [params])),
+                ),
+          )
+          as _i3.Future<_i4.BaseResponse<_i13.UpdateVehicleResponseDto>>);
 }

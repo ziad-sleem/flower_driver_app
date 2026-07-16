@@ -3,7 +3,7 @@ import 'package:tracking_app/features/profile/domain/entities/vehicle_entity.dar
 
 class SingleVehicleResponseEntity extends Equatable {
   final String? message;
-  final ProfileVehicleEntity? vehicle;
+  final VehicleEntity? vehicle;
 
   const SingleVehicleResponseEntity({this.message, this.vehicle});
 

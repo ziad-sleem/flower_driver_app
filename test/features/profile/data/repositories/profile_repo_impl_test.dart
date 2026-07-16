@@ -98,8 +98,8 @@ void main() {
   });
 
   group('ProfileRepoImpl.getVehicles', () {
-    final tVehiclesDto = <ProfileVehicleDto>[
-      ProfileVehicleDto(id: "1", type: "car", image: "car.jpg"),
+    final tVehiclesDto = <VehicleDto>[
+      VehicleDto(id: "1", type: "car", image: "car.jpg"),
     ];
     final tResponseDto = AllVehiclesResponseDto(
       message: "success",
@@ -108,7 +108,7 @@ void main() {
     final tResponseEntity = AllVehiclesResponseEntity(
       message: "success",
       vehicles: [
-        const ProfileVehicleEntity(id: "1", type: "car", image: "car.jpg"),
+        const VehicleEntity(id: "1", type: "car", image: "car.jpg"),
       ],
     );
 

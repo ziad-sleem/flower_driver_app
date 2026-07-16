@@ -9,7 +9,7 @@ class SingleVehicleResponseDto {
   @JsonKey(name: "message")
   final String? message;
   @JsonKey(name: "vehicle")
-  final ProfileVehicleDto? vehicle;
+  final VehicleDto? vehicle;
 
   SingleVehicleResponseDto({this.message, this.vehicle});
 

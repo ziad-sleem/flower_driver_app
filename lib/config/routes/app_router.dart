@@ -13,22 +13,22 @@ import 'package:tracking_app/features/auth/presentation/forget_password/cubit/fo
 import 'package:tracking_app/features/auth/presentation/forget_password/pages/forget_password_screen.dart';
 import 'package:tracking_app/features/auth/presentation/login/pages/login_screen.dart';
 import 'package:tracking_app/features/app_section/presentation/page/app_section_page.dart';
-import 'package:tracking_app/features/edit_vehical_info/presentation/cubit/edit_vehicle_info_cubit.dart';
-import 'package:tracking_app/features/edit_vehical_info/presentation/pages/edit_vehicle_info_page.dart';
+import 'package:tracking_app/features/profile/presentation/cubit/edit_vehicle_info_cubit.dart';
+import 'package:tracking_app/features/profile/presentation/pages/edit_vehicle_info_page.dart';
 import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_user_info_cubit.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/pages/reset_password_page.dart';
-import 'package:tracking_app/features/edit_profile/presentation/cubit/edit_profile_cubit.dart';
-import 'package:tracking_app/features/edit_profile/presentation/pages/edit_profile_page.dart';
+import 'package:tracking_app/features/profile/presentation/cubit/edit_profile_cubit.dart';
+import 'package:tracking_app/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_detail_page.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/order_details_screen.dart';
-import 'package:tracking_app/features/orders/driver_order_details/presentation/pages/driver_order_details_page.dart';
-import 'package:tracking_app/features/orders/order_page/domain/entities/driver_order_entity.dart';
+import 'package:tracking_app/features/orders/presentation/pages/driver_order_details_page.dart';
+import 'package:tracking_app/features/orders/domain/entities/driver_order_entity.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {

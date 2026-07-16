@@ -12,7 +12,7 @@ SingleVehicleResponseDto _$SingleVehicleResponseDtoFromJson(
   message: json['message'] as String?,
   vehicle: json['vehicle'] == null
       ? null
-      : ProfileVehicleDto.fromJson(json['vehicle'] as Map<String, dynamic>),
+      : VehicleDto.fromJson(json['vehicle'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$SingleVehicleResponseDtoToJson(

@@ -16,15 +16,8 @@ class ProfileEndPoint {
   static const vehicleId = "vehicle/";
   static const vehicles = "vehicles";
   static const changePassword = "drivers/change-password";
-}
-
-class EditProfileEndPoint {
   static const editProfile = 'drivers/editProfile';
   static const uploadPhoto = 'drivers/upload-photo';
-}
-
-class EditVehicleInfoEndPoint {
-  static const vehicles = 'vehicles';
   static const updateVehicleInfo = 'vehicles/update';
 }
 
