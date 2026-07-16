@@ -1,16 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tracking_app/config/routes/routes.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tracking_app/core/localization_constants/orders_constants.dart';
-import 'package:tracking_app/core/theme/app_colors.dart';
-import 'package:tracking_app/core/theme/app_text_style.dart';
-import 'package:tracking_app/core/theme/font_size_manager.dart';
-import 'package:tracking_app/core/widgets/button_loading_widget.dart';
 import 'package:tracking_app/core/utils/geocoding_helper.dart';
-import 'package:tracking_app/core/utils/launch_utils.dart';
-import 'package:tracking_app/core/widgets/cached_network_image.dart';
 import 'package:tracking_app/core/widgets/custom_appbar.dart';
 import 'package:tracking_app/core/widgets/custom_snack_bar.dart';
 import 'package:tracking_app/features/driver_map/domain/entities/driver_map_params.dart';
@@ -18,10 +11,15 @@ import 'package:tracking_app/features/oreder_details/data/models/order_user_info
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_user_info_cubit.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_cubit.dart';
-import 'package:tracking_app/features/oreder_details/presentation/cubit/order_details_intents.dart';
-import 'package:tracking_app/features/oreder_details/presentation/cubit/order_step.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/address_tile.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/order_action_button.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/order_item_row.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/order_progress_bar.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/order_status_banner.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/order_details_screen_shimmer.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/section_title.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/summary_row.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   const OrderDetailsScreen({super.key});
@@ -47,7 +45,7 @@ class OrderDetailsScreen extends StatelessWidget {
                 if (state.updateState.errorMessage != null) {
                   CustomSnackBar.error(
                     context,
-                    state.updateState.errorMessage!.tr(),
+                    state.updateState.errorMessage!,
                   );
                 }
               },
@@ -56,67 +54,71 @@ class OrderDetailsScreen extends StatelessWidget {
                 final step = state.step;
 
                 if (order == null || step == null) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const OrderDetailsScreenShimmer();
                 }
 
                 final userInfo = context
                     .select<OrderUserInfoCubit, OrderUserInfoModel?>(
-                      (cubit) => cubit.state.userInfoMap[order.id]
-                          ?? cubit.state.userInfoMap[_userId(order.user)],
+                      (cubit) => cubit.state.userInfoMap[order.id] ??
+                          cubit.state.userInfoMap[_userId(order.user)],
                     );
 
                 return Column(
                   children: [
-                    _OrderProgressBar(step: step),
+                    OrderProgressBar(step: step),
                     Expanded(
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _OrderStatusBanner(order: order, step: step),
+                            OrderStatusBanner(order: order, step: step),
                             const SizedBox(height: 20),
-                            _SectionTitle(OrdersConstants.pickupAddress),
+                            SectionTitle(OrdersConstants.pickupAddress),
                             const SizedBox(height: 10),
-                            _AddressCard(
+                            AddressTile(
                               title: order.store?.name ?? '',
                               address: order.store?.address ?? '',
                               image: order.store?.image,
                               phone: order.store?.phoneNumber,
-                              onNavigate: () => _openMap(context, MapMode.toStore),
+                              onNavigate: () =>
+                                  _openMap(context, MapMode.toStore),
                             ),
                             const SizedBox(height: 20),
-                            _SectionTitle(OrdersConstants.userAddress),
+                            SectionTitle(OrdersConstants.userAddress),
                             const SizedBox(height: 10),
-                            _AddressCard(
+                            AddressTile(
                               title: _userName(
                                 order.user,
-                                userInfo?.city ?? order.shippingAddress?.city,
+                                userInfo?.city ??
+                                    order.shippingAddress?.city,
                                 userInfo,
                               ),
-                              address: order.shippingAddress?.street
-                                  ?? userInfo?.street
-                                  ?? '',
+                              address: order.shippingAddress?.street ??
+                                  userInfo?.street ??
+                                  '',
                               image: userInfo?.userImage,
                               phone: userInfo?.userPhone.isNotEmpty == true
                                   ? userInfo!.userPhone
                                   : order.shippingAddress?.phone,
-                              onNavigate: () => _openMap(context, MapMode.toUser),
+                              onNavigate: () =>
+                                  _openMap(context, MapMode.toUser),
                             ),
                             const SizedBox(height: 20),
-                            _SectionTitle(OrdersConstants.orderDetails),
+                            SectionTitle(OrdersConstants.orderDetails),
                             const SizedBox(height: 10),
                             _OrderItemsSection(
                               items: order.orderItems ?? const [],
                             ),
                             const SizedBox(height: 8),
                             const Divider(),
-                            _SummaryRow(
+                            SummaryRow(
                               label: OrdersConstants.total,
-                              value: 'EGP ${order.totalPrice?.toInt() ?? 0}',
+                              value:
+                                  'EGP ${order.totalPrice?.toInt() ?? 0}',
                             ),
                             const Divider(),
-                            _SummaryRow(
+                            SummaryRow(
                               label: OrdersConstants.paymentMethod,
                               value: _paymentLabel(order.paymentType),
                             ),
@@ -124,7 +126,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const _OrderActionButton(),
+                    const OrderActionButton(),
                   ],
                 );
               },
@@ -164,10 +166,12 @@ class OrderDetailsScreen extends StatelessWidget {
     if (order == null) return;
 
     final userInfo = context
-        .read<OrderUserInfoCubit>()
-        .state
-        .userInfoMap[order.id] ??
-        context.read<OrderUserInfoCubit>().state
+            .read<OrderUserInfoCubit>()
+            .state
+            .userInfoMap[order.id] ??
+        context
+            .read<OrderUserInfoCubit>()
+            .state
             .userInfoMap[_userId(order.user)];
 
     LatLng? storeLoc;
@@ -185,7 +189,6 @@ class OrderDetailsScreen extends StatelessWidget {
       ].where((s) => s != null && s.isNotEmpty).join(', '),
     );
 
-    // Try user info lat/long first, fall back to shipping address
     final userInfoLat = double.tryParse(userInfo?.lat ?? '');
     final userInfoLng = double.tryParse(userInfo?.long ?? '');
     if (userInfoLat != null && userInfoLng != null) {
@@ -256,212 +259,6 @@ class OrderDetailsScreen extends StatelessWidget {
   };
 }
 
-class _OrderProgressBar extends StatelessWidget {
-  final OrderStep step;
-  const _OrderProgressBar({required this.step});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: List.generate(OrderStep.values.length, (index) {
-          final active = index <= step.index;
-          return Expanded(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 3),
-              height: 4,
-              decoration: BoxDecoration(
-                color: active ? AppColors.success : AppColors.border,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}
-
-class _OrderStatusBanner extends StatelessWidget {
-  final OrderEntity order;
-  final OrderStep step;
-  const _OrderStatusBanner({required this.order, required this.step});
-
-  @override
-  Widget build(BuildContext context) {
-    final createdAt = order.createdAt;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Status : ',
-                style: getMediumStyle(
-                  context: context,
-                  color: AppColors.primary,
-                  fontSize: FontSizeManager.s14,
-                ),
-              ),
-              Text(
-                step.statusLabel,
-                style: getMediumStyle(
-                  context: context,
-                  color: AppColors.success,
-                  fontSize: FontSizeManager.s14,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Order ID : ${order.orderNumber ?? order.id ?? ''}',
-            style: getBoldStyle(
-              context: context,
-              color: AppColors.textPrimary,
-              fontSize: FontSizeManager.s14,
-            ),
-          ),
-          if (createdAt != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              DateFormat('EEE, dd MMM yyyy, hh:mm a').format(createdAt),
-              style: getRegularStyle(
-                context: context,
-                color: AppColors.textSecondary,
-                fontSize: FontSizeManager.s12,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String title;
-  const _SectionTitle(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: getBoldStyle(
-        context: context,
-        color: AppColors.textPrimary,
-        fontSize: FontSizeManager.s16,
-      ),
-    );
-  }
-}
-
-class _AddressCard extends StatelessWidget {
-  final String title;
-  final String address;
-  final String? image;
-  final String? phone;
-  final VoidCallback? onNavigate;
-  const _AddressCard({
-    required this.title,
-    required this.address,
-    this.image,
-    this.phone,
-    this.onNavigate,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          image != null && image!.isNotEmpty
-              ? ClipOval(
-                  child: CachedNetworkImageWidget(
-                    urlToImage: image!,
-                    width: 36,
-                    height: 36,
-                  ),
-                )
-              : const CircleAvatar(
-                  radius: 18,
-                  backgroundColor: AppColors.background,
-                  child: Icon(Icons.store, size: 18),
-                ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: getMediumStyle(
-                    context: context,
-                    color: AppColors.textPrimary,
-                    fontSize: FontSizeManager.s14,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on,
-                      size: 14,
-                      color: AppColors.textSecondary,
-                    ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        address,
-                        overflow: TextOverflow.ellipsis,
-                        style: getRegularStyle(
-                          context: context,
-                          color: AppColors.textSecondary,
-                          fontSize: FontSizeManager.s12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          if (onNavigate != null)
-            GestureDetector(
-              onTap: onNavigate,
-              child: const Icon(Icons.map, color: AppColors.primary, size: 20),
-            ),
-          if (phone != null && phone!.isNotEmpty) ...[
-            const SizedBox(width: 12),
-            GestureDetector(
-              onTap: () => makePhoneCall(phone!),
-              child: const Icon(Icons.call, color: AppColors.primary, size: 20),
-            ),
-            const SizedBox(width: 12),
-            GestureDetector(
-              onTap: () => openWhatsApp(phone!),
-              child: const Icon(Icons.chat, color: AppColors.primary, size: 20),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
 class _OrderItemsSection extends StatelessWidget {
   final List<OrderItemEntity> items;
   const _OrderItemsSection({required this.items});
@@ -469,170 +266,7 @@ class _OrderItemsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: items.map((item) => _OrderItemRow(item: item)).toList(),
-    );
-  }
-}
-
-class _OrderItemRow extends StatelessWidget {
-  final OrderItemEntity item;
-  const _OrderItemRow({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    final image = item.product?.imgCover;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: SizedBox(
-              width: 44,
-              height: 44,
-              child: (image != null && image.isNotEmpty)
-                  ? CachedNetworkImageWidget(
-                      urlToImage: image,
-                      width: 44,
-                      height: 44,
-                    )
-                  : const Icon(Icons.local_florist),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.product?.title ?? '',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: getMediumStyle(
-                    context: context,
-                    color: AppColors.textPrimary,
-                    fontSize: FontSizeManager.s14,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'EGP ${item.price?.toInt() ?? 0}',
-                  style: getRegularStyle(
-                    context: context,
-                    color: AppColors.textSecondary,
-                    fontSize: FontSizeManager.s12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            'X${item.quantity ?? 0}',
-            style: getMediumStyle(
-              context: context,
-              color: AppColors.primary,
-              fontSize: FontSizeManager.s14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryRow extends StatelessWidget {
-  final String label;
-  final String value;
-  const _SummaryRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: getMediumStyle(
-              context: context,
-              color: AppColors.textPrimary,
-              fontSize: FontSizeManager.s14,
-            ),
-          ),
-          Text(
-            value,
-            style: getMediumStyle(
-              context: context,
-              color: AppColors.textSecondary,
-              fontSize: FontSizeManager.s14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OrderActionButton extends StatelessWidget {
-  const _OrderActionButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
-      buildWhen: (p, c) =>
-          p.step != c.step ||
-          p.updateState.isLoading != c.updateState.isLoading ||
-          p.updateState.data != c.updateState.data,
-      builder: (context, state) {
-        final step = state.step;
-        if (step == null) return const SizedBox.shrink();
-
-        final loading = state.updateState.isLoading;
-
-        final waiting =
-            step == OrderStep.arrived && state.updateState.data == true;
-
-        final disabled = loading || waiting;
-
-        if (loading) {
-          return const Padding(
-            padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: ButtonLoadingWidget(),
-          );
-        }
-
-        return SafeArea(
-          minimum: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              onPressed: disabled
-                  ? null
-                  : () {
-                      if (step == OrderStep.delivered) {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          Routes.appSection,
-                          (route) => false,
-                        );
-                        return;
-                      }
-
-                      context.read<OrderDetailsCubit>().doIntent(
-                        const AdvanceOrderStepIntent(),
-                      );
-                    },
-              child: Text(
-                waiting
-                    ? OrdersConstants.waitingForCustomerConfirmation
-                    : step.buttonLabel,
-              ),
-            ),
-          ),
-        );
-      },
+      children: items.map((item) => OrderItemRow(item: item)).toList(),
     );
   }
 }

@@ -3,16 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
-import 'package:tracking_app/core/widgets/cached_network_image.dart';
 import 'package:tracking_app/core/widgets/custom_appbar.dart';
 import 'package:tracking_app/features/oreder_details/data/models/order_user_info_model.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/order_user_info_cubit.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_cubit.dart';
-import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/accept_reject_buttons.dart';
 import 'package:tracking_app/features/oreder_details/presentation/widgets/address_tile.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/order_item_card.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/section_title.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/summary_row.dart';
 import 'package:tracking_app/core/utils/launch_utils.dart';
 
 class OrderDetailPage extends StatelessWidget {
@@ -43,17 +44,17 @@ class OrderDetailPage extends StatelessWidget {
     );
 
     final userInfo = context.select<OrderUserInfoCubit, OrderUserInfoModel?>(
-      (cubit) => cubit.state.userInfoMap[order.id]
-          ?? cubit.state.userInfoMap[_userId(order.user)],
+      (cubit) => cubit.state.userInfoMap[order.id] ??
+          cubit.state.userInfoMap[_userId(order.user)],
     );
-    final userName = userInfo?.userName.isNotEmpty == true
-        ? userInfo!.userName
-        : null;
+    final userName =
+        userInfo?.userName.isNotEmpty == true ? userInfo!.userName : null;
     final userCity = order.shippingAddress?.city ?? userInfo?.city;
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Order #${order.orderNumber ?? order.id?.substring(0, 8) ?? ""}",
+        title:
+            "Order #${order.orderNumber ?? order.id?.substring(0, 8) ?? ""}",
         subtitle: _statusLabel(order.state),
       ),
       body: SafeArea(
@@ -62,7 +63,7 @@ class OrderDetailPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _SectionHeader(title: "Pickup address"),
+              SectionTitle("Pickup address"),
               const AppSizedBox(height: 8),
               AddressTile(
                 title: order.store?.name ?? "",
@@ -72,11 +73,13 @@ class OrderDetailPage extends StatelessWidget {
 
               const AppSizedBox(height: 20),
 
-              _SectionHeader(title: "Delivery address"),
+              SectionTitle("Delivery address"),
               const AppSizedBox(height: 8),
               AddressTile(
                 title: userName ?? "Customer",
-                address: order.shippingAddress?.street ?? userInfo?.street ?? "",
+                address: order.shippingAddress?.street ??
+                    userInfo?.street ??
+                    "",
                 image: userInfo?.userImage,
               ),
               if (userInfo?.userPhone.isNotEmpty == true) ...[
@@ -85,7 +88,7 @@ class OrderDetailPage extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 12),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.phone,
                         size: 14,
                         color: AppColors.textSecondary,
@@ -138,12 +141,13 @@ class OrderDetailPage extends StatelessWidget {
 
               const AppSizedBox(height: 20),
 
-              _SectionHeader(
-                title: "Order items (${order.orderItems?.length ?? 0})",
-              ),
+              SectionTitle(
+                  "Order items (${order.orderItems?.length ?? 0})"),
               const AppSizedBox(height: 8),
-              if (order.orderItems != null && order.orderItems!.isNotEmpty)
-                ...order.orderItems!.map((item) => _OrderItemTile(item: item))
+              if (order.orderItems != null &&
+                  order.orderItems!.isNotEmpty)
+                ...order.orderItems!
+                    .map((item) => OrderItemCard(item: item))
               else
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -158,7 +162,7 @@ class OrderDetailPage extends StatelessWidget {
 
               const AppSizedBox(height: 20),
 
-              _SectionHeader(title: "Payment"),
+              SectionTitle("Payment"),
               const AppSizedBox(height: 8),
               _PaymentInfoRow(
                 label: "Payment method",
@@ -193,87 +197,11 @@ class OrderDetailPage extends StatelessWidget {
 
               const AppSizedBox(height: 32),
 
-              if (order.state == OrderState.pending)
-                Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 45,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.primary),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                          onPressed: rejectLoading
-                              ? null
-                              : () {
-                                  context.read<HomeCubit>().doEvent(
-                                    RejectOrder(order: order),
-                                  );
-                                },
-                          child: rejectLoading
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Text(
-                                  "Reject",
-                                  style: getMediumStyle(
-                                    context: context,
-                                    color: AppColors.primary,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ),
-                    const AppSizedBox(width: 16),
-                    Expanded(
-                      child: SizedBox(
-                        height: 45,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.background,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            elevation: 0,
-                          ),
-                          onPressed: acceptLoading
-                              ? null
-                              : () {
-                                  context.read<HomeCubit>().doEvent(
-                                    AcceptOrder(order: order),
-                                  );
-                                },
-                          child: acceptLoading
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : Text(
-                                  "Accept",
-                                  style: getMediumStyle(
-                                    context: context,
-                                    color: AppColors.background,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              AcceptRejectButtons(
+                order: order,
+                acceptLoading: acceptLoading,
+                rejectLoading: rejectLoading,
+              ),
 
               const AppSizedBox(height: 24),
             ],
@@ -309,100 +237,6 @@ class OrderDetailPage extends StatelessWidget {
       case null:
         return "";
     }
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-
-  const _SectionHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: getBoldStyle(
-        context: context,
-        color: AppColors.textPrimary,
-        fontSize: 16,
-      ),
-    );
-  }
-}
-
-class _OrderItemTile extends StatelessWidget {
-  final OrderItemEntity item;
-
-  const _OrderItemTile({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
-        children: [
-          if (item.product?.imgCover != null)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CachedNetworkImageWidget(
-                urlToImage: item.product!.imgCover!,
-                width: 60,
-                height: 60,
-              ),
-            )
-          else
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.grey.shade100,
-              ),
-              child: const Icon(Icons.image, color: Colors.grey),
-            ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.product?.title ?? "Product",
-                  style: getMediumStyle(
-                    context: context,
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const AppSizedBox(height: 4),
-                Text(
-                  "Qty: ${item.quantity ?? 1}",
-                  style: getRegularStyle(
-                    context: context,
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            "EGP ${(item.price ?? 0).toInt()}",
-            style: getMediumStyle(
-              context: context,
-              color: AppColors.textPrimary,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
