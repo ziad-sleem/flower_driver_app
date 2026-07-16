@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tracking_app/core/localization_constants/orders_constants.dart';
+import 'package:tracking_app/core/resources/app_svgs.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/theme/font_size_manager.dart';
@@ -11,26 +12,22 @@ import 'package:tracking_app/features/driver_map/domain/entities/driver_map_para
 
 class MapBottomSheet extends StatelessWidget {
   final DriverMapParams params;
-  final double? storeDistance;
-  final double? storeDuration;
-  final double? userDistance;
-  final double? userDuration;
-  final VoidCallback? onStoreTap;
-  final VoidCallback? onUserTap;
+  final double? distance;
+  final double? duration;
+  final VoidCallback? onDestinationTap;
 
   const MapBottomSheet({
     super.key,
     required this.params,
-    this.storeDistance,
-    this.storeDuration,
-    this.userDistance,
-    this.userDuration,
-    this.onStoreTap,
-    this.onUserTap,
+    this.distance,
+    this.duration,
+    this.onDestinationTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isToStore = params.mode == MapMode.toStore;
+
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.surface,
@@ -59,7 +56,11 @@ class MapBottomSheet extends StatelessWidget {
           if (params.orderNumber != null) ...[
             Row(
               children: [
-                Icon(Icons.receipt, size: 16, color: AppColors.textSecondary),
+                const Icon(
+                  Icons.receipt,
+                  size: 16,
+                  color: AppColors.textSecondary,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   'Order #${params.orderNumber}',
@@ -74,42 +75,39 @@ class MapBottomSheet extends StatelessWidget {
             const SizedBox(height: 14),
           ],
           _LocationSection(
-            icon: 'assets/svgs/my_location.svg',
+            icon: AppSvgs.myLocation,
             iconBgColor: const Color(0xFF4CAF50),
             title: OrdersConstants.yourLocation.tr(),
             subtitle: OrdersConstants.yourLocation.tr(),
           ),
           const SizedBox(height: 12),
           GestureDetector(
-            onTap: onStoreTap,
-            child: _LocationSection(
-              icon: 'assets/svgs/flowery_location.svg',
-              iconBgColor: AppColors.primary,
-              title: params.storeName,
-              subtitle: params.storeAddress.isNotEmpty ? params.storeAddress : null,
-              phone: params.storePhone,
-              distance: storeDistance,
-              duration: storeDuration,
-            ),
+            onTap: onDestinationTap,
+            child: isToStore
+                ? _LocationSection(
+                    icon: AppSvgs.floweryLocation,
+                    iconBgColor: AppColors.primary,
+                    title: params.storeName,
+                    subtitle: params.storeAddress.isNotEmpty
+                        ? params.storeAddress
+                        : null,
+                    phone: params.storePhone,
+                    distance: distance,
+                    duration: duration,
+                  )
+                : _LocationSection(
+                    icon: AppSvgs.userLocation,
+                    iconBgColor: const Color(0xFF2196F3),
+                    title: params.userName?.isNotEmpty == true
+                        ? params.userName!
+                        : OrdersConstants.userAddress.tr(),
+                    subtitle: params.userAddress,
+                    phone: params.userPhone,
+                    image: params.userImage,
+                    distance: distance,
+                    duration: duration,
+                  ),
           ),
-          if (params.userAddress.isNotEmpty) ...[
-            const SizedBox(height: 12),
-              GestureDetector(
-              onTap: onUserTap,
-              child: _LocationSection(
-                icon: 'assets/svgs/user_location.svg',
-                iconBgColor: const Color(0xFF2196F3),
-                title: params.userName?.isNotEmpty == true
-                    ? params.userName!
-                    : OrdersConstants.userAddress.tr(),
-                subtitle: params.userAddress,
-                phone: params.userPhone,
-                image: params.userImage,
-                distance: userDistance,
-                duration: userDuration,
-              ),
-            ),
-          ],
           if (params.totalPrice != null || params.paymentType != null) ...[
             const SizedBox(height: 14),
             const Divider(height: 1, color: AppColors.border),
@@ -219,12 +217,20 @@ class _LocationSection extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () => makePhoneCall(phone!),
-                      child: Icon(Icons.call, size: 14, color: AppColors.primary),
+                      child: Icon(
+                        Icons.call,
+                        size: 14,
+                        color: AppColors.primary,
+                      ),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
                       onTap: () => openWhatsApp(phone!),
-                      child: Icon(Icons.chat, size: 14, color: AppColors.primary),
+                      child: Icon(
+                        Icons.chat,
+                        size: 14,
+                        color: AppColors.primary,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -242,7 +248,11 @@ class _LocationSection extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.route, size: 14, color: AppColors.textSecondary),
+                    Icon(
+                      Icons.route,
+                      size: 14,
+                      color: AppColors.textSecondary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       _formatDistance(distance!),
@@ -253,7 +263,11 @@ class _LocationSection extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: AppColors.textSecondary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       _formatDuration(duration!),
