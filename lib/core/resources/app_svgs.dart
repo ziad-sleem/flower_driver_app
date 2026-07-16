@@ -15,4 +15,7 @@ class AppSvgs {
   static const homeLogo = "assets/svgs/homeLogo.svg";
   static const cancel = "assets/svgs/cancel.svg";
   static const checkCircle = "assets/svgs/check_circle.svg";
+  static const myLocation = "assets/svgs/my_location.svg";
+  static const floweryLocation = "assets/svgs/flowery_location.svg";
+  static const userLocation = "assets/svgs/user_location.svg";
 }
