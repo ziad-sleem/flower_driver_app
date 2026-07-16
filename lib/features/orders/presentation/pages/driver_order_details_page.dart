@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tracking_app/core/localization_constants/orders_constants.dart';
-import 'package:tracking_app/core/theme/app_colors.dart';
-import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
 import 'package:tracking_app/core/widgets/custom_appbar.dart';
 import 'package:tracking_app/features/oreder_details/presentation/widgets/address_tile.dart';
+import 'package:tracking_app/features/oreder_details/presentation/widgets/section_title.dart';
+import 'package:tracking_app/features/orders/presentation/widgets/driver_order_details_shimmer.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/driver_order_item_tile.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/driver_order_status_row.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/driver_order_summary_section.dart';
@@ -23,19 +23,21 @@ class DriverOrderDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(title: OrdersConstants.orderDetails),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: order == null
+            ? const DriverOrderDetailsShimmer()
+            : SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DriverOrderStatusRow(
-                state: order?.state,
-                orderNumber: order?.orderNumber ?? '',
+                state: order.state,
+                orderNumber: order.orderNumber ?? '',
               ),
 
               const AppSizedBox(height: 20),
 
-              _SectionTitle(OrdersConstants.pickupAddress),
+              SectionTitle(OrdersConstants.pickupAddress),
               const AppSizedBox(height: 8),
               AddressTile(
                 title: store?.name ?? '',
@@ -45,24 +47,24 @@ class DriverOrderDetailsPage extends StatelessWidget {
 
               const AppSizedBox(height: 20),
 
-              _SectionTitle(OrdersConstants.userAddress),
+              SectionTitle(OrdersConstants.userAddress),
               const AppSizedBox(height: 8),
               AddressTile(
-                title: _userName(order?.user),
-                address: order?.shippingAddress?.street ?? '',
+                title: _userName(order.user),
+                address: order.shippingAddress?.street ?? '',
               ),
 
               const AppSizedBox(height: 20),
 
-              _SectionTitle(OrdersConstants.orderDetails),
+              SectionTitle(OrdersConstants.orderDetails),
               const AppSizedBox(height: 8),
-              for (final item in order?.orderItems ?? [])
+              for (final item in order.orderItems ?? [])
                 DriverOrderItemTile(item: item),
 
               const AppSizedBox(height: 8),
               DriverOrderSummarySection(
-                totalPrice: order?.totalPrice,
-                paymentType: order?.paymentType,
+                totalPrice: order.totalPrice,
+                paymentType: order.paymentType,
               ),
             ],
           ),
@@ -78,19 +80,5 @@ class DriverOrderDetailsPage extends StatelessWidget {
       if (name.isNotEmpty) return name;
     }
     return 'Customer';
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String title;
-
-  const _SectionTitle(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: getSemiBoldStyle(context: context, color: AppColors.textPrimary),
-    );
   }
 }
