@@ -8,7 +8,7 @@ part of 'order_dto.dart';
 
 OrderDto _$OrderDtoFromJson(Map<String, dynamic> json) => OrderDto(
   id: json['_id'] as String?,
-  user: json['user'],
+  user: UsersDto.fromJson(json['user'] as Map<String, dynamic>),
   orderItems: (json['orderItems'] as List<dynamic>?)
       ?.map((e) => OrderItemDto.fromJson(e as Map<String, dynamic>))
       .toList(),

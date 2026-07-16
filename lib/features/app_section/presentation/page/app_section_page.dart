@@ -11,8 +11,8 @@ import 'package:tracking_app/features/profile/presentation/pages/profile_page.da
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_cubit.dart';
 import 'package:tracking_app/features/oreder_details/presentation/cubit/home_event.dart';
 import 'package:tracking_app/features/oreder_details/presentation/pages/home_screen.dart';
-import 'package:tracking_app/features/orders/order_page/presentation/cubit/order_page_cubit.dart';
-import 'package:tracking_app/features/orders/order_page/presentation/pages/order_page.dart';
+import 'package:tracking_app/features/orders/presentation/cubit/order_page_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/pages/order_page.dart';
 
   
 class AppSectionsPage extends StatelessWidget {

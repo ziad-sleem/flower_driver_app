@@ -67,8 +67,8 @@ void main() {
   });
 
   group('getVehicles', () {
-    final tVehiclesDto = <ProfileVehicleDto>[
-      ProfileVehicleDto(id: "1", type: "car", image: "car.jpg"),
+    final tVehiclesDto = <VehicleDto>[
+      VehicleDto(id: "1", type: "car", image: "car.jpg"),
     ];
     final tResponseDto = AllVehiclesResponseDto(
       message: "success",

@@ -11,7 +11,7 @@ AllVehiclesResponseDto _$AllVehiclesResponseDtoFromJson(
 ) => AllVehiclesResponseDto(
   message: json['message'] as String?,
   vehicles: (json['vehicles'] as List<dynamic>?)
-      ?.map((e) => ProfileVehicleDto.fromJson(e as Map<String, dynamic>))
+      ?.map((e) => VehicleDto.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 

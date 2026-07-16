@@ -30,8 +30,8 @@ void main() {
 
   group('GetVehiclesUseCase', () {
     final tVehicles = [
-      const ProfileVehicleEntity(id: "1", type: "car", image: "car.jpg"),
-      const ProfileVehicleEntity(id: "2", type: "truck", image: "truck.jpg"),
+      const VehicleEntity(id: "1", type: "car", image: "car.jpg"),
+      const VehicleEntity(id: "2", type: "truck", image: "truck.jpg"),
     ];
     final tResponse = AllVehiclesResponseEntity(
       message: "success",

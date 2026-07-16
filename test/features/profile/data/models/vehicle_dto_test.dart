@@ -3,7 +3,7 @@ import 'package:tracking_app/features/profile/data/models/vehicle_dto.dart';
 import 'package:tracking_app/features/profile/domain/entities/vehicle_entity.dart';
 
 void main() {
-  group('ProfileVehicleDto', () {
+  group('VehicleDto', () {
     const tId = "1";
     const tType = "car";
     const tImage = "https://example.com/car.jpg";
@@ -15,7 +15,7 @@ void main() {
     };
 
     test('fromJson creates correct object', () {
-      final dto = ProfileVehicleDto.fromJson(tJson);
+      final dto = VehicleDto.fromJson(tJson);
 
       expect(dto.id, tId);
       expect(dto.type, tType);
@@ -23,7 +23,7 @@ void main() {
     });
 
     test('toJson produces correct map', () {
-      final dto = ProfileVehicleDto(
+      final dto = VehicleDto(
         id: tId,
         type: tType,
         image: tImage,
@@ -36,7 +36,7 @@ void main() {
     });
 
     test('fromJson handles null fields', () {
-      final dto = ProfileVehicleDto.fromJson({});
+      final dto = VehicleDto.fromJson({});
 
       expect(dto.id, isNull);
       expect(dto.type, isNull);
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('toEntity maps all fields correctly', () {
-      final dto = ProfileVehicleDto(
+      final dto = VehicleDto(
         id: tId,
         type: tType,
         image: tImage,
@@ -52,14 +52,14 @@ void main() {
 
       final entity = dto.toEntity();
 
-      expect(entity, isA<ProfileVehicleEntity>());
+      expect(entity, isA<VehicleEntity>());
       expect(entity.id, tId);
       expect(entity.type, tType);
       expect(entity.image, tImage);
     });
 
     test('toEntity handles null fields', () {
-      final dto = ProfileVehicleDto();
+      final dto = VehicleDto();
       final entity = dto.toEntity();
 
       expect(entity.id, isNull);
