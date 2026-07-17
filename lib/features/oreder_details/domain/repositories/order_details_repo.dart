@@ -39,4 +39,12 @@ abstract class OrderDetailsRepo {
     required String orderId,
     required String type,
   });
+
+  Future<void> setDriverLocation({
+    required String orderId,
+    required double latitude,
+    required double longitude,
+  });
+
+  Future<void> deleteDriverLocation({required String orderId});
 }

@@ -97,6 +97,8 @@ import '../../features/oreder_details/domain/use_cases/create_notification_reque
     as _i302;
 import '../../features/oreder_details/domain/use_cases/delete_current_order_usecase.dart'
     as _i99;
+import '../../features/oreder_details/domain/use_cases/delete_driver_location_use_case.dart'
+    as _i545;
 import '../../features/oreder_details/domain/use_cases/get_all_pending_order.dart'
     as _i945;
 import '../../features/oreder_details/domain/use_cases/get_current_order_usecase.dart'
@@ -105,6 +107,8 @@ import '../../features/oreder_details/domain/use_cases/get_order_user_info_use_c
     as _i492;
 import '../../features/oreder_details/domain/use_cases/save_current_order_usecase.dart'
     as _i753;
+import '../../features/oreder_details/domain/use_cases/set_driver_location_use_case.dart'
+    as _i1046;
 import '../../features/oreder_details/domain/use_cases/update_order_state_usecase.dart'
     as _i386;
 import '../../features/oreder_details/domain/use_cases/watch_order_state_usecase.dart'
@@ -344,11 +348,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i99.DeleteCurrentOrderUseCase>(
       () => _i99.DeleteCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
+    gh.factory<_i545.DeleteDriverLocationUseCase>(
+      () => _i545.DeleteDriverLocationUseCase(
+        repo: gh<_i1004.OrderDetailsRepo>(),
+      ),
+    );
     gh.factory<_i315.GetCurrentOrderUseCase>(
       () => _i315.GetCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
     gh.factory<_i753.SaveCurrentOrderUseCase>(
       () => _i753.SaveCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
+    );
+    gh.factory<_i1046.SetDriverLocationUseCase>(
+      () =>
+          _i1046.SetDriverLocationUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
     );
     gh.factory<_i941.WatchCurrentOrderUseCase>(
       () => _i941.WatchCurrentOrderUseCase(repo: gh<_i1004.OrderDetailsRepo>()),
@@ -367,19 +380,21 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i488.ImagePickerService>(),
       ),
     );
-    gh.factory<_i990.EditProfileCubit>(
-      () => _i990.EditProfileCubit(
-        gh<_i199.EditProfileUseCase>(),
-        gh<_i967.UploadPhotoUseCase>(),
-        gh<_i790.ProfileRepo>(),
-      ),
-    );
     gh.factory<_i235.OrderDetailsCubit>(
       () => _i235.OrderDetailsCubit(
         gh<_i753.SaveCurrentOrderUseCase>(),
         gh<_i941.WatchCurrentOrderUseCase>(),
         gh<_i302.CreateNotificationRequestUseCase>(),
         gh<_i141.GetDriverDataUseCase>(),
+        gh<_i1046.SetDriverLocationUseCase>(),
+        gh<_i545.DeleteDriverLocationUseCase>(),
+      ),
+    );
+    gh.factory<_i990.EditProfileCubit>(
+      () => _i990.EditProfileCubit(
+        gh<_i199.EditProfileUseCase>(),
+        gh<_i967.UploadPhotoUseCase>(),
+        gh<_i790.ProfileRepo>(),
       ),
     );
     gh.factory<_i158.GetDriverOrdersUseCase>(
