@@ -105,4 +105,45 @@ class OrderDetailsFireStoreDataSourceImpl
       rethrow;
     }
   }
+
+  static const _driverLocationsCollection = "driver_locations";
+
+  @override
+  Future<void> setDriverLocation({
+    required String orderId,
+    required double latitude,
+    required double longitude,
+  }) async {
+    _logger.i('setDriverLocation: Updating location for order $orderId');
+    try {
+      await firestore
+          .collection(_driverLocationsCollection)
+          .doc(orderId)
+          .set({
+            'latitude': latitude,
+            'longitude': longitude,
+            'orderId': orderId,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
+      _logger.i('setDriverLocation: Success for order $orderId');
+    } catch (e) {
+      _logger.e('setDriverLocation: Failed for order $orderId — $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteDriverLocation({required String orderId}) async {
+    _logger.i('deleteDriverLocation: Deleting location for order $orderId');
+    try {
+      await firestore
+          .collection(_driverLocationsCollection)
+          .doc(orderId)
+          .delete();
+      _logger.i('deleteDriverLocation: Success for order $orderId');
+    } catch (e) {
+      _logger.e('deleteDriverLocation: Failed for order $orderId — $e');
+      rethrow;
+    }
+  }
 }

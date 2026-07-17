@@ -19,4 +19,12 @@ abstract class OrderDetailsFireStoreDataSource {
   Stream<CurrentOrderModel?> watchCurrentOrder({required String orderId});
 
   Future<CurrentOrderModel?> getCurrentOrder({required String orderId});
+
+  Future<void> setDriverLocation({
+    required String orderId,
+    required double latitude,
+    required double longitude,
+  });
+
+  Future<void> deleteDriverLocation({required String orderId});
 }
