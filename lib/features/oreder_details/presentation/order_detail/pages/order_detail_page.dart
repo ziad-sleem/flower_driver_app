@@ -13,7 +13,6 @@ import 'package:tracking_app/features/oreder_details/presentation/home/widgets/a
 import 'package:tracking_app/features/oreder_details/presentation/order_detail/widgets/address_tile.dart';
 import 'package:tracking_app/features/oreder_details/presentation/order_detail/widgets/order_item_card.dart';
 import 'package:tracking_app/features/oreder_details/presentation/order_detail/widgets/section_title.dart';
-import 'package:tracking_app/features/oreder_details/presentation/order_detail/widgets/summary_row.dart';
 import 'package:tracking_app/core/utils/launch_utils.dart';
 
 class OrderDetailPage extends StatelessWidget {
