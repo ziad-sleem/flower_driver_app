@@ -133,4 +133,22 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
       type: type,
     );
   }
+
+  @override
+  Future<void> setDriverLocation({
+    required String orderId,
+    required double latitude,
+    required double longitude,
+  }) {
+    return firestoreDataSource.setDriverLocation(
+      orderId: orderId,
+      latitude: latitude,
+      longitude: longitude,
+    );
+  }
+
+  @override
+  Future<void> deleteDriverLocation({required String orderId}) {
+    return firestoreDataSource.deleteDriverLocation(orderId: orderId);
+  }
 }
