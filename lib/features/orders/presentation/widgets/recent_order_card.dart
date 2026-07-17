@@ -8,7 +8,7 @@ import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
-import 'package:tracking_app/features/oreder_details/presentation/widgets/address_tile.dart';
+import 'package:tracking_app/features/oreder_details/presentation/order_detail/widgets/address_tile.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_order_entity.dart';
 
 class RecentOrderCard extends StatelessWidget {

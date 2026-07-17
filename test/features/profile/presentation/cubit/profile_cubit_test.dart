@@ -11,8 +11,8 @@ import 'package:tracking_app/features/profile/domain/entities/vehicle_entity.dar
 import 'package:tracking_app/features/profile/domain/entities/driver_entity.dart';
 import 'package:tracking_app/features/profile/domain/use_cases/get_driver_data_use_case.dart';
 import 'package:tracking_app/features/profile/domain/use_cases/get_vehicles_use_case.dart';
-import 'package:tracking_app/features/profile/presentation/cubit/profile_cubit.dart';
-import 'package:tracking_app/features/profile/presentation/cubit/profile_event.dart';
+import 'package:tracking_app/features/profile/presentation/profile/cubit/profile_cubit.dart';
+import 'package:tracking_app/features/profile/presentation/profile/cubit/profile_event.dart';
 
 import 'profile_cubit_test.mocks.dart';
 

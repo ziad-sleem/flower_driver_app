@@ -7,6 +7,7 @@ import 'package:tracking_app/core/widgets/app_error_widget.dart';
 import 'package:tracking_app/core/widgets/app_loading_widget.dart';
 import 'package:tracking_app/core/widgets/app_sizebox.dart';
 import 'package:tracking_app/features/orders/presentation/cubit/order_page_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/cubit/order_page_event.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/empty_order_page_widget.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/order_stats_section.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/recent_orders_list.dart';
@@ -20,20 +21,21 @@ class OrderPage extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<OrderPageCubit, OrderPageState>(
           builder: (context, state) {
-            if (state.isLoading && state.orders.isEmpty) {
+            if (state.getOrdersState.isLoading && state.orders.isEmpty) {
               return const AppLoadingWidget();
             }
 
-            if (state.errorMessage != null && state.orders.isEmpty) {
+            if (state.getOrdersState.errorMessage != null && state.orders.isEmpty) {
               return AppErrorWidget(
-                errorMessage: state.errorMessage!,
+                errorMessage: state.getOrdersState.errorMessage!,
                 onRetry: () =>
-                    context.read<OrderPageCubit>().loadDriverOrders(),
+                    context.read<OrderPageCubit>().doEvent(LoadDriverOrders()),
               );
             }
 
             return RefreshIndicator(
-              onRefresh: () => context.read<OrderPageCubit>().loadDriverOrders(),
+              onRefresh: () async =>
+                  context.read<OrderPageCubit>().doEvent(LoadDriverOrders()),
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16),

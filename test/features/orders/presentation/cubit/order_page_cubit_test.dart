@@ -9,6 +9,7 @@ import 'package:tracking_app/features/orders/domain/entities/driver_order_entity
 import 'package:tracking_app/features/orders/domain/entities/driver_orders_response_entity.dart';
 import 'package:tracking_app/features/orders/domain/usecases/get_driver_orders_use_case.dart';
 import 'package:tracking_app/features/orders/presentation/cubit/order_page_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/cubit/order_page_event.dart';
 
 import 'order_page_cubit_test.mocks.dart';
 
@@ -34,15 +35,15 @@ void main() {
 
   group('OrderPageCubit', () {
     test('initial state is empty and not loading', () {
-      expect(cubit.state.isLoading, isFalse);
+      expect(cubit.state.getOrdersState.isLoading, isFalse);
       expect(cubit.state.orders, isEmpty);
       expect(cubit.state.completedCount, 0);
       expect(cubit.state.cancelledCount, 0);
-      expect(cubit.state.errorMessage, isNull);
+      expect(cubit.state.getOrdersState.errorMessage, isNull);
     });
 
     test(
-      'loadDriverOrders emits loading then success with correct stats tallied from the fetched orders',
+      'doEvent(LoadDriverOrders) emits loading then success with correct stats tallied from the fetched orders',
       () async {
         final driverOrders = [
           const DriverOrderEntity(
@@ -72,43 +73,43 @@ void main() {
           ),
         );
 
-        final future = cubit.loadDriverOrders();
+        final future = cubit.doEvent(LoadDriverOrders());
         // `emit(isLoading: true)` happens synchronously before the first
-        // `await` inside loadDriverOrders, so it's already reflected here.
-        expect(cubit.state.isLoading, isTrue);
+        // `await` inside doEvent, so it's already reflected here.
+        expect(cubit.state.getOrdersState.isLoading, isTrue);
 
         await future;
 
-        expect(cubit.state.isLoading, isFalse);
+        expect(cubit.state.getOrdersState.isLoading, isFalse);
         expect(cubit.state.orders, driverOrders);
         expect(cubit.state.completedCount, 2);
         expect(cubit.state.cancelledCount, 1);
-        expect(cubit.state.errorMessage, isNull);
+        expect(cubit.state.getOrdersState.errorMessage, isNull);
       },
     );
 
-    test('loadDriverOrders emits an error message on failure', () async {
+    test('doEvent(LoadDriverOrders) emits an error message on failure', () async {
       when(mockUseCase(page: 1, limit: anyNamed('limit'))).thenAnswer(
         (_) async => ErrorBaseResponse<DriverOrdersResponseEntity>(
           failure: Failure(message: 'Something went wrong'),
         ),
       );
 
-      await cubit.loadDriverOrders();
+      await cubit.doEvent(LoadDriverOrders());
 
-      expect(cubit.state.isLoading, isFalse);
-      expect(cubit.state.errorMessage, 'Something went wrong');
+      expect(cubit.state.getOrdersState.isLoading, isFalse);
+      expect(cubit.state.getOrdersState.errorMessage, 'Something went wrong');
       expect(cubit.state.orders, isEmpty);
     });
 
-    test('loadDriverOrders treats a null orders list as empty with zero stats', () async {
+    test('doEvent(LoadDriverOrders) treats a null orders list as empty with zero stats', () async {
       when(mockUseCase(page: 1, limit: anyNamed('limit'))).thenAnswer(
         (_) async => SuccessBaseResponse<DriverOrdersResponseEntity>(
           data: const DriverOrdersResponseEntity(message: 'success'),
         ),
       );
 
-      await cubit.loadDriverOrders();
+      await cubit.doEvent(LoadDriverOrders());
 
       expect(cubit.state.orders, isEmpty);
       expect(cubit.state.completedCount, 0);
