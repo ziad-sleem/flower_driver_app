@@ -113,11 +113,11 @@ import '../../features/oreder_details/domain/use_cases/update_order_state_usecas
     as _i386;
 import '../../features/oreder_details/domain/use_cases/watch_order_state_usecase.dart'
     as _i941;
-import '../../features/oreder_details/presentation/cubit/home_cubit.dart'
+import '../../features/oreder_details/presentation/home/cubit/home_cubit.dart'
     as _i531;
-import '../../features/oreder_details/presentation/cubit/order_details_cubit.dart'
+import '../../features/oreder_details/presentation/order_details/cubit/order_details_cubit.dart'
     as _i235;
-import '../../features/oreder_details/presentation/cubit/order_user_info_cubit.dart'
+import '../../features/oreder_details/presentation/order_detail/cubit/order_user_info_cubit.dart'
     as _i199;
 import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
 import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
@@ -139,11 +139,11 @@ import '../../features/profile/domain/use_cases/update_vehicle_use_case.dart'
     as _i730;
 import '../../features/profile/domain/use_cases/upload_photo_use_case.dart'
     as _i967;
-import '../../features/profile/presentation/cubit/edit_profile_cubit.dart'
+import '../../features/profile/presentation/edit_profile/cubit/edit_profile_cubit.dart'
     as _i990;
-import '../../features/profile/presentation/cubit/edit_vehicle_info_cubit.dart'
+import '../../features/profile/presentation/edit_vehicle_info/cubit/edit_vehicle_info_cubit.dart'
     as _i947;
-import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
+import '../../features/profile/presentation/profile/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
     as _i786;
 import 'firestore_module.dart' as _i431;

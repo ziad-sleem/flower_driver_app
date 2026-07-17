@@ -1,11 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 import 'package:tracking_app/config/base/base_response.dart';
+import 'package:tracking_app/config/base/base_state.dart';
+import 'package:tracking_app/core/error/error_handler.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_order_entity.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_orders_response_entity.dart';
 import 'package:tracking_app/features/orders/domain/usecases/get_driver_orders_use_case.dart';
+import 'package:tracking_app/features/orders/presentation/cubit/order_page_event.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 part 'order_page_state.dart';
 
@@ -17,20 +20,32 @@ class OrderPageCubit extends Cubit<OrderPageState> {
 
   OrderPageCubit(this._getDriverOrdersUseCase) : super(const OrderPageState());
 
-  Future<void> loadDriverOrders() async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+  void doEvent(OrderPageEvent event) {
+    switch (event) {
+      case LoadDriverOrders():
+        _loadDriverOrders();
+        break;
+    }
+  }
 
-    final response = await _getDriverOrdersUseCase(
-      page: 1,
-      limit: _kFullHistoryLimit,
-    );
+  Future<void> _loadDriverOrders() async {
+    try {
+      emit(
+        state.copyWith(
+          getOrdersState: const BaseState(isLoading: true),
+        ),
+      );
 
-    switch (response) {
-      case SuccessBaseResponse<DriverOrdersResponseEntity>():
-        final orders = response.data.orders ?? [];
+      final result = await _getDriverOrdersUseCase(
+        page: 1,
+        limit: _kFullHistoryLimit,
+      );
+
+      if (result is SuccessBaseResponse<DriverOrdersResponseEntity>) {
+        final orders = result.data.orders ?? [];
         emit(
           state.copyWith(
-            isLoading: false,
+            getOrdersState: BaseState(data: result.data, isLoading: false),
             orders: orders,
             completedCount: orders
                 .where((o) => o.order?.state == OrderState.completed)
@@ -40,10 +55,25 @@ class OrderPageCubit extends Cubit<OrderPageState> {
                 .length,
           ),
         );
-      case ErrorBaseResponse<DriverOrdersResponseEntity>():
+      } else if (result is ErrorBaseResponse<DriverOrdersResponseEntity>) {
         emit(
-          state.copyWith(isLoading: false, errorMessage: response.failure.message),
+          state.copyWith(
+            getOrdersState: BaseState(
+              isLoading: false,
+              errorMessage: result.failure.message,
+            ),
+          ),
         );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          getOrdersState: BaseState(
+            isLoading: false,
+            errorMessage: ErrorHandler.handle(e).message,
+          ),
+        ),
+      );
     }
   }
 }

@@ -1,42 +1,37 @@
 part of 'order_page_cubit.dart';
 
 class OrderPageState extends Equatable {
-  final bool isLoading;
+  final BaseState<DriverOrdersResponseEntity> getOrdersState;
   final List<DriverOrderEntity> orders;
   final int completedCount;
   final int cancelledCount;
-  final String? errorMessage;
 
   const OrderPageState({
-    this.isLoading = false,
+    this.getOrdersState = const BaseState(),
     this.orders = const [],
     this.completedCount = 0,
     this.cancelledCount = 0,
-    this.errorMessage,
   });
 
   OrderPageState copyWith({
-    bool? isLoading,
+    BaseState<DriverOrdersResponseEntity>? getOrdersState,
     List<DriverOrderEntity>? orders,
     int? completedCount,
     int? cancelledCount,
-    String? errorMessage,
   }) {
     return OrderPageState(
-      isLoading: isLoading ?? this.isLoading,
+      getOrdersState: getOrdersState ?? this.getOrdersState,
       orders: orders ?? this.orders,
       completedCount: completedCount ?? this.completedCount,
       cancelledCount: cancelledCount ?? this.cancelledCount,
-      errorMessage: errorMessage,
     );
   }
 
   @override
   List<Object?> get props => [
-    isLoading,
+    getOrdersState,
     orders,
     completedCount,
     cancelledCount,
-    errorMessage,
   ];
 }

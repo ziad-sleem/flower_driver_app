@@ -18,6 +18,7 @@ import 'package:tracking_app/features/orders/domain/entities/driver_order_entity
 import 'package:tracking_app/features/orders/domain/entities/driver_orders_response_entity.dart';
 import 'package:tracking_app/features/orders/domain/usecases/get_driver_orders_use_case.dart';
 import 'package:tracking_app/features/orders/presentation/cubit/order_page_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/cubit/order_page_event.dart';
 import 'package:tracking_app/features/orders/presentation/pages/order_page.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/empty_order_page_widget.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/recent_order_card.dart';
@@ -72,7 +73,7 @@ void main() {
       ).thenAnswer((_) => completer.future);
 
       await tester.pumpWidget(createTestWidget(cubit));
-      unawaited(cubit.loadDriverOrders());
+      unawaited(cubit.doEvent(LoadDriverOrders()));
       await tester.pump();
 
       expect(find.byType(AppLoadingWidget), findsOneWidget);
@@ -101,7 +102,7 @@ void main() {
         );
 
         await tester.pumpWidget(createTestWidget(cubit));
-        await cubit.loadDriverOrders();
+        await cubit.doEvent(LoadDriverOrders());
         await tester.pumpAndSettle();
 
         expect(find.byType(AppErrorWidget), findsOneWidget);
@@ -137,7 +138,7 @@ void main() {
       );
 
       await tester.pumpWidget(createTestWidget(cubit));
-      await cubit.loadDriverOrders();
+      await cubit.doEvent(LoadDriverOrders());
       await tester.pumpAndSettle();
 
       expect(find.byType(EmptyOrderPageWidget), findsOneWidget);
@@ -185,7 +186,7 @@ void main() {
         );
 
         await tester.pumpWidget(createTestWidget(cubit));
-        await cubit.loadDriverOrders();
+        await cubit.doEvent(LoadDriverOrders());
         await tester.pumpAndSettle();
 
         expect(find.byType(EmptyOrderPageWidget), findsNothing);
