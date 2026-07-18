@@ -4,6 +4,7 @@ import 'package:tracking_app/features/notifications/data_source/notification_que
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/features/oreder_details/data/datasources/order_details_firestore_data_source.dart';
 import 'package:tracking_app/features/oreder_details/data/datasources/order_details_remote_data_source.dart';
+import 'package:tracking_app/features/oreder_details/data/models/current_order_model.dart';
 import 'package:tracking_app/features/oreder_details/data/models/order_details_response_dto.dart';
 import 'package:tracking_app/features/oreder_details/data/models/request/update_order_state_request_dto.dart';
 import 'package:tracking_app/features/oreder_details/data/models/update_order_state_response_dto.dart';
@@ -150,5 +151,10 @@ class OrderDetailsRepoImpl implements OrderDetailsRepo {
   @override
   Future<void> deleteDriverLocation({required String orderId}) {
     return firestoreDataSource.deleteDriverLocation(orderId: orderId);
+  }
+
+  @override
+  Future<List<CurrentOrderModel>> getAllCurrentOrders() {
+    return firestoreDataSource.getAllCurrentOrders();
   }
 }

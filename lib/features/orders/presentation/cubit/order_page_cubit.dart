@@ -12,8 +12,6 @@ import 'package:injectable/injectable.dart';
 
 part 'order_page_state.dart';
 
-const _kFullHistoryLimit = 1000;
-
 @injectable
 class OrderPageCubit extends Cubit<OrderPageState> {
   final GetDriverOrdersUseCase _getDriverOrdersUseCase;
@@ -36,10 +34,7 @@ class OrderPageCubit extends Cubit<OrderPageState> {
         ),
       );
 
-      final result = await _getDriverOrdersUseCase(
-        page: 1,
-        limit: _kFullHistoryLimit,
-      );
+      final result = await _getDriverOrdersUseCase();
 
       if (result is SuccessBaseResponse<DriverOrdersResponseEntity>) {
         final orders = result.data.orders ?? [];

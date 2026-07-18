@@ -27,4 +27,6 @@ abstract class OrderDetailsFireStoreDataSource {
   });
 
   Future<void> deleteDriverLocation({required String orderId});
+
+  Future<List<CurrentOrderModel>> getAllCurrentOrders();
 }

@@ -56,22 +56,16 @@ class MockGetDriverOrdersUseCase extends _i1.Mock
           as _i2.OrderPageRepo);
 
   @override
-  _i4.Future<_i5.BaseResponse<_i6.DriverOrdersResponseEntity>> call({
-    required int? page,
-    required int? limit,
-  }) =>
+  _i4.Future<_i5.BaseResponse<_i6.DriverOrdersResponseEntity>> call() =>
       (super.noSuchMethod(
-            Invocation.method(#call, [], {#page: page, #limit: limit}),
+            Invocation.method(#call, []),
             returnValue:
                 _i4.Future<
                   _i5.BaseResponse<_i6.DriverOrdersResponseEntity>
                 >.value(
                   _i7.dummyValue<
                     _i5.BaseResponse<_i6.DriverOrdersResponseEntity>
-                  >(
-                    this,
-                    Invocation.method(#call, [], {#page: page, #limit: limit}),
-                  ),
+                  >(this, Invocation.method(#call, [])),
                 ),
           )
           as _i4.Future<_i5.BaseResponse<_i6.DriverOrdersResponseEntity>>);

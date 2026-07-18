@@ -61,8 +61,12 @@ import '../../features/notifications/repository/notification_queue_repo_impl.dar
     as _i1029;
 import '../../features/orders/api/api_client/order_page_api_client.dart'
     as _i454;
+import '../../features/orders/api/datasource/order_page_firestore_data_source_impl.dart'
+    as _i139;
 import '../../features/orders/api/datasource/order_page_remote_data_source_impl.dart'
     as _i485;
+import '../../features/orders/data/datasources/order_page_firestore_data_source.dart'
+    as _i147;
 import '../../features/orders/data/datasources/order_page_remote_data_source.dart'
     as _i644;
 import '../../features/orders/data/repositories/order_page_repo_impl.dart'
@@ -114,11 +118,11 @@ import '../../features/oreder_details/domain/use_cases/update_order_state_usecas
 import '../../features/oreder_details/domain/use_cases/watch_order_state_usecase.dart'
     as _i941;
 import '../../features/oreder_details/presentation/home/cubit/home_cubit.dart'
-    as _i531;
-import '../../features/oreder_details/presentation/order_details/cubit/order_details_cubit.dart'
-    as _i235;
+    as _i816;
 import '../../features/oreder_details/presentation/order_detail/cubit/order_user_info_cubit.dart'
-    as _i199;
+    as _i64;
+import '../../features/oreder_details/presentation/order_details/cubit/order_details_cubit.dart'
+    as _i356;
 import '../../features/profile/api/api_client/profile_api_client.dart' as _i699;
 import '../../features/profile/api/datasources/profile_remote_data_source_impl.dart'
     as _i4;
@@ -140,10 +144,11 @@ import '../../features/profile/domain/use_cases/update_vehicle_use_case.dart'
 import '../../features/profile/domain/use_cases/upload_photo_use_case.dart'
     as _i967;
 import '../../features/profile/presentation/edit_profile/cubit/edit_profile_cubit.dart'
-    as _i990;
+    as _i780;
 import '../../features/profile/presentation/edit_vehicle_info/cubit/edit_vehicle_info_cubit.dart'
-    as _i947;
-import '../../features/profile/presentation/profile/cubit/profile_cubit.dart' as _i36;
+    as _i877;
+import '../../features/profile/presentation/profile/cubit/profile_cubit.dart'
+    as _i1024;
 import '../../features/profile/presentation/reset_password/cubit/reset_password_cubit.dart'
     as _i786;
 import 'firestore_module.dart' as _i431;
@@ -242,6 +247,11 @@ extension GetItInjectableX on _i174.GetIt {
         safeApiCaller: gh<_i563.SafeApiCaller>(),
       ),
     );
+    gh.lazySingleton<_i147.OrderPageFirestoreDataSourceContract>(
+      () => _i139.OrderPageFirestoreDataSourceImpl(
+        gh<_i824.OrderDetailsFireStoreDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i249.OrderUserInfoRepo>(
       () => _i895.OrderUserInfoRepoImpl(
         gh<_i772.OrderUserInfoRemoteDataSourceContract>(),
@@ -250,6 +260,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i723.AuthRepo>(
       () => _i662.AuthRepoImpl(
         authRemoteDataSourceContract: gh<_i107.AuthRemoteDataSourceContract>(),
+      ),
+    );
+    gh.factory<_i59.OrderPageRepo>(
+      () => _i579.OrderPageRepoImpl(
+        firestoreDataSource: gh<_i147.OrderPageFirestoreDataSourceContract>(),
       ),
     );
     gh.factory<_i790.ProfileRepo>(
@@ -271,6 +286,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1038.LoginUseCase>(
       () => _i1038.LoginUseCase(authRepo: gh<_i723.AuthRepo>()),
+    );
+    gh.factory<_i158.GetDriverOrdersUseCase>(
+      () => _i158.GetDriverOrdersUseCase(gh<_i59.OrderPageRepo>()),
     );
     gh.factory<_i199.EditProfileUseCase>(
       () => _i199.EditProfileUseCase(gh<_i790.ProfileRepo>()),
@@ -315,11 +333,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i151.GetVehiclesUseCase>(
       () => _i151.GetVehiclesUseCase(profileRepo: gh<_i790.ProfileRepo>()),
-    );
-    gh.factory<_i59.OrderPageRepo>(
-      () => _i579.OrderPageRepoImpl(
-        remoteDataSource: gh<_i644.OrderPageRemoteDataSourceContract>(),
-      ),
     );
     gh.factory<_i27.ForgetPasswordUseCase>(
       () => _i27.ForgetPasswordUseCase(gh<_i723.AuthRepo>()),
@@ -373,15 +386,18 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i302.CreateNotificationRequestUseCase>(),
       ),
     );
-    gh.factory<_i947.EditVehicleInfoCubit>(
-      () => _i947.EditVehicleInfoCubit(
+    gh.factory<_i877.EditVehicleInfoCubit>(
+      () => _i877.EditVehicleInfoCubit(
         gh<_i151.GetVehiclesUseCase>(),
         gh<_i730.UpdateVehicleUseCase>(),
         gh<_i488.ImagePickerService>(),
       ),
     );
-    gh.factory<_i235.OrderDetailsCubit>(
-      () => _i235.OrderDetailsCubit(
+    gh.factory<_i2.OrderPageCubit>(
+      () => _i2.OrderPageCubit(gh<_i158.GetDriverOrdersUseCase>()),
+    );
+    gh.factory<_i356.OrderDetailsCubit>(
+      () => _i356.OrderDetailsCubit(
         gh<_i753.SaveCurrentOrderUseCase>(),
         gh<_i941.WatchCurrentOrderUseCase>(),
         gh<_i302.CreateNotificationRequestUseCase>(),
@@ -390,37 +406,31 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i545.DeleteDriverLocationUseCase>(),
       ),
     );
-    gh.factory<_i990.EditProfileCubit>(
-      () => _i990.EditProfileCubit(
+    gh.factory<_i780.EditProfileCubit>(
+      () => _i780.EditProfileCubit(
         gh<_i199.EditProfileUseCase>(),
         gh<_i967.UploadPhotoUseCase>(),
         gh<_i790.ProfileRepo>(),
       ),
     );
-    gh.factory<_i158.GetDriverOrdersUseCase>(
-      () => _i158.GetDriverOrdersUseCase(gh<_i59.OrderPageRepo>()),
-    );
-    gh.factory<_i531.HomeCubit>(
-      () => _i531.HomeCubit(
+    gh.factory<_i816.HomeCubit>(
+      () => _i816.HomeCubit(
         gh<_i945.GetPendingOrdersUseCase>(),
         gh<_i386.UpdateOrderStateUseCase>(),
         gh<_i315.GetCurrentOrderUseCase>(),
       ),
     );
-    gh.factory<_i199.OrderUserInfoCubit>(
-      () => _i199.OrderUserInfoCubit(gh<_i492.GetOrderUserInfoUseCase>()),
+    gh.factory<_i64.OrderUserInfoCubit>(
+      () => _i64.OrderUserInfoCubit(gh<_i492.GetOrderUserInfoUseCase>()),
     );
-    gh.factory<_i36.ProfileCubit>(
-      () => _i36.ProfileCubit(
+    gh.factory<_i1024.ProfileCubit>(
+      () => _i1024.ProfileCubit(
         gh<_i141.GetDriverDataUseCase>(),
         gh<_i151.GetVehiclesUseCase>(),
       ),
     );
     gh.factory<_i545.AppLaunchCubit>(
       () => _i545.AppLaunchCubit(gh<_i315.GetCurrentOrderUseCase>()),
-    );
-    gh.factory<_i2.OrderPageCubit>(
-      () => _i2.OrderPageCubit(gh<_i158.GetDriverOrdersUseCase>()),
     );
     return this;
   }

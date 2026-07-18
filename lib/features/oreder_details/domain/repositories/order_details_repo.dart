@@ -1,4 +1,5 @@
 import 'package:tracking_app/config/base/base_response.dart';
+import 'package:tracking_app/features/oreder_details/data/models/current_order_model.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/current_order_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
@@ -47,4 +48,6 @@ abstract class OrderDetailsRepo {
   });
 
   Future<void> deleteDriverLocation({required String orderId});
+
+  Future<List<CurrentOrderModel>> getAllCurrentOrders();
 }

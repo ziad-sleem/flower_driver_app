@@ -146,4 +146,23 @@ class OrderDetailsFireStoreDataSourceImpl
       rethrow;
     }
   }
+
+  @override
+  Future<List<CurrentOrderModel>> getAllCurrentOrders() async {
+    _logger.i('getAllCurrentOrders: Fetching all current orders');
+    try {
+      final snapshot = await firestore.collection(_collection).get();
+      final orders = snapshot.docs
+          .where((doc) => doc.data().isNotEmpty)
+          .map((doc) => CurrentOrderModel.fromJson(doc.data()))
+          .toList();
+      _logger.i(
+        'getAllCurrentOrders: Successfully fetched ${orders.length} orders',
+      );
+      return orders;
+    } catch (e) {
+      _logger.e('getAllCurrentOrders: Failed — $e');
+      rethrow;
+    }
+  }
 }
