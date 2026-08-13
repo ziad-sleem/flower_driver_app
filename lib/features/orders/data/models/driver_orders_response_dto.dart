@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tracking_app/features/oreder_details/data/models/pagination_dto.dart';
+import 'package:tracking_app/features/orders/data/models/pagination_dto.dart';
 import 'package:tracking_app/features/orders/data/models/driver_order_dto.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_orders_response_entity.dart'
     as entity;

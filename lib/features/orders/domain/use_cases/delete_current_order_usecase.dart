@@ -1,0 +1,13 @@
+import 'package:injectable/injectable.dart';
+import 'package:tracking_app/features/orders/domain/repositories/order_details_repo.dart';
+
+@injectable
+class DeleteCurrentOrderUseCase {
+  final OrderDetailsRepo repo;
+
+  DeleteCurrentOrderUseCase({required this.repo});
+
+  Future<void> call({required String orderId}) {
+    return repo.deleteCurrentOrder(orderId: orderId);
+  }
+}

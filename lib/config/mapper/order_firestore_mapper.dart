@@ -1,10 +1,10 @@
-import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_Item_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/product_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/shipping_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/store_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/users_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_Item_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/product_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/shipping_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/store_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_details_response_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/users_entity.dart';
 
 class OrderFirestoreMapper {
   static Map<String, dynamic> toFirestore(OrderEntity order) {

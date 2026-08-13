@@ -6,14 +6,14 @@ import 'package:tracking_app/core/localization_constants/tabs_constants.dart';
 import 'package:tracking_app/core/resources/app_svgs.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/features/app_section/presentation/cubit/app_section_cubit.dart';
-import 'package:tracking_app/features/oreder_details/presentation/order_detail/cubit/order_user_info_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/home/cubit/order_user_info_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/profile/pages/profile_page.dart';
-import 'package:tracking_app/features/oreder_details/presentation/home/cubit/home_cubit.dart';
-import 'package:tracking_app/features/oreder_details/presentation/home/cubit/home_event.dart';
-import 'package:tracking_app/features/oreder_details/presentation/home/pages/home_screen.dart';
-import 'package:tracking_app/features/orders/presentation/cubit/order_page_cubit.dart';
-import 'package:tracking_app/features/orders/presentation/cubit/order_page_event.dart';
-import 'package:tracking_app/features/orders/presentation/pages/order_page.dart';
+import 'package:tracking_app/features/orders/presentation/home/cubit/home_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/home/cubit/home_event.dart';
+import 'package:tracking_app/features/orders/presentation/home/pages/home_screen.dart';
+import 'package:tracking_app/features/orders/presentation/history/cubit/history_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/history/cubit/history_event.dart';
+import 'package:tracking_app/features/orders/presentation/history/pages/history_page.dart';
 
   
 class AppSectionsPage extends StatelessWidget {

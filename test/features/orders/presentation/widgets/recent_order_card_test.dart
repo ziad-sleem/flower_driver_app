@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tracking_app/core/resources/app_value.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/shipping_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/store_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_details_response_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/shipping_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/store_entity.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_order_entity.dart';
 import 'package:tracking_app/features/orders/presentation/widgets/recent_order_card.dart';
 

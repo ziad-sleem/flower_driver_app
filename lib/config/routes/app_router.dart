@@ -16,19 +16,19 @@ import 'package:tracking_app/features/app_section/presentation/page/app_section_
 import 'package:tracking_app/features/profile/presentation/edit_vehicle_info/cubit/edit_vehicle_info_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/edit_vehicle_info/pages/edit_vehicle_info_page.dart';
 import 'package:tracking_app/features/onboarding/page/onboarding_screen.dart';
-import 'package:tracking_app/features/oreder_details/presentation/order_detail/cubit/order_user_info_cubit.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_details_args.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/reset_password/pages/reset_password_page.dart';
 import 'package:tracking_app/features/profile/presentation/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tracking_app/features/profile/presentation/edit_profile/pages/edit_profile_page.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
-import 'package:tracking_app/features/oreder_details/presentation/order_details/cubit/order_details_cubit.dart';
-import 'package:tracking_app/features/oreder_details/presentation/order_details/cubit/order_details_intents.dart';
-import 'package:tracking_app/features/oreder_details/presentation/order_detail/pages/order_detail_page.dart';
-import 'package:tracking_app/features/oreder_details/presentation/order_details/pages/order_details_screen.dart';
-import 'package:tracking_app/features/orders/presentation/pages/driver_order_details_page.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_entity.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_order_entity.dart';
+import 'package:tracking_app/features/orders/presentation/home/cubit/order_user_info_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/order_track/cubit/order_track_cubit.dart';
+import 'package:tracking_app/features/orders/presentation/order_track/cubit/order_track_event.dart';
+import 'package:tracking_app/features/orders/presentation/home/pages/order_detail_page.dart';
+import 'package:tracking_app/features/orders/presentation/order_track/pages/order_track_page.dart';
+import 'package:tracking_app/features/orders/presentation/history/pages/driver_order_details_page.dart';
 import 'package:tracking_app/features/splash/presentation/pages/splash_screen.dart';
 
 abstract class AppRouter {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_details_response_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_details_response_entity.dart';
 import 'package:tracking_app/features/orders/data/models/driver_order_dto.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_order_entity.dart';
 

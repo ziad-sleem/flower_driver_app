@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_entity.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/store_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_entity.dart';
+import 'package:tracking_app/features/orders/domain/entities/store_entity.dart';
 
 class DriverOrderEntity extends Equatable {
   final String? id;

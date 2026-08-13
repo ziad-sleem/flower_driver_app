@@ -18,19 +18,43 @@ class OrderPageRepoImpl implements OrderPageRepo {
   @override
   Future<BaseResponse<DriverOrdersResponseEntity>> getDriverOrders() async {
     try {
-      final currentOrders = await firestoreDataSource.getAllCurrentOrders();
+      final results = await Future.wait([
+        firestoreDataSource.getAllCurrentOrders(),
+        firestoreDataSource.getAllOrderHistory(),
+      ]);
 
-      final driverOrders = currentOrders.map((currentOrder) {
+      final currentOrders = results[0];
+      final historyOrders = results[1];
+
+      final driverOrders = <DriverOrderEntity>[];
+
+      for (final currentOrder in currentOrders) {
         final order = currentOrder.order;
-        return DriverOrderEntity(
-          id: order.id,
-          driverId: currentOrder.driverId,
-          order: order,
-          store: order.store,
-          createdAt: order.createdAt,
-          updatedAt: order.updatedAt,
+        driverOrders.add(
+          DriverOrderEntity(
+            id: order.id,
+            driverId: currentOrder.driverId,
+            order: order,
+            store: order.store,
+            createdAt: order.createdAt,
+            updatedAt: order.updatedAt,
+          ),
         );
-      }).toList();
+      }
+
+      for (final historyOrder in historyOrders) {
+        final order = historyOrder.order;
+        driverOrders.add(
+          DriverOrderEntity(
+            id: order.id,
+            driverId: historyOrder.driverId,
+            order: order,
+            store: order.store,
+            createdAt: order.createdAt,
+            updatedAt: order.updatedAt,
+          ),
+        );
+      }
 
       driverOrders.sort((a, b) {
         final aDate = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);

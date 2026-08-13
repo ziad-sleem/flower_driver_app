@@ -5,8 +5,8 @@ import 'package:tracking_app/config/routes/routes.dart';
 import 'package:tracking_app/core/resources/app_svgs.dart';
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
-import 'package:tracking_app/features/oreder_details/domain/entities/order_details_args.dart';
-import 'package:tracking_app/features/oreder_details/domain/use_cases/get_current_order_usecase.dart';
+import 'package:tracking_app/features/orders/domain/entities/order_details_args.dart';
+import 'package:tracking_app/features/orders/domain/use_cases/get_current_order_usecase.dart';
 
 
 class SplashScreen extends StatefulWidget {

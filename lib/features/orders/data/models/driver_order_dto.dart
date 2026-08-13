@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tracking_app/features/oreder_details/data/models/order_dto.dart';
-import 'package:tracking_app/features/oreder_details/data/models/store_dto.dart';
+import 'package:tracking_app/features/orders/data/models/order_dto.dart';
+import 'package:tracking_app/features/orders/data/models/store_dto.dart';
 import 'package:tracking_app/features/orders/domain/entities/driver_order_entity.dart'
     as entity;
 

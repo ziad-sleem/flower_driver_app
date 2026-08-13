@@ -1,5 +1,6 @@
-import 'package:tracking_app/features/oreder_details/data/models/current_order_model.dart';
+import 'package:tracking_app/features/orders/data/models/current_order_model.dart';
 
 abstract interface class OrderPageFirestoreDataSourceContract {
   Future<List<CurrentOrderModel>> getAllCurrentOrders();
+  Future<List<CurrentOrderModel>> getAllOrderHistory();
 }
