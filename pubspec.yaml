@@ -58,6 +58,7 @@ dependencies:
   shimmer: ^3.0.0
   google_fonts: ^8.1.0
   pinput: ^5.0.0
+  google_nav_bar: ^5.0.7
   # Localization
   easy_localization: ^3.0.8
 
@@ -110,6 +111,9 @@ dev_dependencies:
   retrofit_generator: ^10.2.5
   json_serializable: ^6.7.1
 
+  # Launcher Icon
+  flutter_launcher_icons: ^0.14.4
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -158,3 +162,17 @@ flutter:
     - assets/data/
     - assets/images/
     - assets/lottie/
+
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+
+  image_path: "assets/images/app_icon3.png"
+
+  min_sdk_android: 21
+
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/app_icon3.png"
+
+  remove_alpha_ios: true
