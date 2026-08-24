@@ -139,8 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                           return OrderCard(order: state.orders[index]);
                         },
-                        childCount: state.orders.length +
-                            (state.isLoadingMore ? 1 : 0),
+                        childCount:
+                            state.orders.length + (state.isLoadingMore ? 1 : 0),
                       ),
                     ),
                   ),

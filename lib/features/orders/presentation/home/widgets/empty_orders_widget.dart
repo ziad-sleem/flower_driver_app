@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/core/theme/app_text_style.dart';
-
+import 'package:tracking_app/core/resources/app_lottie.dart';
 
 class EmptyOrdersWidget extends StatelessWidget {
   const EmptyOrdersWidget({super.key});
@@ -12,19 +13,20 @@ class EmptyOrdersWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.inventory_2_outlined,
-            size: 70,
-            color: Colors.grey.shade500,
+          Lottie.asset(
+            AppLottie.empty2,
+            width: 250,
+            height: 250,
+            fit: BoxFit.contain,
+            repeat: true,
+            animate: true,
           ),
-
-          const SizedBox(height: 20),
 
           Text(
             "No Pending Orders",
-            style: getSemiBoldStyle(
+            style: getMediumStyle(
               context: context,
-              color: AppColors.textPrimary,
+              color: AppColors.textSecondary,
             ),
           ),
         ],
