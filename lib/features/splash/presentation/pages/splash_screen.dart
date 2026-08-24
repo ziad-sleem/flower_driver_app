@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tracking_app/config/dependency_injection/di.dart';
 import 'package:tracking_app/config/routes/routes.dart';
-import 'package:tracking_app/core/resources/app_svgs.dart';
+import 'package:tracking_app/core/resources/app_lottie.dart';
 import 'package:tracking_app/core/storage/secure_storage_service.dart';
 import 'package:tracking_app/core/theme/app_colors.dart';
 import 'package:tracking_app/features/orders/domain/entities/order_details_args.dart';
 import 'package:tracking_app/features/orders/domain/use_cases/get_current_order_usecase.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,8 +17,16 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
+  late final AnimationController _controller;
+
+  late final Animation<double> _lottieFadeAnimation;
+  late final Animation<double> _lottieScaleAnimation;
+
+  late final Animation<double> _floweryFadeAnimation;
+  late final Animation<Offset> _flowerySlideAnimation;
+
+  late final Animation<double> _riderFadeAnimation;
+  late final Animation<Offset> _riderSlideAnimation;
 
   @override
   void initState() {
@@ -27,21 +34,53 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 2500),
     );
 
-    _animation = CurvedAnimation(
+    // Lottie Animation
+    _lottieFadeAnimation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeOutBack,
+      curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
     );
+
+    _lottieScaleAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.45, curve: Curves.easeOutBack),
+    );
+
+    // Flowery Animation
+    _floweryFadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.35, 0.65, curve: Curves.easeOut),
+    );
+
+    _flowerySlideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.35), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.35, 0.65, curve: Curves.easeOutCubic),
+          ),
+        );
+
+    // Rider Animation
+    _riderFadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.55, 0.85, curve: Curves.easeOut),
+    );
+
+    _riderSlideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.35), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.55, 0.85, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _controller.forward();
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          _checkAuth();
-        });
+        Future.delayed(const Duration(milliseconds: 500), _checkAuth);
       }
     });
   }
@@ -59,15 +98,14 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     final orderId = await SecureStorageService.getCurrentOrderId();
-    debugPrint("orderId = $orderId");
+
+    debugPrint('orderId = $orderId');
 
     if (orderId != null && orderId.isNotEmpty) {
       final currentOrder = await getIt<GetCurrentOrderUseCase>()(
         orderId: orderId,
       );
-      debugPrint("currentOrder = $currentOrder");
       if (!mounted) return;
-
       if (currentOrder != null) {
         Navigator.pushReplacementNamed(
           context,
@@ -81,6 +119,8 @@ class _SplashScreenState extends State<SplashScreen>
       }
     }
 
+    if (!mounted) return;
+
     Navigator.pushReplacementNamed(context, Routes.appSection);
   }
 
@@ -93,26 +133,82 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.primary,
-              AppColors.primaryLight,
-              AppColors.surface,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+      backgroundColor: AppColors.surface,
+      body: SafeArea(
         child: Center(
-          child: ScaleTransition(
-            scale: _animation,
-            child: SvgPicture.asset(
-              AppSvgs.splashLogo,
-              width: 160,
-              height: 160,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Lottie
+              FadeTransition(
+                opacity: _lottieFadeAnimation,
+                child: ScaleTransition(
+                  scale: _lottieScaleAnimation,
+                  child: Lottie.asset(
+                    AppLottie.splashAnimation,
+                    repeat: true,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              // App Name
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SlideTransition(
+                    position: _flowerySlideAnimation,
+                    child: FadeTransition(
+                      opacity: _floweryFadeAnimation,
+                      child: Text(
+                        'Flowery',
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.primary,
+                          letterSpacing: -0.8,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 7),
+
+                  SlideTransition(
+                    position: _riderSlideAnimation,
+                    child: FadeTransition(
+                      opacity: _riderFadeAnimation,
+                      child: Text(
+                        'Rider',
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.textPrimary,
+                          letterSpacing: -0.8,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 7),
+
+              FadeTransition(
+                opacity: CurvedAnimation(
+                  parent: _controller,
+                  curve: const Interval(0.72, 1.0, curve: Curves.easeOut),
+                ),
+                child: Text(
+                  'Delivering happiness, one order at a time',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

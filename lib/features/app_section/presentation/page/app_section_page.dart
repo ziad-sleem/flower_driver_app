@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tracking_app/config/dependency_injection/di.dart';
 import 'package:tracking_app/core/localization_constants/tabs_constants.dart';
 import 'package:tracking_app/core/resources/app_svgs.dart';
@@ -15,7 +16,6 @@ import 'package:tracking_app/features/orders/presentation/history/cubit/history_
 import 'package:tracking_app/features/orders/presentation/history/cubit/history_event.dart';
 import 'package:tracking_app/features/orders/presentation/history/pages/history_page.dart';
 
-  
 class AppSectionsPage extends StatelessWidget {
   const AppSectionsPage({super.key});
 
@@ -36,19 +36,12 @@ class AppSectionsPage extends StatelessWidget {
 class _AppSectionsView extends StatelessWidget {
   const _AppSectionsView();
 
-  List<_BottomNavItem> _items(BuildContext context) {
-    return [
-      _BottomNavItem(label: TabsConstants.home, icon: AppSvgs.home),
-      _BottomNavItem(label: TabsConstants.orders, icon: AppSvgs.order),
-      _BottomNavItem(label: TabsConstants.profile, icon: AppSvgs.profile),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppSectionsCubit, AppSectionState>(
       builder: (context, state) {
         final cubit = context.read<AppSectionsCubit>();
+
         final currentIndex = state is AppSectionsChanged
             ? state.currentIndex
             : 0;
@@ -62,27 +55,17 @@ class _AppSectionsView extends StatelessWidget {
                 child: const HomeScreen(),
               ),
               BlocProvider(
-                create: (_) => getIt<OrderPageCubit>()..doEvent(LoadDriverOrders()),
+                create: (_) =>
+                    getIt<OrderPageCubit>()..doEvent(LoadDriverOrders()),
                 child: const OrderPage(),
               ),
               ProfilePage(),
             ],
-
           ),
-          bottomNavigationBar: BottomNavigationBar(
+
+          bottomNavigationBar: _GoogleNavBar(
             currentIndex: currentIndex,
-            onTap: cubit.changeSection,
-            selectedItemColor: AppColors.primary,
-            unselectedItemColor: AppColors.grey700,
-            type: BottomNavigationBarType.fixed,
-            items: _items(context).map((item) {
-              final isSelected = _items(context).indexOf(item) == currentIndex;
-              return BottomNavigationBarItem(
-                label: item.label,
-                icon: _NavBarIcon(assetName: item.icon, isSelected: isSelected),
-                activeIcon: _NavBarIcon(assetName: item.icon, isSelected: true),
-              );
-            }).toList(),
+            onTabChange: cubit.changeSection,
           ),
         );
       },
@@ -90,18 +73,75 @@ class _AppSectionsView extends StatelessWidget {
   }
 }
 
-class _NavBarIcon extends StatelessWidget {
-  final String assetName;
-  final bool isSelected;
+class _GoogleNavBar extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTabChange;
 
-  const _NavBarIcon({required this.assetName, required this.isSelected});
+  const _GoogleNavBar({required this.currentIndex, required this.onTabChange});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: SvgPicture.asset(
+    return Container(
+      color: AppColors.background,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: GNav(
+            selectedIndex: currentIndex,
+            onTabChange: onTabChange,
+
+            // Colors
+            backgroundColor: AppColors.background,
+            color: AppColors.grey700,
+            activeColor: AppColors.primary,
+            tabBackgroundColor: AppColors.primary.withOpacity(0.10),
+
+            // Animation
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+
+            // Layout
+            gap: 7,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+
+            tabs: [
+              _buildTab(
+                label: TabsConstants.home,
+                assetName: AppSvgs.home,
+                isSelected: currentIndex == 0,
+              ),
+
+              _buildTab(
+                label: TabsConstants.orders,
+                assetName: AppSvgs.order,
+                isSelected: currentIndex == 1,
+              ),
+
+              _buildTab(
+                label: TabsConstants.profile,
+                assetName: AppSvgs.profile,
+                isSelected: currentIndex == 2,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  GButton _buildTab({
+    required String label,
+    required String assetName,
+    required bool isSelected,
+  }) {
+    return GButton(
+      icon: Icons.circle_outlined,
+      text: label,
+      leading: SvgPicture.asset(
         assetName,
+        width: 22,
+        height: 22,
         colorFilter: ColorFilter.mode(
           isSelected ? AppColors.primary : AppColors.grey700,
           BlendMode.srcIn,
@@ -109,11 +149,4 @@ class _NavBarIcon extends StatelessWidget {
       ),
     );
   }
-}
-
-class _BottomNavItem {
-  final String label;
-  final String icon;
-
-  const _BottomNavItem({required this.label, required this.icon});
 }
